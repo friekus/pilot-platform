@@ -1,494 +1,119 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
-const BRAND = {
-  navy: "#0F2A44",
-  navyLight: "#1B3A5C",
-  teal: "#0F6E56",
-  tealLight: "#1D9E75",
-  tealPale: "#E1F5EE",
-  coral: "#D85A30",
-  coralPale: "#FAECE7",
-  cream: "#FAF8F5",
-  white: "#FFFFFF",
-  dark: "#1A1A1A",
-  gray: "#6B7280",
-  grayLight: "#E5E7EB",
-  bluePale: "#E6F1FB",
-};
-
-function useInView(threshold = 0.15) {
+function Fade({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
+  const [vis, setVis] = useState(false);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const obs = new IntersectionObserver(
-      ([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } },
-      { threshold }
-    );
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setVis(true); obs.disconnect(); } }, { threshold: 0.08 });
     obs.observe(el);
     return () => obs.disconnect();
-  }, [threshold]);
-  return [ref, visible] as const;
+  }, []);
+  return (<div ref={ref} className={className} style={{ opacity: vis ? 1 : 0, transform: vis ? "translateY(0)" : "translateY(20px)", transition: `opacity 0.6s cubic-bezier(0.22,1,0.36,1) ${delay}s, transform 0.6s cubic-bezier(0.22,1,0.36,1) ${delay}s` }}>{children}</div>);
 }
 
-function FadeIn({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
-  const [ref, visible] = useInView();
-  return (
-    <div
-      ref={ref}
-      className={className}
-      style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(28px)",
-        transition: `opacity 0.7s cubic-bezier(0.22,1,0.36,1) ${delay}s, transform 0.7s cubic-bezier(0.22,1,0.36,1) ${delay}s`,
-      }}
-    >
-      {children}
-    </div>
-  );
-}
-
-function Nav() {
-  return (
-    <nav style={{
-      position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
-      background: "rgba(15,42,68,0.92)", backdropFilter: "blur(12px)",
-      borderBottom: "1px solid rgba(255,255,255,0.08)",
-    }}>
-      <div style={{
-        maxWidth: 1100, margin: "0 auto", padding: "14px 24px",
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-      }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-            <path d="M14 3L6 14l8 11 8-11L14 3z" fill={BRAND.tealLight} opacity="0.9"/>
-            <path d="M14 8l-4 6 4 5.5 4-5.5-4-6z" fill={BRAND.white} opacity="0.3"/>
-          </svg>
-          <span style={{
-            fontSize: 20, fontWeight: 700,
-            color: BRAND.white, letterSpacing: "-0.02em",
-          }}>
-            Pilot Platform
-          </span>
-        </div>
-        <a href="#waitlist" style={{
-          fontSize: 13, fontWeight: 600,
-          color: BRAND.navy, background: BRAND.tealLight, padding: "8px 20px",
-          borderRadius: 6, textDecoration: "none", letterSpacing: "0.01em",
-        }}>
-          Join the waitlist
-        </a>
-      </div>
-    </nav>
-  );
-}
-
-function WaitlistForm() {
+function EmailForm({ id, dark = false }: { id: string; dark?: boolean }) {
   const [email, setEmail] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-  const [licence, setLicence] = useState("");
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email) setSubmitted(true);
-  };
-
-  if (submitted) {
-    return (
-      <div style={{
-        background: "rgba(29,158,117,0.15)", border: "1px solid rgba(29,158,117,0.3)",
-        borderRadius: 12, padding: "20px 28px", maxWidth: 460, margin: "0 auto",
-      }}>
-        <p style={{ fontSize: 16, fontWeight: 600, color: BRAND.tealLight, margin: "0 0 4px" }}>
-          You&apos;re on the list!
-        </p>
-        <p style={{ fontSize: 13, color: "rgba(255,255,255,0.5)", margin: 0 }}>
-          We&apos;ll let you know when we launch. Early supporters get 30% off.
-        </p>
-      </div>
-    );
-  }
-
-  return (
-    <div id="waitlist" style={{ maxWidth: 460, margin: "0 auto" }}>
-      <form onSubmit={handleSubmit}>
-        <div style={{
-          display: "flex", gap: 8, marginBottom: 10,
-          background: "rgba(255,255,255,0.06)", borderRadius: 10, padding: 4,
-          border: "1px solid rgba(255,255,255,0.1)",
-        }}>
-          <input
-            type="email"
-            placeholder="your@email.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            style={{
-              flex: 1, background: "transparent", border: "none", outline: "none",
-              color: BRAND.white, fontSize: 15, padding: "12px 14px",
-            }}
-          />
-          <button type="submit" style={{
-            background: BRAND.tealLight, color: BRAND.navy, border: "none",
-            borderRadius: 7, padding: "12px 22px",
-            fontSize: 14, fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap",
-          }}>
-            Join waitlist
-          </button>
-        </div>
-      </form>
-      <div style={{ display: "flex", gap: 6, justifyContent: "center", flexWrap: "wrap" }}>
-        {["RPL student", "PPL student", "CPL student", "Instructor"].map((l) => (
-          <button
-            key={l}
-            type="button"
-            onClick={() => setLicence(licence === l ? "" : l)}
-            style={{
-              background: licence === l ? "rgba(29,158,117,0.2)" : "rgba(255,255,255,0.04)",
-              border: `1px solid ${licence === l ? "rgba(29,158,117,0.4)" : "rgba(255,255,255,0.08)"}`,
-              borderRadius: 16, padding: "5px 12px", cursor: "pointer",
-              fontSize: 12, fontWeight: 500,
-              color: licence === l ? BRAND.tealLight : "rgba(255,255,255,0.4)",
-              transition: "all 0.2s",
-            }}
-          >
-            {l}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
+  const [done, setDone] = useState(false);
+  const submit = (e: React.FormEvent) => { e.preventDefault(); if (!email.includes("@")) return; setDone(true); };
+  if (done) return (<div style={{ display:"flex",alignItems:"center",gap:10,padding:"14px 20px",borderRadius:10,background:"rgba(0,212,170,0.1)",border:"1px solid rgba(0,212,170,0.2)",color:"#00D4AA",fontWeight:500,fontSize:15 }}>✓ You&apos;re on the list. We&apos;ll be in touch before launch.</div>);
+  return (<form onSubmit={submit} style={{ display:"flex",flexWrap:"wrap",gap:10,maxWidth:480 }}><input type="email" placeholder="Enter your email" required value={email} onChange={e=>setEmail(e.target.value)} style={{ flex:"1 1 260px",padding:"13px 16px",borderRadius:10,border:"1.5px solid #1E3352",background:dark?"rgba(255,255,255,0.1)":"#162A42",color:"#F0F4F8",fontSize:15,fontFamily:"'DM Sans',sans-serif",outline:"none",minWidth:200 }} /><button type="submit" style={{ padding:"13px 24px",borderRadius:10,border:"none",background:"#00D4AA",color:"#0B1120",fontSize:15,fontWeight:600,fontFamily:"'DM Sans',sans-serif",cursor:"pointer",whiteSpace:"nowrap" }}>Get early access</button></form>);
 }
 
-function Hero() {
-  return (
-    <section style={{
-      background: `linear-gradient(165deg, ${BRAND.navy} 0%, #0A1E33 60%, #081828 100%)`,
-      minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center",
-      position: "relative", overflow: "hidden", padding: "100px 24px 80px",
-    }}>
-      <div style={{
-        position: "absolute", inset: 0,
-        background: "radial-gradient(ellipse 600px 400px at 70% 30%, rgba(29,158,117,0.12) 0%, transparent 70%), radial-gradient(ellipse 400px 500px at 20% 70%, rgba(15,110,86,0.08) 0%, transparent 70%)",
-      }} />
-      <div style={{
-        position: "absolute", top: "15%", right: "8%", width: 320, height: 320,
-        border: "1px solid rgba(29,158,117,0.1)", borderRadius: "50%", opacity: 0.4,
-      }} />
-
-      <div style={{ maxWidth: 720, textAlign: "center", position: "relative", zIndex: 1 }}>
-        <FadeIn>
-          <div style={{
-            display: "inline-flex", alignItems: "center", gap: 8,
-            background: "rgba(29,158,117,0.12)", border: "1px solid rgba(29,158,117,0.25)",
-            borderRadius: 20, padding: "6px 16px", marginBottom: 28,
-          }}>
-            <div style={{ width: 6, height: 6, borderRadius: "50%", background: BRAND.tealLight }} />
-            <span style={{
-              fontSize: 12, fontWeight: 600,
-              color: BRAND.tealLight, letterSpacing: "0.04em", textTransform: "uppercase" as const,
-            }}>
-              Coming soon — Australia
-            </span>
-          </div>
-        </FadeIn>
-
-        <FadeIn delay={0.1}>
-          <h1 style={{
-            fontSize: "clamp(38px, 6vw, 64px)",
-            fontWeight: 400, color: BRAND.white, lineHeight: 1.1, margin: "0 0 20px",
-            letterSpacing: "-0.02em", fontFamily: "Georgia, serif",
-          }}>
-            From first lesson<br />
-            <span style={{ color: BRAND.tealLight }}>to first job.</span>
-          </h1>
-        </FadeIn>
-
-        <FadeIn delay={0.2}>
-          <p style={{
-            fontSize: "clamp(16px, 2.2vw, 19px)",
-            color: "rgba(255,255,255,0.6)", lineHeight: 1.65, maxWidth: 520, margin: "0 auto 40px",
-          }}>
-            The modern study platform for Australian student pilots.
-            Adaptive quizzes, progress tracking, and career tools —
-            built by a pilot who knows the grind.
-          </p>
-        </FadeIn>
-
-        <FadeIn delay={0.3}>
-          <WaitlistForm />
-        </FadeIn>
-
-        <FadeIn delay={0.45}>
-          <div style={{ display: "flex", gap: 32, justifyContent: "center", marginTop: 48, flexWrap: "wrap" }}>
-            {[
-              { num: "7", label: "CASA subjects" },
-              { num: "3", label: "Licence levels" },
-              { num: "650+", label: "Launch questions" },
-            ].map((s, i) => (
-              <div key={i} style={{ textAlign: "center" }}>
-                <div style={{ fontSize: 28, fontWeight: 700, color: BRAND.tealLight }}>{s.num}</div>
-                <div style={{
-                  fontSize: 11, fontWeight: 500,
-                  color: "rgba(255,255,255,0.4)", letterSpacing: "0.06em", textTransform: "uppercase" as const,
-                }}>{s.label}</div>
-              </div>
-            ))}
-          </div>
-        </FadeIn>
-      </div>
-    </section>
-  );
+function Logo({ size=40 }: { size?: number }) {
+  const s=size,cx=s/2,cy=s/2;
+  return (<svg width={s} height={s} viewBox={`0 0 ${s} ${s}`} fill="none"><rect width={s} height={s} rx={s*0.25} fill="#0F1D2F"/><circle cx={cx} cy={cy} r={s*0.35} fill="none" stroke="#00D4AA" strokeWidth={0.7} opacity={0.3}/><path d={`M${cx} ${s*0.2} L${s*0.775} ${s*0.725} L${cx} ${s*0.6} L${s*0.225} ${s*0.725} Z`} fill="#00D4AA"/></svg>);
 }
 
-function ProblemSection() {
-  const problems = [
-    { icon: "📱", title: "Dated platforms", desc: "Existing study tools feel like 2010. Dual logins, broken forms, no mobile experience." },
-    { icon: "🎯", title: "No adaptive learning", desc: "Static questions don't identify your weak spots. You need smart repetition." },
-    { icon: "📊", title: "No progress tracking", desc: "How close are you to exam-ready? Right now, you're guessing." },
-    { icon: "🤝", title: "The jobs black hole", desc: "After your CPL, you're told to 'network'. But where do you start?" },
-  ];
-
-  return (
-    <section style={{ background: BRAND.cream, padding: "100px 24px" }}>
-      <div style={{ maxWidth: 900, margin: "0 auto" }}>
-        <FadeIn>
-          <p style={{
-            fontSize: 12, fontWeight: 700, color: BRAND.teal,
-            letterSpacing: "0.08em", textTransform: "uppercase" as const, marginBottom: 12,
-          }}>The problem</p>
-          <h2 style={{
-            fontSize: "clamp(28px, 4vw, 40px)", fontFamily: "Georgia, serif",
-            fontWeight: 400, color: BRAND.navy, lineHeight: 1.2, margin: "0 0 16px", maxWidth: 560,
-          }}>
-            Australian pilot training deserves better tools.
-          </h2>
-          <p style={{
-            fontSize: 16, color: BRAND.gray, lineHeight: 1.65, maxWidth: 520, marginBottom: 48,
-          }}>
-            CASA&apos;s published fail rate sits around 34%. One in three students fail their theory
-            exam — at $217 per resit. The study tools haven&apos;t kept up.
-          </p>
-        </FadeIn>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 20 }}>
-          {problems.map((p, i) => (
-            <FadeIn key={i} delay={i * 0.1}>
-              <div style={{
-                background: BRAND.white, borderRadius: 14, padding: "28px 24px",
-                border: "1px solid rgba(0,0,0,0.05)", boxShadow: "0 1px 3px rgba(0,0,0,0.04)", height: "100%",
-              }}>
-                <div style={{ fontSize: 24, marginBottom: 14 }}>{p.icon}</div>
-                <h3 style={{ fontSize: 16, fontWeight: 700, color: BRAND.navy, margin: "0 0 8px" }}>{p.title}</h3>
-                <p style={{ fontSize: 14, color: BRAND.gray, lineHeight: 1.6, margin: 0 }}>{p.desc}</p>
-              </div>
-            </FadeIn>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
+function Feature({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
+  return (<Fade><div style={{ background:"#131F33",border:"1px solid rgba(255,255,255,0.06)",borderRadius:16,padding:"28px 24px",display:"flex",flexDirection:"column",gap:14,transition:"border-color 0.25s,transform 0.25s" }} onMouseEnter={e=>{e.currentTarget.style.borderColor="rgba(0,212,170,0.3)";e.currentTarget.style.transform="translateY(-3px)"}} onMouseLeave={e=>{e.currentTarget.style.borderColor="rgba(255,255,255,0.06)";e.currentTarget.style.transform="translateY(0)"}}><div style={{ width:44,height:44,borderRadius:12,background:"rgba(0,212,170,0.1)",display:"flex",alignItems:"center",justifyContent:"center" }}>{icon}</div><h3 style={{ fontSize:17,fontWeight:600,color:"#FFF",lineHeight:1.3,margin:0,fontFamily:"'Space Grotesk',sans-serif" }}>{title}</h3><p style={{ fontSize:14.5,color:"#8899AA",lineHeight:1.7,margin:0 }}>{desc}</p></div></Fade>);
 }
 
-function FeaturesSection() {
-  const features = [
-    {
-      tag: "Learn", color: BRAND.teal, bg: BRAND.tealPale,
-      title: "Adaptive quiz engine",
-      desc: "Spaced repetition that targets your weak areas. Questions you miss come back more often. Across all 7 CASA subjects, RPL through CPL.",
-      details: ["Aerodynamics", "Air Law", "Navigation", "Performance", "Human Factors", "Meteorology", "Systems & AGK"],
-    },
-    {
-      tag: "Track", color: BRAND.navyLight, bg: BRAND.bluePale,
-      title: "Know when you're ready",
-      desc: "Real-time progress dashboard showing mastery by subject and sub-topic. Estimated exam readiness score so you don't walk in guessing.",
-      details: ["Mastery heat maps", "Score trends", "Exam readiness %", "Weak-area alerts"],
-    },
-    {
-      tag: "Connect", color: BRAND.coral, bg: BRAND.coralPale,
-      title: "From study to career",
-      desc: "A searchable database of Australian charter operators, crowdsourced hiring data, and mentorship matching.",
-      details: ["Operator database", "Hiring hour data", "Mentorship matching", "Job alerts"],
-    },
-  ];
-
-  return (
-    <section style={{ background: BRAND.white, padding: "100px 24px" }}>
-      <div style={{ maxWidth: 900, margin: "0 auto" }}>
-        <FadeIn>
-          <p style={{
-            fontSize: 12, fontWeight: 700, color: BRAND.teal,
-            letterSpacing: "0.08em", textTransform: "uppercase" as const, marginBottom: 12,
-          }}>What&apos;s coming</p>
-          <h2 style={{
-            fontSize: "clamp(28px, 4vw, 40px)", fontFamily: "Georgia, serif",
-            fontWeight: 400, color: BRAND.navy, lineHeight: 1.2, margin: "0 0 56px",
-          }}>
-            Built by a pilot, for pilots.
-          </h2>
-        </FadeIn>
-        <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
-          {features.map((f, i) => (
-            <FadeIn key={i} delay={i * 0.12}>
-              <div style={{
-                display: "grid", gridTemplateColumns: "1fr 1fr", gap: 0,
-                background: BRAND.white, borderRadius: 16, overflow: "hidden",
-                border: "1px solid rgba(0,0,0,0.06)", boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
-              }}>
-                <div style={{ padding: "36px 32px" }}>
-                  <span style={{
-                    display: "inline-block", fontSize: 11, fontWeight: 700, color: f.color,
-                    background: f.bg, padding: "4px 10px", borderRadius: 4,
-                    letterSpacing: "0.04em", textTransform: "uppercase" as const, marginBottom: 14,
-                  }}>{f.tag}</span>
-                  <h3 style={{ fontSize: 22, fontWeight: 700, color: BRAND.navy, margin: "0 0 10px" }}>{f.title}</h3>
-                  <p style={{ fontSize: 14, color: BRAND.gray, lineHeight: 1.65, margin: 0 }}>{f.desc}</p>
-                </div>
-                <div style={{
-                  background: f.bg, padding: "32px 28px",
-                  display: "flex", flexWrap: "wrap", gap: 8, alignContent: "center",
-                }}>
-                  {f.details.map((d, j) => (
-                    <span key={j} style={{
-                      fontSize: 12, fontWeight: 600, color: f.color,
-                      background: "rgba(255,255,255,0.7)", padding: "6px 12px", borderRadius: 6,
-                    }}>{d}</span>
-                  ))}
-                </div>
-              </div>
-            </FadeIn>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function ComparisonSection() {
-  const rows = [
-    { feature: "Adaptive learning", us: true, others: false },
-    { feature: "Mobile-first design", us: true, others: false },
-    { feature: "Progress analytics", us: true, others: false },
-    { feature: "All subjects, one price", us: true, others: false },
-    { feature: "CASA-aligned content", us: true, others: true },
-    { feature: "Practice exams", us: true, others: true },
-    { feature: "Career tools & job board", us: true, others: false },
-    { feature: "Mentorship matching", us: true, others: false },
-  ];
-
-  return (
-    <section style={{ background: BRAND.cream, padding: "100px 24px" }}>
-      <div style={{ maxWidth: 640, margin: "0 auto" }}>
-        <FadeIn>
-          <p style={{
-            fontSize: 12, fontWeight: 700, color: BRAND.teal,
-            letterSpacing: "0.08em", textTransform: "uppercase" as const, marginBottom: 12, textAlign: "center",
-          }}>Why us</p>
-          <h2 style={{
-            fontSize: "clamp(28px, 4vw, 36px)", fontFamily: "Georgia, serif",
-            fontWeight: 400, color: BRAND.navy, lineHeight: 1.2, margin: "0 0 40px", textAlign: "center",
-          }}>
-            Modern tools for modern pilots.
-          </h2>
-        </FadeIn>
-        <FadeIn delay={0.1}>
-          <div style={{
-            background: BRAND.white, borderRadius: 14, overflow: "hidden",
-            border: "1px solid rgba(0,0,0,0.06)", boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
-          }}>
-            <div style={{
-              display: "grid", gridTemplateColumns: "1fr 100px 100px", padding: "14px 24px", background: BRAND.navy,
-            }}>
-              <span style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.5)", textTransform: "uppercase" as const }}>Feature</span>
-              <span style={{ fontSize: 12, fontWeight: 700, color: BRAND.tealLight, textTransform: "uppercase" as const, textAlign: "center" }}>Us</span>
-              <span style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.4)", textTransform: "uppercase" as const, textAlign: "center" }}>Others</span>
-            </div>
-            {rows.map((r, i) => (
-              <div key={i} style={{
-                display: "grid", gridTemplateColumns: "1fr 100px 100px", padding: "13px 24px",
-                background: i % 2 === 0 ? BRAND.white : "rgba(0,0,0,0.015)",
-                borderTop: "1px solid rgba(0,0,0,0.04)",
-              }}>
-                <span style={{ fontSize: 14, color: BRAND.dark }}>{r.feature}</span>
-                <span style={{ textAlign: "center", fontSize: 16, color: BRAND.tealLight }}>✓</span>
-                <span style={{ textAlign: "center", fontSize: 16, color: r.others ? BRAND.gray : "rgba(0,0,0,0.15)" }}>
-                  {r.others ? "✓" : "—"}
-                </span>
-              </div>
-            ))}
-          </div>
-        </FadeIn>
-      </div>
-    </section>
-  );
-}
-
-function CTASection() {
-  return (
-    <section style={{
-      background: `linear-gradient(165deg, ${BRAND.navy} 0%, #0A1E33 100%)`,
-      padding: "100px 24px", position: "relative", overflow: "hidden",
-    }}>
-      <div style={{ maxWidth: 560, margin: "0 auto", textAlign: "center", position: "relative" }}>
-        <FadeIn>
-          <h2 style={{
-            fontSize: "clamp(28px, 4vw, 40px)", fontFamily: "Georgia, serif",
-            fontWeight: 400, color: BRAND.white, lineHeight: 1.2, margin: "0 0 16px",
-          }}>
-            Ready to study smarter?
-          </h2>
-          <p style={{
-            fontSize: 16, color: "rgba(255,255,255,0.55)", lineHeight: 1.6, marginBottom: 36,
-          }}>
-            Join the waitlist and be first to access our platform when we launch.
-            Early supporters get 30% off their first year.
-          </p>
-        </FadeIn>
-        <FadeIn delay={0.15}>
-          <WaitlistForm />
-        </FadeIn>
-      </div>
-    </section>
-  );
-}
-
-function Footer() {
-  return (
-    <footer style={{
-      background: "#060E17", padding: "40px 24px",
-      borderTop: "1px solid rgba(255,255,255,0.05)",
-    }}>
-      <div style={{
-        maxWidth: 900, margin: "0 auto",
-        display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16,
-      }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <svg width="20" height="20" viewBox="0 0 28 28" fill="none">
-            <path d="M14 3L6 14l8 11 8-11L14 3z" fill={BRAND.tealLight} opacity="0.6"/>
-          </svg>
-          <span style={{ fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.4)" }}>
-            Pilot Platform
-          </span>
-        </div>
-        <p style={{ fontSize: 12, color: "rgba(255,255,255,0.25)", margin: 0 }}>
-          Built in Sydney, Australia. Made for student pilots everywhere.
-        </p>
-      </div>
-    </footer>
-  );
+function CRow({ f, o }: { f: string; o: "n"|"~" }) {
+  return (<div style={{ display:"grid",gridTemplateColumns:"1fr 90px 90px",padding:"13px 20px",borderBottom:"1px solid rgba(255,255,255,0.06)",fontSize:14,alignItems:"center" }}><span style={{ color:"#C0CDD8",fontWeight:500 }}>{f}</span><span style={{ textAlign:"center",color:"#00D4AA",fontWeight:700,fontSize:17 }}>✓</span><span style={{ textAlign:"center",color:o==="~"?"#8899AA":"#4A5568",fontSize:17 }}>{o==="~"?"~":"✗"}</span></div>);
 }
 
 export default function Home() {
-  return (
-    <main>
-      <Nav />
-      <Hero />
-      <ProblemSection />
-      <FeaturesSection />
-      <ComparisonSection />
-      <CTASection />
-      <Footer />
-    </main>
-  );
+  return (<>
+    {/* eslint-disable-next-line @next/next/no-page-custom-font */}
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet"/>
+    <div style={{ background:"#0B1120",minHeight:"100vh",color:"#F0F4F8",fontFamily:"'DM Sans',system-ui,sans-serif",WebkitFontSmoothing:"antialiased",lineHeight:1.6 }}>
+
+      <nav style={{ padding:"18px 0",borderBottom:"1px solid rgba(255,255,255,0.06)" }}><div style={{ maxWidth:1120,margin:"0 auto",padding:"0 32px",display:"flex",justifyContent:"space-between",alignItems:"center" }}><div style={{ display:"flex",alignItems:"center",gap:12 }}><Logo size={40}/><span style={{ fontSize:21,fontWeight:700,color:"#FFF",fontFamily:"'Space Grotesk',sans-serif",letterSpacing:"-0.03em" }}>Vectored</span></div><div style={{ padding:"8px 18px",borderRadius:100,background:"rgba(0,212,170,0.1)",color:"#00D4AA",fontSize:13,fontWeight:600 }}>Coming soon</div></div></nav>
+
+      <section style={{ position:"relative",overflow:"hidden",minHeight:540,display:"flex",alignItems:"center" }}>
+        <div style={{ position:"absolute",inset:0,zIndex:0 }}><img src="/img-hero.jpg" alt="Light aircraft on runway" style={{ width:"100%",height:"100%",objectFit:"cover",objectPosition:"center 40%" }}/><div style={{ position:"absolute",inset:0,background:"linear-gradient(90deg,rgba(11,17,32,0.92) 0%,rgba(11,17,32,0.8) 50%,rgba(11,17,32,0.4) 100%)" }}/></div>
+        <div style={{ maxWidth:1120,margin:"0 auto",padding:"0 32px",position:"relative",zIndex:1 }}><div style={{ padding:"72px 0 64px",maxWidth:580 }}>
+          <Fade><div style={{ display:"inline-block",padding:"7px 16px",borderRadius:100,background:"rgba(0,212,170,0.1)",border:"1px solid rgba(0,212,170,0.15)",color:"#00D4AA",fontSize:13,fontWeight:600,marginBottom:24 }}>Australian student pilot platform — launching 2026</div></Fade>
+          <Fade delay={0.1}><h1 style={{ fontSize:"clamp(32px,5vw,52px)",fontWeight:700,color:"#FFF",letterSpacing:"-0.03em",marginBottom:20,fontFamily:"'Space Grotesk',sans-serif",lineHeight:1.15 }}>Get vectored to your<br/><span style={{ color:"#00D4AA" }}>flying career</span></h1></Fade>
+          <Fade delay={0.2}><p style={{ fontSize:18,color:"#8899AA",lineHeight:1.7,marginBottom:32 }}>The study platform built for Australian student pilots. Adaptive practice exams from your RPL all the way through to the 7 CPL subjects and IREX, progress tracking that finds your weak areas, and a career hub to help you network and land your first job.</p></Fade>
+          <Fade delay={0.3}><EmailForm id="hero"/></Fade>
+          <Fade delay={0.35}><p style={{ fontSize:13,color:"#4A5568",marginTop:14 }}>Join the waitlist — no spam, just launch updates.</p></Fade>
+        </div></div>
+      </section>
+
+      <section style={{ maxWidth:1120,margin:"0 auto",padding:"40px 32px 56px" }}><Fade><div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(140px,1fr))",gap:24,padding:"36px 28px",background:"#0F1D2F",borderRadius:20,border:"1px solid rgba(255,255,255,0.06)" }}>
+        {[["350+","Practice questions"],["7","CASA subjects + IREX"],["50+","Charter operators"],["RPL→IREX","Licence levels"]].map(([v,l],i)=>(<div key={i} style={{ textAlign:"center" }}><div style={{ fontSize:36,fontWeight:700,color:"#00D4AA",fontFamily:"'Space Grotesk',sans-serif",lineHeight:1.1 }}>{v}</div><div style={{ fontSize:13,color:"#8899AA",marginTop:6,textTransform:"uppercase",letterSpacing:"0.08em",fontWeight:500 }}>{l}</div></div>))}
+      </div></Fade></section>
+
+      <section style={{ maxWidth:1120,margin:"0 auto",padding:"40px 32px 64px" }}><Fade><div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:48,alignItems:"center" }}>
+        <div style={{ display:"flex",flexDirection:"column",gap:40 }}>
+          <div><div style={{ fontSize:12,fontWeight:700,textTransform:"uppercase",letterSpacing:"0.1em",color:"#FF6B4A",marginBottom:10 }}>The problem</div><h2 style={{ fontSize:24,fontWeight:700,color:"#FFF",marginBottom:12,letterSpacing:"-0.02em",fontFamily:"'Space Grotesk',sans-serif",lineHeight:1.15 }}>38% of student pilots fail their first CASA exam</h2><p style={{ fontSize:15,color:"#8899AA",lineHeight:1.75,margin:0 }}>That&apos;s a $217 resit fee, weeks of lost momentum, and a serious knock to your confidence. Existing study tools are outdated textbooks or random question banks with no way to track what you actually need to work on.</p></div>
+          <div><div style={{ fontSize:12,fontWeight:700,textTransform:"uppercase",letterSpacing:"0.1em",color:"#00D4AA",marginBottom:10 }}>The solution</div><h2 style={{ fontSize:24,fontWeight:700,color:"#FFF",marginBottom:12,letterSpacing:"-0.02em",fontFamily:"'Space Grotesk',sans-serif",lineHeight:1.15 }}>A platform that knows what you don&apos;t know</h2><p style={{ fontSize:15,color:"#8899AA",lineHeight:1.75,margin:0 }}>Vectored tracks every question you answer. It finds your weak subjects, targets your gaps, and focuses your study time where it matters most. Plus a career hub showing you exactly which operators hire low-hour pilots and how to reach them.</p></div>
+        </div>
+        <div style={{ borderRadius:20,overflow:"hidden",aspectRatio:"4/3",position:"relative" }}><img src="/img-cockpit.jpg" alt="Student pilot and instructor in cockpit" style={{ width:"100%",height:"100%",objectFit:"cover" }}/><div style={{ position:"absolute",inset:0,borderRadius:20,border:"1px solid rgba(255,255,255,0.06)" }}/></div>
+      </div></Fade></section>
+
+      <section style={{ maxWidth:1120,margin:"0 auto",padding:"0 32px 64px" }}>
+        <Fade><div style={{ textAlign:"center",marginBottom:44 }}><div style={{ fontSize:12,fontWeight:700,textTransform:"uppercase",letterSpacing:"0.1em",color:"#00D4AA",marginBottom:12 }}>Features</div><h2 style={{ fontSize:32,fontWeight:700,color:"#FFF",letterSpacing:"-0.02em",fontFamily:"'Space Grotesk',sans-serif",lineHeight:1.15,margin:0 }}>Everything you need to pass and get hired</h2></div></Fade>
+        <div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(300px,1fr))",gap:16 }}>
+          <Feature icon={<svg viewBox="0 0 24 24" fill="none" stroke="#00D4AA" strokeWidth={2} strokeLinecap="round" width={22} height={22}><circle cx={12} cy={12} r={10}/><circle cx={12} cy={12} r={4}/><circle cx={12} cy={12} r={1}/></svg>} title="Adaptive practice exams" desc="Hundreds of questions covering your RPL exam through all 7 CPL subjects and the IREX. The system identifies your weak areas and serves more questions on the topics you're struggling with."/>
+          <Feature icon={<svg viewBox="0 0 24 24" fill="none" stroke="#00D4AA" strokeWidth={2} strokeLinecap="round" width={22} height={22}><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>} title="Progress analytics" desc="See exactly where you stand in each subject. Track improvement over time. Know when you're ready to sit the real exam — not guess."/>
+          <Feature icon={<svg viewBox="0 0 24 24" fill="none" stroke="#00D4AA" strokeWidth={2} strokeLinecap="round" width={22} height={22}><rect x={3} y={3} width={18} height={18} rx={2}/><line x1={3} y1={9} x2={21} y2={9}/><line x1={9} y1={21} x2={9} y2={9}/></svg>} title="Visual explanations" desc="Every question comes with a detailed explanation and educational diagrams — aerofoils, circuit patterns, weather systems — concepts you can see, not just read."/>
+          <Feature icon={<svg viewBox="0 0 24 24" fill="none" stroke="#00D4AA" strokeWidth={2} strokeLinecap="round" width={22} height={22}><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx={12} cy={10} r={3}/></svg>} title="Operator database" desc="50+ Australian charter operators mapped across every state. Fleet types, minimum hours, contact details — find the operators who hire fresh CPL holders."/>
+          <Feature icon={<svg viewBox="0 0 24 24" fill="none" stroke="#00D4AA" strokeWidth={2} strokeLinecap="round" width={22} height={22}><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>} title="Interactive career map" desc="See where the jobs are on an interactive map of Australia. Click any operator to see their fleet, base, and key contacts — helping you network and get your foot in the door."/>
+          <Feature icon={<svg viewBox="0 0 24 24" fill="none" stroke="#00D4AA" strokeWidth={2} strokeLinecap="round" width={22} height={22}><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx={12} cy={7} r={4}/></svg>} title="Built by a student pilot" desc="Vectored is built by someone going through it right now — not a corporation. Every feature exists because a real student pilot needed it."/>
+        </div>
+      </section>
+
+      <section style={{ maxWidth:1120,margin:"0 auto",padding:"0 32px 64px" }}><Fade><div style={{ borderRadius:20,overflow:"hidden",position:"relative",height:280 }}>
+        <img src="/img-outback.jpg" alt="Pilot on approach to a regional airstrip" style={{ width:"100%",height:"100%",objectFit:"cover",objectPosition:"center 60%" }}/>
+        <div style={{ position:"absolute",inset:0,background:"linear-gradient(0deg,#0B1120 0%,transparent 40%,transparent 60%,#0B1120 100%)" }}/>
+        <div style={{ position:"absolute",inset:0,background:"rgba(11,17,32,0.55)",zIndex:1 }}/>
+        <div style={{ position:"absolute",bottom:32,left:40,right:40,zIndex:2,fontSize:20,fontStyle:"italic",color:"#FFF",lineHeight:1.6,maxWidth:560,textShadow:"0 2px 8px rgba(0,0,0,0.5)" }}>&ldquo;I spent hours reading the same textbook pages and still couldn&apos;t get the concepts to stick. I needed something that showed me exactly where my gaps were — not just more practice questions.&rdquo;<span style={{ color:"#00D4AA",fontStyle:"normal",fontWeight:600,fontSize:14,display:"block",marginTop:8,textShadow:"none" }}>— The frustration every student pilot knows</span></div>
+      </div></Fade></section>
+
+      <section style={{ maxWidth:720,margin:"0 auto",padding:"0 32px 64px" }}>
+        <Fade><h2 style={{ fontSize:28,fontWeight:700,color:"#FFF",letterSpacing:"-0.02em",textAlign:"center",marginBottom:36,fontFamily:"'Space Grotesk',sans-serif",lineHeight:1.15 }}>How Vectored compares</h2></Fade>
+        <Fade delay={0.1}><div style={{ background:"#0F1D2F",borderRadius:16,border:"1px solid rgba(255,255,255,0.06)",overflow:"hidden" }}>
+          <div style={{ display:"grid",gridTemplateColumns:"1fr 90px 90px",padding:"13px 20px",borderBottom:"1px solid rgba(255,255,255,0.06)",fontSize:12,fontWeight:700,textTransform:"uppercase",letterSpacing:"0.06em",color:"#4A5568",alignItems:"center" }}><span></span><span style={{ textAlign:"center",color:"#00D4AA" }}>Vectored</span><span style={{ textAlign:"center" }}>Others</span></div>
+          <CRow f="Adaptive weak-area targeting" o="n"/>
+          <CRow f="All 7 CASA subjects + IREX" o="~"/>
+          <CRow f="Detailed explanations" o="~"/>
+          <CRow f="Progress analytics dashboard" o="n"/>
+          <CRow f="Visual diagrams & illustrations" o="n"/>
+          <CRow f="Career / operator database" o="n"/>
+          <CRow f="Interactive job map" o="n"/>
+          <CRow f="Mobile-first design" o="n"/>
+          <CRow f="Built for Australian students" o="~"/>
+        </div></Fade>
+      </section>
+
+      <section style={{ maxWidth:720,margin:"0 auto",padding:"0 32px 80px" }}><Fade><div style={{ background:"#0F1D2F",borderRadius:24,padding:"56px 40px",textAlign:"center",position:"relative",overflow:"hidden",border:"1px solid rgba(255,255,255,0.06)" }}>
+        <div style={{ position:"absolute",top:-80,right:-60,width:250,height:250,background:"radial-gradient(circle,rgba(0,212,170,0.15) 0%,transparent 70%)",pointerEvents:"none" }}/>
+        <h2 style={{ fontSize:28,fontWeight:700,color:"#FFF",letterSpacing:"-0.02em",marginBottom:14,position:"relative",fontFamily:"'Space Grotesk',sans-serif",lineHeight:1.15 }}>Ready to get vectored?</h2>
+        <p style={{ fontSize:16,color:"#8899AA",lineHeight:1.7,maxWidth:400,margin:"0 auto 28px",position:"relative" }}>Join the waitlist for early access. Be the first to study smarter when we launch.</p>
+        <div style={{ display:"flex",justifyContent:"center",position:"relative" }}><EmailForm id="bottom" dark/></div>
+      </div></Fade></section>
+
+      <footer style={{ borderTop:"1px solid rgba(255,255,255,0.06)",padding:"28px 0 36px" }}><div style={{ maxWidth:1120,margin:"0 auto",padding:"0 32px",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:16 }}>
+        <div style={{ display:"flex",alignItems:"center",gap:8 }}><Logo size={28}/><span style={{ fontSize:15,fontWeight:600,color:"#8899AA",fontFamily:"'Space Grotesk',sans-serif" }}>Vectored</span></div>
+        <div style={{ fontSize:13,color:"#4A5568" }}>© 2026 Vectored. Built in Australia for Australian pilots.</div>
+        <div style={{ display:"flex",gap:20 }}>{[["Instagram","https://instagram.com/vectoredau"],["Facebook","https://facebook.com/vectoredau"],["TikTok","https://tiktok.com/@vectoredau"]].map(([n,u])=>(<a key={n} href={u} target="_blank" rel="noopener noreferrer" style={{ fontSize:13,color:"#8899AA",textDecoration:"none" }}>{n}</a>))}</div>
+      </div></footer>
+
+    </div>
+  </>);
 }
