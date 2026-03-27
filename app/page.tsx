@@ -15,13 +15,46 @@ function Fade({ children, delay = 0, className = "" }: { children: React.ReactNo
   return (<div ref={ref} className={className} style={{ opacity: vis ? 1 : 0, transform: vis ? "translateY(0)" : "translateY(20px)", transition: `opacity 0.6s cubic-bezier(0.22,1,0.36,1) ${delay}s, transform 0.6s cubic-bezier(0.22,1,0.36,1) ${delay}s` }}>{children}</div>);
 }
 
+/* ── Supabase config ── */
+const SUPABASE_URL = "https://cbvzjovbheiavmkalmaz.supabase.co";
+const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNidnpqb3ZiaGVpYXZta2FsbWF6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDA2MDUsImV4cCI6MjA4OTkxNjYwNX0.elpc_IUb9dot2ljnFMXGQnWAQ1aAb8krb2-QxC2jnKw";
+
 /* ── Email capture form ── */
 function EmailForm({ id, dark = false }: { id: string; dark?: boolean }) {
   const [email, setEmail] = useState("");
   const [done, setDone] = useState(false);
-  const submit = (e: React.FormEvent) => { e.preventDefault(); if (!email.includes("@")) return; setDone(true); };
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.includes("@")) return;
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/waitlist`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": SUPABASE_ANON,
+          "Authorization": `Bearer ${SUPABASE_ANON}`,
+          "Prefer": "return=minimal",
+        },
+        body: JSON.stringify({ email }),
+      });
+      if (res.ok) {
+        setDone(true);
+      } else if (res.status === 409) {
+        setDone(true); // already signed up — still show success
+      } else {
+        setError("Something went wrong. Please try again.");
+      }
+    } catch {
+      setError("Something went wrong. Please try again.");
+    }
+    setLoading(false);
+  };
   if (done) return (<div style={{ display: "flex", alignItems: "center", gap: 10, padding: "14px 20px", borderRadius: 10, background: "rgba(0,212,170,0.1)", border: "1px solid rgba(0,212,170,0.2)", color: "#00D4AA", fontWeight: 500, fontSize: 15 }}>✓ You&apos;re on the list. We&apos;ll be in touch before launch.</div>);
-  return (<form onSubmit={submit} className="email-form"><input type="email" placeholder="Enter your email" required value={email} onChange={e => setEmail(e.target.value)} style={{ flex: "1 1 240px", padding: "13px 16px", borderRadius: 10, border: "1.5px solid #1E3352", background: dark ? "rgba(255,255,255,0.1)" : "#162A42", color: "#F0F4F8", fontSize: 15, fontFamily: "'DM Sans',sans-serif", outline: "none", minWidth: 0 }} /><button type="submit" className="email-btn">Get early access</button></form>);
+  return (<><form onSubmit={submit} className="email-form"><input type="email" placeholder="Enter your email" required value={email} onChange={e => setEmail(e.target.value)} style={{ flex: "1 1 240px", padding: "13px 16px", borderRadius: 10, border: "1.5px solid #1E3352", background: dark ? "rgba(255,255,255,0.1)" : "#162A42", color: "#F0F4F8", fontSize: 15, fontFamily: "'DM Sans',sans-serif", outline: "none", minWidth: 0 }} /><button type="submit" className="email-btn" disabled={loading}>{loading ? "Saving..." : "Get early access"}</button></form>{error && <p style={{ color: "#FF6B4A", fontSize: 13, marginTop: 8 }}>{error}</p>}</>);
 }
 
 /* ── Logo SVG ── */
