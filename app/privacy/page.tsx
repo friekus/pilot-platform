@@ -45,7 +45,7 @@ export default function PrivacyPage() {
 
             <h2 style={{ fontSize: 18, color: "#FFF", fontWeight: 600, marginTop: 32, marginBottom: 12 }}>6. Your rights</h2>
             <p>Under the Australian Privacy Principles, you have the right to access the personal information we hold about you, request correction of inaccurate information, request deletion of your personal information, opt out of marketing communications at any time, and lodge a complaint with the Office of the Australian Information Commissioner (OAIC) if you believe your privacy has been breached.</p>
-            <p style={{ marginTop: 12 }}>To exercise any of these rights, contact us at <span style={{ color: "#00D4AA" }}>hello@vectored.com.au</span></p>
+            <p style={{ marginTop: 12 }}>To exercise any of these rights, contact us at <span style={{ color: "#00D4AA" }}>vectoredau@outlook.com</span></p>
 
             <h2 style={{ fontSize: 18, color: "#FFF", fontWeight: 600, marginTop: 32, marginBottom: 12 }}>7. Cookies</h2>
             <p>Vectored may use essential cookies to maintain your session and preferences. We do not use advertising or tracking cookies. You can disable cookies in your browser settings, though this may affect the functionality of the platform.</p>
@@ -57,7 +57,7 @@ export default function PrivacyPage() {
             <p>We may update this Privacy Policy from time to time. Changes will be posted on this page with an updated revision date. Continued use of Vectored after changes constitutes acceptance of the updated policy.</p>
 
             <h2 style={{ fontSize: 18, color: "#FFF", fontWeight: 600, marginTop: 32, marginBottom: 12 }}>10. Contact</h2>
-            <p>For privacy-related enquiries, contact us at <span style={{ color: "#00D4AA" }}>hello@vectored.com.au</span></p>
+            <p>For privacy-related enquiries, contact us at <span style={{ color: "#00D4AA" }}>vectoredau@outlook.com</span></p>
           </div>
 
           <div style={{ marginTop: 48, paddingTop: 24, borderTop: "1px solid rgba(255,255,255,0.06)", textAlign: "center" }}>

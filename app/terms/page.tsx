@@ -50,7 +50,7 @@ export default function TermsPage() {
             <p>These Terms of Use are governed by the laws of New South Wales, Australia. Any disputes will be subject to the jurisdiction of the courts of New South Wales.</p>
 
             <h2 style={{ fontSize: 18, color: "#FFF", fontWeight: 600, marginTop: 32, marginBottom: 12 }}>10. Contact</h2>
-            <p>If you have questions about these terms, contact us at <span style={{ color: "#00D4AA" }}>hello@vectored.com.au</span></p>
+            <p>If you have questions about these terms, contact us at <span style={{ color: "#00D4AA" }}>vectoredau@outlook.com</span></p>
           </div>
 
           <div style={{ marginTop: 48, paddingTop: 24, borderTop: "1px solid rgba(255,255,255,0.06)", textAlign: "center" }}>
