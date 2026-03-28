@@ -199,7 +199,7 @@ export default function Home() {
         <div className="container footer-inner">
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}><Logo size={28} /><span style={{ fontSize: 15, fontWeight: 600, color: "#8899AA", fontFamily: "'Space Grotesk',sans-serif" }}>Vectored</span></div>
           <div style={{ fontSize: 12, color: "#4A5568" }}>© 2026 Vectored. Built in Australia for Australian pilots.</div>
-          <div style={{ display: "flex", gap: 16 }}>{[["Instagram", "https://instagram.com/vectoredau"], ["Facebook", "https://facebook.com/vectoredau"], ["TikTok", "https://tiktok.com/@vectoredau"]].map(([n, u]) => (<a key={n} href={u} target="_blank" rel="noopener noreferrer" style={{ fontSize: 12, color: "#8899AA", textDecoration: "none" }}>{n}</a>))}</div>
+          <div style={{ display: "flex", gap: 16 }}><a href="/terms" style={{ fontSize: 12, color: "#8899AA", textDecoration: "none" }}>Terms</a><a href="/privacy" style={{ fontSize: 12, color: "#8899AA", textDecoration: "none" }}>Privacy</a>{[["Instagram", "https://instagram.com/vectoredau"], ["Facebook", "https://facebook.com/vectoredau"], ["TikTok", "https://tiktok.com/@vectoredau"]].map(([n, u]) => (<a key={n} href={u} target="_blank" rel="noopener noreferrer" style={{ fontSize: 12, color: "#8899AA", textDecoration: "none" }}>{n}</a>))}</div>
         </div>
       </footer>
     </div>
