@@ -21,7 +21,7 @@ export default function TermsPage() {
 
           <div style={{ fontSize: 15, color: "#8899AA", lineHeight: 1.8 }}>
             <h2 style={{ fontSize: 18, color: "#FFF", fontWeight: 600, marginTop: 32, marginBottom: 12 }}>1. About Vectored</h2>
-            <p>Vectored (vectored.com.au) is an online aviation education platform providing practice exam questions, study resources, and career guidance for Australian student pilots. Vectored is operated as a sole trader under Australian Business Number (ABN). By accessing or using Vectored, you agree to these Terms of Use.</p>
+            <p>Vectored (vectored.com.au) is an online aviation education platform providing practice exam questions, study resources, and career guidance for Australian student pilots. Vectored is operated as a sole trader under Australian Business Number (ABN 43 910 620 675). By accessing or using Vectored, you agree to these Terms of Use.</p>
 
             <h2 style={{ fontSize: 18, color: "#FFF", fontWeight: 600, marginTop: 32, marginBottom: 12 }}>2. Educational disclaimer</h2>
             <p>Vectored is a <strong style={{ color: "#FFF" }}>supplementary study aid only</strong>. It is not a registered training organisation (RTO), not endorsed by or affiliated with the Civil Aviation Safety Authority (CASA), and not a substitute for formal flight training, ground school, or professional instruction.</p>
