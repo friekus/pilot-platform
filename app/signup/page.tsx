@@ -23,14 +23,7 @@ export default function SignupPage() {
 
   useEffect(() => {
     async function fetchCount() {
-      try {
-        const { count } = await supabase.auth.admin.listUsers();
-        setUserCount(typeof count === "number" ? count : 0);
-      } catch {
-        // Fallback: we can't count auth users from the client easily
-        // so we'll just show the counter without a live number
-        setUserCount(1); // At least Kieran's test account
-      }
+      setUserCount(1);
       setCountLoaded(true);
     }
     fetchCount();
