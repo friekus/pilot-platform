@@ -39,32 +39,16 @@ function FlagButton({ questionId, userId }: { questionId: number; userId?: strin
     try {
       await fetch(`${SUPABASE_URL}/rest/v1/question_flags`, {
         method: "POST",
-        headers: {
-          apikey: SUPABASE_ANON,
-          Authorization: `Bearer ${SUPABASE_ANON}`,
-          "Content-Type": "application/json",
-          Prefer: "return=minimal",
-        },
-        body: JSON.stringify({
-          question_id: questionId,
-          user_id: userId || null,
-          reason,
-          note: note || null,
-        }),
+        headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}`, "Content-Type": "application/json", Prefer: "return=minimal" },
+        body: JSON.stringify({ question_id: questionId, user_id: userId || null, reason, note: note || null }),
       });
-      setSubmitted(true);
-      setShowModal(false);
+      setSubmitted(true); setShowModal(false);
     } catch { /* silent */ }
     setSending(false);
   };
 
   if (submitted) {
-    return (
-      <button className="flag-btn flagged" disabled>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
-        Flagged
-      </button>
-    );
+    return (<button className="flag-btn flagged" disabled><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>Flagged</button>);
   }
 
   return (
@@ -73,36 +57,84 @@ function FlagButton({ questionId, userId }: { questionId: number; userId?: strin
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
         Report issue
       </button>
-
       {showModal && (
         <div className="flag-overlay" onClick={() => setShowModal(false)}>
           <div className="flag-modal" onClick={e => e.stopPropagation()}>
             <h3>Report an issue</h3>
             <p>Help us improve. What&apos;s wrong with this question?</p>
             <div className="flag-reasons">
-              {FLAG_REASONS.map(r => (
-                <button key={r} className={`flag-reason ${reason === r ? "selected" : ""}`} onClick={() => setReason(r)}>
-                  <span className="flag-reason-dot" />
-                  {r}
-                </button>
-              ))}
+              {FLAG_REASONS.map(r => (<button key={r} className={`flag-reason ${reason === r ? "selected" : ""}`} onClick={() => setReason(r)}><span className="flag-reason-dot" />{r}</button>))}
             </div>
-            <textarea
-              className="flag-note"
-              placeholder="Any extra detail? (optional)"
-              value={note}
-              onChange={e => setNote(e.target.value)}
-            />
+            <textarea className="flag-note" placeholder="Any extra detail? (optional)" value={note} onChange={e => setNote(e.target.value)} />
             <div className="flag-actions">
               <button className="quiz-btn" onClick={() => setShowModal(false)}>Cancel</button>
-              <button className="quiz-btn quiz-btn-primary" onClick={handleSubmit} disabled={!reason || sending}>
-                {sending ? "Sending..." : "Submit"}
-              </button>
+              <button className="quiz-btn quiz-btn-primary" onClick={handleSubmit} disabled={!reason || sending}>{sending ? "Sending..." : "Submit"}</button>
             </div>
           </div>
         </div>
       )}
     </>
+  );
+}
+
+function ShareCard({ score, total, pct, subject, level }: { score: number; total: number; pct: number; subject: string; level: string }) {
+  const [copied, setCopied] = useState(false);
+  const [showOptions, setShowOptions] = useState(false);
+
+  const shareText = `I just scored ${score}/${total} (${pct}%) on ${level} ${subject} on Vectored! Think you can beat me? Try the free quiz:`;
+  const shareUrl = "https://vectored.com.au/try";
+  const fullText = `${shareText} ${shareUrl}`;
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(fullText);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch { /* silent */ }
+  };
+
+  const handleNativeShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: "Vectored - Aviation Quiz", text: shareText, url: shareUrl });
+      } catch { /* user cancelled */ }
+    } else {
+      setShowOptions(true);
+    }
+  };
+
+  const handleWhatsApp = () => {
+    window.open(`https://wa.me/?text=${encodeURIComponent(fullText)}`, "_blank");
+  };
+
+  const handleSMS = () => {
+    window.open(`sms:?body=${encodeURIComponent(fullText)}`, "_blank");
+  };
+
+  return (
+    <div className="share-card">
+      <div className="share-card-inner">
+        <div style={{ marginBottom: 12 }}>
+          <p style={{ fontSize: 15, fontWeight: 600, color: "#FFF", margin: "0 0 4px" }}>Challenge a mate</p>
+          <p style={{ fontSize: 13, color: "#6B7B8D", margin: 0, lineHeight: 1.5 }}>Think your mates can beat {pct}%? Share your score and find out.</p>
+        </div>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <button className="share-btn share-btn-primary" onClick={handleNativeShare}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            Share score
+          </button>
+          <button className="share-btn" onClick={handleWhatsApp}>WhatsApp</button>
+          <button className="share-btn" onClick={handleSMS}>Text</button>
+          <button className="share-btn" onClick={handleCopy}>{copied ? "Copied!" : "Copy link"}</button>
+        </div>
+        {showOptions && (
+          <div style={{ marginTop: 12, padding: "10px 14px", borderRadius: 10, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+            <p style={{ fontSize: 12, color: "#6B7B8D", margin: "0 0 8px" }}>Copy this message and send it to a mate:</p>
+            <p style={{ fontSize: 13, color: "#8899AA", margin: 0, lineHeight: 1.5, wordBreak: "break-word" }}>{fullText}</p>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -132,8 +164,7 @@ export default function StudyQuizPage() {
     async function checkAuth() {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) { router.push("/login"); return; }
-      setAuthed(true);
-      setUserId(session.user.id);
+      setAuthed(true); setUserId(session.user.id);
     }
     checkAuth();
   }, [router]);
@@ -188,7 +219,6 @@ export default function StudyQuizPage() {
     return Object.entries(topics).map(([name, data]) => ({ name, ...data, pct: Math.round((data.correct / data.total) * 100) })).sort((a, b) => a.pct - b.pct);
   };
 
-  // Review mode
   if (reviewMode) {
     const ra = answers[reviewIndex]; const rq = ra.question;
     const rOpts = [{ letter: "A", text: rq.option_a }, { letter: "B", text: rq.option_b }, { letter: "C", text: rq.option_c }, { letter: "D", text: rq.option_d }];
@@ -263,6 +293,10 @@ export default function StudyQuizPage() {
                pct >= 50 ? "You're getting there. Focus on the topics below marked in red." :
                "Don\u2019t worry \u2014 this is how you learn. Review the topic breakdown below and try again."}
             </p>
+
+            {/* Share card */}
+            <ShareCard score={score} total={answered} pct={pct} subject={subjectName} level={levelUpper} />
+
             <div className="quiz-breakdown">
               <h3 className="quiz-breakdown-title">Performance by topic</h3>
               {getTopicBreakdown().map(t => (

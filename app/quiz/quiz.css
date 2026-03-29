@@ -652,3 +652,44 @@
 .flag-actions .quiz-btn {
   flex: 1;
 }
+
+/* ═══ SHARE CARD ═══ */
+.share-card {
+  margin: 0 0 24px;
+}
+.share-card-inner {
+  padding: 20px;
+  background: #131F33;
+  border: 1px solid rgba(0,212,170,0.15);
+  border-radius: 14px;
+  text-align: left;
+}
+.share-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: transparent;
+  color: #8899AA;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.share-btn:hover {
+  border-color: rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.03);
+  color: #C0CDD8;
+}
+.share-btn-primary {
+  background: rgba(0,212,170,0.1);
+  border-color: rgba(0,212,170,0.25);
+  color: #00D4AA;
+}
+.share-btn-primary:hover {
+  background: rgba(0,212,170,0.18);
+  border-color: rgba(0,212,170,0.4);
+}

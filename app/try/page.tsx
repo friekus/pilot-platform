@@ -17,6 +17,54 @@ function Logo({ size = 34 }: { size?: number }) {
   return (<svg width={s} height={s} viewBox={`0 0 ${s} ${s}`} fill="none"><rect width={s} height={s} rx={s * 0.25} fill="#0F1D2F" /><circle cx={cx} cy={cy} r={s * 0.35} fill="none" stroke="#00D4AA" strokeWidth={0.7} opacity={0.3} /><path d={`M${cx} ${s * 0.2} L${s * 0.775} ${s * 0.725} L${cx} ${s * 0.6} L${s * 0.225} ${s * 0.725} Z`} fill="#00D4AA" /></svg>);
 }
 
+function ShareCard({ score, total, pct }: { score: number; total: number; pct: number }) {
+  const [copied, setCopied] = useState(false);
+  const [showOptions, setShowOptions] = useState(false);
+
+  const shareText = `I just scored ${score}/${total} (${pct}%) on the Vectored RPL pilot quiz! Think you know your aviation theory? Try it:`;
+  const shareUrl = "https://vectored.com.au/try";
+  const fullText = `${shareText} ${shareUrl}`;
+
+  const handleCopy = async () => {
+    try { await navigator.clipboard.writeText(fullText); setCopied(true); setTimeout(() => setCopied(false), 2000); } catch {}
+  };
+
+  const handleNativeShare = async () => {
+    if (navigator.share) {
+      try { await navigator.share({ title: "Vectored - Aviation Quiz", text: shareText, url: shareUrl }); } catch {}
+    } else { setShowOptions(true); }
+  };
+
+  const handleWhatsApp = () => { window.open(`https://wa.me/?text=${encodeURIComponent(fullText)}`, "_blank"); };
+  const handleSMS = () => { window.open(`sms:?body=${encodeURIComponent(fullText)}`, "_blank"); };
+
+  return (
+    <div className="share-card">
+      <div className="share-card-inner">
+        <div style={{ marginBottom: 12 }}>
+          <p style={{ fontSize: 15, fontWeight: 600, color: "#FFF", margin: "0 0 4px" }}>Challenge a mate</p>
+          <p style={{ fontSize: 13, color: "#6B7B8D", margin: 0, lineHeight: 1.5 }}>Think your mates can beat {pct}%? Share the quiz and find out.</p>
+        </div>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <button className="share-btn share-btn-primary" onClick={handleNativeShare}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            Share score
+          </button>
+          <button className="share-btn" onClick={handleWhatsApp}>WhatsApp</button>
+          <button className="share-btn" onClick={handleSMS}>Text</button>
+          <button className="share-btn" onClick={handleCopy}>{copied ? "Copied!" : "Copy link"}</button>
+        </div>
+        {showOptions && (
+          <div style={{ marginTop: 12, padding: "10px 14px", borderRadius: 10, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+            <p style={{ fontSize: 12, color: "#6B7B8D", margin: "0 0 8px" }}>Copy this message and send it to a mate:</p>
+            <p style={{ fontSize: 13, color: "#8899AA", margin: 0, lineHeight: 1.5, wordBreak: "break-word" }}>{fullText}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function TryPage() {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [current, setCurrent] = useState(0);
@@ -101,6 +149,9 @@ export default function TryPage() {
                "Everyone starts somewhere. Focused practice makes the difference."}
             </p>
 
+            {/* Share card */}
+            <ShareCard score={score} total={answered} pct={pct} />
+
             <div className="quiz-breakdown">
               <h3 className="quiz-breakdown-title">Performance by subject</h3>
               {getTopicBreakdown().map(t => (
@@ -113,7 +164,7 @@ export default function TryPage() {
             </div>
 
             {/* CTA to sign up */}
-            <div style={{ marginTop: 32, padding: 24, background: "#131F33", borderRadius: 16, border: "1px solid rgba(0,212,170,0.2)" }}>
+            <div style={{ marginTop: 8, padding: 24, background: "#131F33", borderRadius: 16, border: "1px solid rgba(0,212,170,0.2)" }}>
               <h3 style={{ fontSize: 18, fontWeight: 600, fontFamily: "'Space Grotesk', sans-serif", color: "#FFF", margin: "0 0 8px" }}>Ready to study properly?</h3>
               <p style={{ fontSize: 14, color: "#8899AA", margin: "0 0 16px", lineHeight: 1.6 }}>
                 Create a free account to practise by subject, track your weak areas, and study with questions aligned to the Part 61 MOS.
