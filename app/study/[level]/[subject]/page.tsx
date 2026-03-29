@@ -19,10 +19,91 @@ const slugToSubject: Record<string, string> = {
   "human-factors": "Human Factors", "navigation": "Navigation", "performance": "Performance", "systems": "Systems",
 };
 const levelNames: Record<string, string> = { rpl: "RPL", ppl: "PPL", cpl: "CPL", irex: "IREX" };
+const FLAG_REASONS = ["Incorrect answer", "Unclear wording", "Wrong difficulty level", "Outdated content", "Other"];
 
 function Logo({ size = 34 }: { size?: number }) {
   const s = size, cx = s / 2, cy = s / 2;
   return (<svg width={s} height={s} viewBox={`0 0 ${s} ${s}`} fill="none"><rect width={s} height={s} rx={s * 0.25} fill="#0F1D2F" /><circle cx={cx} cy={cy} r={s * 0.35} fill="none" stroke="#00D4AA" strokeWidth={0.7} opacity={0.3} /><path d={`M${cx} ${s * 0.2} L${s * 0.775} ${s * 0.725} L${cx} ${s * 0.6} L${s * 0.225} ${s * 0.725} Z`} fill="#00D4AA" /></svg>);
+}
+
+function FlagButton({ questionId, userId }: { questionId: number; userId?: string }) {
+  const [showModal, setShowModal] = useState(false);
+  const [reason, setReason] = useState("");
+  const [note, setNote] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+
+  const handleSubmit = async () => {
+    if (!reason) return;
+    setSending(true);
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/question_flags`, {
+        method: "POST",
+        headers: {
+          apikey: SUPABASE_ANON,
+          Authorization: `Bearer ${SUPABASE_ANON}`,
+          "Content-Type": "application/json",
+          Prefer: "return=minimal",
+        },
+        body: JSON.stringify({
+          question_id: questionId,
+          user_id: userId || null,
+          reason,
+          note: note || null,
+        }),
+      });
+      setSubmitted(true);
+      setShowModal(false);
+    } catch { /* silent */ }
+    setSending(false);
+  };
+
+  if (submitted) {
+    return (
+      <button className="flag-btn flagged" disabled>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+        Flagged
+      </button>
+    );
+  }
+
+  return (
+    <>
+      <button className="flag-btn" onClick={() => setShowModal(true)}>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+        Report issue
+      </button>
+
+      {showModal && (
+        <div className="flag-overlay" onClick={() => setShowModal(false)}>
+          <div className="flag-modal" onClick={e => e.stopPropagation()}>
+            <h3>Report an issue</h3>
+            <p>Help us improve. What&apos;s wrong with this question?</p>
+            <div className="flag-reasons">
+              {FLAG_REASONS.map(r => (
+                <button key={r} className={`flag-reason ${reason === r ? "selected" : ""}`} onClick={() => setReason(r)}>
+                  <span className="flag-reason-dot" />
+                  {r}
+                </button>
+              ))}
+            </div>
+            <textarea
+              className="flag-note"
+              placeholder="Any extra detail? (optional)"
+              value={note}
+              onChange={e => setNote(e.target.value)}
+            />
+            <div className="flag-actions">
+              <button className="quiz-btn" onClick={() => setShowModal(false)}>Cancel</button>
+              <button className="quiz-btn quiz-btn-primary" onClick={handleSubmit} disabled={!reason || sending}>
+                {sending ? "Sending..." : "Submit"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
 }
 
 export default function StudyQuizPage() {
@@ -33,6 +114,7 @@ export default function StudyQuizPage() {
   const subjectName = slugToSubject[subjectSlug] || subjectSlug;
 
   const [authed, setAuthed] = useState(false);
+  const [userId, setUserId] = useState<string | undefined>();
   const [questions, setQuestions] = useState<Question[]>([]);
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState<string | null>(null);
@@ -51,6 +133,7 @@ export default function StudyQuizPage() {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) { router.push("/login"); return; }
       setAuthed(true);
+      setUserId(session.user.id);
     }
     checkAuth();
   }, [router]);
@@ -122,7 +205,10 @@ export default function StudyQuizPage() {
             <span className="quiz-progress-text">Reviewing {reviewIndex + 1} of {answers.length} — {ra.correct ? "You got this right" : "You got this wrong"}</span>
           </div>
           <div className="quiz-card">
-            <div className="quiz-subtopic">{rq.subtopic}</div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+              <div className="quiz-subtopic">{rq.subtopic}</div>
+              <FlagButton questionId={rq.id} userId={userId} />
+            </div>
             <h2 className="quiz-question">{rq.question}</h2>
             <div className="quiz-options">
               {rOpts.map(opt => {
@@ -211,7 +297,10 @@ export default function StudyQuizPage() {
               <span className="quiz-progress-text">Question {current + 1} of {questions.length}</span>
             </div>
             <div className="quiz-card">
-              <div className="quiz-subtopic">{q.subtopic}</div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                <div className="quiz-subtopic">{q.subtopic}</div>
+                <FlagButton questionId={q.id} userId={userId} />
+              </div>
               <h2 className="quiz-question">{q.question}</h2>
               <div className="quiz-options">
                 {options.map(opt => {
