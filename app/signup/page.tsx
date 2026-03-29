@@ -63,7 +63,7 @@ export default function SignupPage() {
             <div style={{ width: 64, height: 64, borderRadius: "50%", background: "rgba(0,212,170,0.12)", color: "#00D4AA", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 28, fontWeight: 700, margin: "0 auto 20px" }}>{"\u2713"}</div>
             <h2 style={{ fontSize: 24, fontWeight: 700, fontFamily: "'Space Grotesk', sans-serif", color: "#FFF", margin: "0 0 12px" }}>You&apos;re in!</h2>
             <p style={{ fontSize: 15, color: "#8899AA", lineHeight: 1.6, margin: "0 0 24px" }}>Your account has been created. Start practising now.</p>
-            <a href="/quiz" className="quiz-btn quiz-btn-primary" style={{ textDecoration: "none", display: "inline-block" }}>Start a quiz</a>
+            <a href="/study" className="quiz-btn quiz-btn-primary" style={{ textDecoration: "none", display: "inline-block" }}>Start a quiz</a>
           </div>
         ) : (
           <>
