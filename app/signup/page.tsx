@@ -88,8 +88,9 @@ export default function SignupPage() {
             <div style={{ width: 64, height: 64, borderRadius: "50%", background: "rgba(0,212,170,0.12)", color: "#00D4AA", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 28, fontWeight: 700, margin: "0 auto 20px" }}>{"\u2713"}</div>
             <h2 style={{ fontSize: 24, fontWeight: 700, fontFamily: "'Space Grotesk', sans-serif", color: "#FFF", margin: "0 0 4px" }}>Welcome aboard, Founding Pilot.</h2>
             <p style={{ fontSize: 15, color: "#8899AA", lineHeight: 1.6, margin: "8px 0 8px" }}>You have <strong style={{ color: "#00D4AA" }}>12 months of free access</strong> to the full Vectored study hub.</p>
-            <p style={{ fontSize: 13, color: "#4A5568", lineHeight: 1.6, margin: "0 0 28px" }}>All we ask: try the quizzes, tell us what you think, and share Vectored with a mate who&apos;s studying.</p>
-            <a href="/study" className="quiz-btn quiz-btn-primary" style={{ textDecoration: "none", display: "inline-block" }}>Enter the study hub</a>
+            <p style={{ fontSize: 15, color: "#FFF", lineHeight: 1.6, margin: "8px 0 8px", padding: "12px 16px", background: "rgba(0,212,170,0.08)", borderRadius: 12, border: "1px solid rgba(0,212,170,0.15)" }}>Check your email and click the confirmation link to activate your account.</p>
+            <p style={{ fontSize: 13, color: "#4A5568", lineHeight: 1.6, margin: "0 0 28px" }}>Once confirmed, log in and start studying. All we ask: try the quizzes, tell us what you think, and share Vectored with a mate who&apos;s studying.</p>
+            <a href="/login" className="quiz-btn quiz-btn-primary" style={{ textDecoration: "none", display: "inline-block" }}>Go to login</a>
           </div>
         ) : (
           <>
