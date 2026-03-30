@@ -89,7 +89,7 @@ export default function StudyLevelPage() {
       <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
 
       <nav className="quiz-nav">
-        <a href="/" className="quiz-logo-link">
+        <a href="/dashboard" className="quiz-logo-link">
           <Logo size={34} />
           <span className="quiz-logo-text">Vectored</span>
         </a>
@@ -104,7 +104,7 @@ export default function StudyLevelPage() {
 
       <div className="quiz-container">
         <div style={{ marginBottom: 8 }}>
-          <a href="/study" style={{ fontSize: 13, color: "#4A5568", textDecoration: "none" }}>{"\u2190"} All levels</a>
+          <a href="/dashboard" style={{ fontSize: 13, color: "#4A5568", textDecoration: "none" }}>{"\u2190"} All levels</a>
         </div>
         <div style={{ marginBottom: 32 }}>
           <h1 style={{ fontSize: 28, fontWeight: 700, fontFamily: "'Space Grotesk', sans-serif", color: "#FFF", margin: "0 0 8px" }}>

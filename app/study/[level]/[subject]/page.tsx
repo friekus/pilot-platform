@@ -226,7 +226,7 @@ export default function StudyQuizPage() {
       <div className="quiz-root">
         <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
         <nav className="quiz-nav">
-          <a href="/" className="quiz-logo-link"><Logo size={34} /><span className="quiz-logo-text">Vectored</span></a>
+          <a href="/dashboard" className="quiz-logo-link"><Logo size={34} /><span className="quiz-logo-text">Vectored</span></a>
           <button onClick={() => setReviewMode(false)} className="quiz-score-pill" style={{ cursor: "pointer", border: "none" }}>Back to results</button>
         </nav>
         <div className="quiz-container">
@@ -268,7 +268,7 @@ export default function StudyQuizPage() {
     <div className="quiz-root">
       <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
       <nav className="quiz-nav">
-        <a href="/" className="quiz-logo-link"><Logo size={34} /><span className="quiz-logo-text">Vectored</span></a>
+        <a href="/dashboard" className="quiz-logo-link"><Logo size={34} /><span className="quiz-logo-text">Vectored</span></a>
         <div className="quiz-score-pill">{answered > 0 && !quizComplete ? `${score}/${answered} (${pct}%)` : `${levelUpper} ${subjectName}`}</div>
       </nav>
 

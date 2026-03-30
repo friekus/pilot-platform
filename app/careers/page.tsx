@@ -133,7 +133,7 @@ export default function CareersPage() {
       <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
 
       <nav className="quiz-nav">
-        <a href="/" className="quiz-logo-link">
+        <a href="/dashboard" className="quiz-logo-link">
           <Logo size={34} />
           <span className="quiz-logo-text">Vectored</span>
         </a>
