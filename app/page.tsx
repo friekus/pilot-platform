@@ -54,7 +54,7 @@ function EmailForm({ id, dark = false }: { id: string; dark?: boolean }) {
     setLoading(false);
   };
   if (done) return (<div style={{ display: "flex", alignItems: "center", gap: 10, padding: "14px 20px", borderRadius: 10, background: "rgba(0,212,170,0.1)", border: "1px solid rgba(0,212,170,0.2)", color: "#00D4AA", fontWeight: 500, fontSize: 15 }}>✓ You&apos;re on the list. We&apos;ll be in touch before launch.</div>);
-  return (<><form onSubmit={submit} className="email-form"><input type="email" placeholder="Enter your email" required value={email} onChange={e => setEmail(e.target.value)} style={{ flex: "1 1 240px", padding: "13px 16px", borderRadius: 10, border: "1.5px solid #1E3352", background: dark ? "rgba(255,255,255,0.1)" : "#162A42", color: "#F0F4F8", fontSize: 15, fontFamily: "'DM Sans',sans-serif", outline: "none", minWidth: 0 }} /><button type="submit" className="email-btn" disabled={loading}>{loading ? "Saving..." : "Get early access"}</button></form>{error && <p style={{ color: "#FF6B4A", fontSize: 13, marginTop: 8 }}>{error}</p>}</>);
+  return (<><form onSubmit={submit} className="email-form"><input type="email" placeholder="Enter your email" required value={email} onChange={e => setEmail(e.target.value)} style={{ flex: "1 1 240px", padding: "13px 16px", borderRadius: 10, border: "1.5px solid #1E3352", background: dark ? "rgba(255,255,255,0.1)" : "#162A42", color: "#F0F4F8", fontSize: 15, fontFamily: "'DM Sans',sans-serif", outline: "none", minWidth: 0 }} /><button type="submit" className="email-btn" disabled={loading}>{loading ? "Saving..." : "Sign up for updates"}</button></form>{error && <p style={{ color: "#FF6B4A", fontSize: 13, marginTop: 8 }}>{error}</p>}</>);
 }
 
 /* ── Logo SVG ── */
@@ -99,11 +99,16 @@ export default function Home() {
         </div>
         <div className="container" style={{ position: "relative", zIndex: 1 }}>
           <div className="hero-content">
-            <Fade><div className="pill">Australian student pilot platform — launching 2026</div></Fade>
+            <Fade><div className="pill">Australian student pilot platform</div></Fade>
             <Fade delay={0.1}><h1 className="hero-h1">Get vectored to your<br /><span style={{ color: "#00D4AA" }}>flying career</span></h1></Fade>
-            <Fade delay={0.2}><p className="hero-p">The study platform built for Australian student pilots. Adaptive practice exams from your RPL all the way through to the 7 CPL subjects and IREX, progress tracking that finds your weak areas, and a career hub to help you network and land your first job.</p></Fade>
-            <Fade delay={0.3}><EmailForm id="hero" /></Fade>
-            <Fade delay={0.35}><p style={{ fontSize: 13, color: "#4A5568", marginTop: 14 }}>Join the waitlist — no spam, just launch updates.</p></Fade>
+            <Fade delay={0.2}><p className="hero-p">Practice exams aligned to the Part 61 MOS. Topic-by-topic performance tracking. A career hub to help you land your first flying job. Built by a student pilot, for student pilots.</p></Fade>
+            <Fade delay={0.3}>
+              <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginBottom: 24 }}>
+                <a href="/signup" style={{ padding: "14px 32px", borderRadius: 10, background: "#00D4AA", border: "1.5px solid #00D4AA", color: "#0B1120", fontSize: 15, fontWeight: 600, textDecoration: "none", fontFamily: "'DM Sans', sans-serif" }}>Become a Founding Pilot</a>
+                <a href="/try" style={{ padding: "14px 32px", borderRadius: 10, background: "transparent", border: "1.5px solid rgba(255,255,255,0.2)", color: "#FFF", fontSize: 15, fontWeight: 600, textDecoration: "none", fontFamily: "'DM Sans', sans-serif" }}>Try the free quiz</a>
+              </div>
+              <p style={{ fontSize: 13, color: "#00D4AA", margin: 0 }}>25 Founding Pilot spots — 12 months free access</p>
+            </Fade>
           </div>
         </div>
       </section>
@@ -189,8 +194,11 @@ export default function Home() {
         <Fade><div className="cta-box">
           <div className="cta-glow" />
           <h2 className="cta-h2">Ready to get vectored?</h2>
-          <p className="cta-p">Join the waitlist for early access. Be the first to study smarter when we launch.</p>
-          <div style={{ display: "flex", justifyContent: "center", position: "relative" }}><EmailForm id="bottom" dark /></div>
+          <p className="cta-p">25 Founding Pilot spots available. Full access to every subject, every level — free for 12 months.</p>
+          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", position: "relative" }}>
+            <a href="/signup" style={{ padding: "14px 32px", borderRadius: 10, background: "#00D4AA", border: "1.5px solid #00D4AA", color: "#0B1120", fontSize: 15, fontWeight: 600, textDecoration: "none", fontFamily: "'DM Sans', sans-serif" }}>Claim your spot</a>
+            <a href="/try" style={{ padding: "14px 32px", borderRadius: 10, background: "transparent", border: "1.5px solid rgba(255,255,255,0.2)", color: "#FFF", fontSize: 15, fontWeight: 600, textDecoration: "none", fontFamily: "'DM Sans', sans-serif" }}>Try the free quiz first</a>
+          </div>
         </div></Fade>
       </section>
 
