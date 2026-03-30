@@ -59,6 +59,16 @@ export default function SignupPage() {
     if (signUpError) {
       setError(signUpError.message);
     } else {
+      // Create profile for founding pilot tracking
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        await supabase.from("profiles").insert({
+          id: session.user.id,
+          email: email,
+          first_name: firstName,
+          tier: "founding_pilot",
+        });
+      }
       setSuccess(true);
     }
     setLoading(false);
