@@ -104,7 +104,7 @@ export default function StudyLevelPage() {
 
       <div className="quiz-container">
         <div style={{ marginBottom: 8 }}>
-          <a href="/dashboard" style={{ fontSize: 13, color: "#4A5568", textDecoration: "none" }}>{"\u2190"} All levels</a>
+          <a href="/study" style={{ fontSize: 13, color: "#4A5568", textDecoration: "none" }}>{"\u2190"} Study hub</a>
         </div>
         <div style={{ marginBottom: 32 }}>
           <h1 style={{ fontSize: 28, fontWeight: 700, fontFamily: "'Space Grotesk', sans-serif", color: "#FFF", margin: "0 0 8px" }}>

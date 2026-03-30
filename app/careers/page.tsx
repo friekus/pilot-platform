@@ -141,6 +141,7 @@ export default function CareersPage() {
       </nav>
 
       <div className="quiz-container">
+        <div style={{ marginBottom: 8 }}><a href="/dashboard" style={{ fontSize: 13, color: "#4A5568", textDecoration: "none" }}>{"←"} Dashboard</a></div>
         <div style={{ marginBottom: 24 }}>
           <h1 style={{ fontSize: 28, fontWeight: 700, fontFamily: "'Space Grotesk', sans-serif", color: "#FFF", margin: "0 0 8px" }}>Where the jobs are</h1>
           <p style={{ fontSize: 15, color: "#8899AA", margin: 0, lineHeight: 1.6 }}>
