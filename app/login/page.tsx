@@ -32,7 +32,7 @@ export default function LoginPage() {
     if (signInError) {
       setError(signInError.message === "Invalid login credentials" ? "Invalid email or password. Please try again." : signInError.message);
     } else {
-      router.push("/study");
+      router.push("/dashboard");
     }
     setLoading(false);
   };
