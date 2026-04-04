@@ -49,11 +49,177 @@ function ShareButton() {
   );
 }
 
+// Common Australian aerodrome coordinates for Windy embed
+const AERODROME_COORDS: Record<string, { lat: number; lon: number; name: string }> = {
+  YSBK: { lat: -33.9244, lon: 150.9886, name: "Bankstown" },
+  YSSY: { lat: -33.9461, lon: 151.1772, name: "Sydney Kingsford Smith" },
+  YMML: { lat: -37.6733, lon: 144.8430, name: "Melbourne Tullamarine" },
+  YBBN: { lat: -27.3842, lon: 153.1175, name: "Brisbane" },
+  YPAD: { lat: -34.9450, lon: 138.5306, name: "Adelaide" },
+  YPPH: { lat: -31.9403, lon: 115.9672, name: "Perth" },
+  YSRI: { lat: -33.7003, lon: 150.9928, name: "Richmond RAAF" },
+  YSCN: { lat: -34.0419, lon: 150.6872, name: "Camden" },
+  YWOL: { lat: -34.5611, lon: 150.7892, name: "Wollongong/Albion Park" },
+  YCFS: { lat: -30.3206, lon: 153.1161, name: "Coffs Harbour" },
+  YBTH: { lat: -33.4094, lon: 149.6517, name: "Bathurst" },
+  YMAV: { lat: -38.0394, lon: 144.4694, name: "Avalon" },
+  YMEN: { lat: -37.7281, lon: 144.9017, name: "Essendon" },
+  YMPC: { lat: -38.3339, lon: 145.0486, name: "Moorabbin" },
+  YCDR: { lat: -26.0739, lon: 152.3811, name: "Caloundra" },
+  YAMB: { lat: -34.0258, lon: 151.6331, name: "Archerfield" },
+  YBAF: { lat: -27.5703, lon: 153.0078, name: "Archerfield" },
+  YTWB: { lat: -27.5428, lon: 151.9164, name: "Toowoomba" },
+  YBCS: { lat: -16.8858, lon: 145.7553, name: "Cairns" },
+  YBTL: { lat: -19.2525, lon: 146.7656, name: "Townsville" },
+  YPJT: { lat: -31.9364, lon: 115.8814, name: "Jandakot" },
+  YMMB: { lat: -37.9758, lon: 145.1025, name: "Moorabbin" },
+};
+
+function WeatherWidget({ icao, lat, lon, onChangeIcao }: { icao: string; lat: number; lon: number; onChangeIcao: () => void }) {
+  const [metar, setMetar] = useState<string>("");
+  const [taf, setTaf] = useState<string>("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    async function fetchWeather() {
+      setLoading(true); setError("");
+      try {
+        // Fetch METAR
+        const metarRes = await fetch(`https://aviationweather.gov/api/data/metar?ids=${icao}&format=raw`);
+        if (metarRes.ok) {
+          const text = await metarRes.text();
+          setMetar(text.trim() || "No METAR available");
+        }
+        // Fetch TAF
+        const tafRes = await fetch(`https://aviationweather.gov/api/data/taf?ids=${icao}&format=raw`);
+        if (tafRes.ok) {
+          const text = await tafRes.text();
+          setTaf(text.trim() || "No TAF available");
+        }
+      } catch {
+        setError("Could not fetch weather data");
+      }
+      setLoading(false);
+    }
+    if (icao) fetchWeather();
+  }, [icao]);
+
+  return (
+    <div style={{ marginBottom: 24 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+        <h3 style={{ fontSize: 15, fontWeight: 600, fontFamily: "'Space Grotesk', sans-serif", color: "#FFF", margin: 0 }}>
+          Weather — {icao}
+        </h3>
+        <button onClick={onChangeIcao} style={{ fontSize: 12, color: "#4A5568", background: "none", border: "none", cursor: "pointer", textDecoration: "underline", fontFamily: "'DM Sans', sans-serif" }}>
+          Change aerodrome
+        </button>
+      </div>
+
+      {loading ? (
+        <div style={{ padding: "20px", borderRadius: 12, background: "#131F33", border: "1px solid rgba(255,255,255,0.06)", textAlign: "center" }}>
+          <p style={{ fontSize: 13, color: "#6B7B8D", margin: 0 }}>Loading weather...</p>
+        </div>
+      ) : error ? (
+        <div style={{ padding: "20px", borderRadius: 12, background: "#131F33", border: "1px solid rgba(255,255,255,0.06)", textAlign: "center" }}>
+          <p style={{ fontSize: 13, color: "#E96B56", margin: 0 }}>{error}</p>
+        </div>
+      ) : (
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          {/* METAR */}
+          <div style={{ padding: "14px 16px", borderRadius: 12, background: "#131F33", border: "1px solid rgba(255,255,255,0.06)" }}>
+            <div style={{ fontSize: 11, color: "#00D4AA", marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.05em", fontWeight: 600 }}>METAR</div>
+            <pre style={{ fontSize: 13, color: "#CCD6E0", margin: 0, fontFamily: "'DM Mono', 'SF Mono', 'Consolas', monospace", whiteSpace: "pre-wrap", wordBreak: "break-all", lineHeight: 1.5 }}>
+              {metar || "No METAR available for this station"}
+            </pre>
+          </div>
+          {/* TAF */}
+          <div style={{ padding: "14px 16px", borderRadius: 12, background: "#131F33", border: "1px solid rgba(255,255,255,0.06)" }}>
+            <div style={{ fontSize: 11, color: "#5D9CEC", marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.05em", fontWeight: 600 }}>TAF</div>
+            <pre style={{ fontSize: 13, color: "#CCD6E0", margin: 0, fontFamily: "'DM Mono', 'SF Mono', 'Consolas', monospace", whiteSpace: "pre-wrap", wordBreak: "break-all", lineHeight: 1.5 }}>
+              {taf || "No TAF available for this station"}
+            </pre>
+          </div>
+        </div>
+      )}
+
+      {/* Windy embed */}
+      <div style={{ marginTop: 12, borderRadius: 12, overflow: "hidden", border: "1px solid rgba(255,255,255,0.06)" }}>
+        <iframe
+          src={`https://embed.windy.com/embed.html?type=map&location=coordinates&metricRain=mm&metricTemp=°C&metricWind=kt&zoom=8&overlay=radar&product=radar&level=surface&lat=${lat}&lon=${lon}&pressure=true&message=true`}
+          width="100%"
+          height="300"
+          style={{ border: "none", display: "block" }}
+          loading="lazy"
+          title="Windy weather radar"
+        />
+      </div>
+    </div>
+  );
+}
+
+function IcaoSetup({ onSave }: { onSave: (icao: string) => void }) {
+  const [input, setInput] = useState("");
+  const [error, setError] = useState("");
+
+  const handleSave = () => {
+    const clean = input.trim().toUpperCase();
+    if (clean.length !== 4) { setError("ICAO codes are 4 characters (e.g. YSBK)"); return; }
+    if (!/^[A-Z]{4}$/.test(clean)) { setError("ICAO codes are 4 letters only"); return; }
+    onSave(clean);
+  };
+
+  return (
+    <div style={{ marginBottom: 24, padding: "24px 20px", borderRadius: 14, background: "#131F33", border: "1px solid rgba(255,255,255,0.06)" }}>
+      <h3 style={{ fontSize: 15, fontWeight: 600, fontFamily: "'Space Grotesk', sans-serif", color: "#FFF", margin: "0 0 6px" }}>
+        Set your home aerodrome
+      </h3>
+      <p style={{ fontSize: 13, color: "#6B7B8D", margin: "0 0 16px", lineHeight: 1.5 }}>
+        Enter your home aerodrome ICAO code to see live METAR, TAF, and weather radar on your dashboard.
+      </p>
+      <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+        <input
+          type="text"
+          value={input}
+          onChange={e => { setInput(e.target.value.toUpperCase()); setError(""); }}
+          placeholder="e.g. YSBK"
+          maxLength={4}
+          style={{
+            flex: 1, padding: "10px 14px", borderRadius: 10,
+            border: "1px solid rgba(255,255,255,0.1)", background: "#0F1D2F",
+            color: "#FFF", fontSize: 15, fontFamily: "'Space Grotesk', sans-serif",
+            letterSpacing: "0.1em", textTransform: "uppercase", outline: "none",
+          }}
+          onKeyDown={e => { if (e.key === "Enter") handleSave(); }}
+        />
+        <button
+          onClick={handleSave}
+          style={{
+            padding: "10px 20px", borderRadius: 10, border: "none",
+            background: "#00D4AA", color: "#0F1D2F", fontSize: 14,
+            fontWeight: 600, cursor: "pointer", fontFamily: "'DM Sans', sans-serif",
+          }}
+        >
+          Save
+        </button>
+      </div>
+      {error && <p style={{ fontSize: 12, color: "#E96B56", margin: "8px 0 0" }}>{error}</p>}
+      <p style={{ fontSize: 11, color: "#4A5568", margin: "10px 0 0" }}>
+        Common: YSBK (Bankstown), YSSY (Sydney), YMML (Melbourne), YBBN (Brisbane), YBTH (Bathurst)
+      </p>
+    </div>
+  );
+}
+
 export default function DashboardPage() {
   const [user, setUser] = useState<any>(null);
   const [firstName, setFirstName] = useState("");
   const [tier, setTier] = useState("");
   const [expiresAt, setExpiresAt] = useState("");
+  const [homeIcao, setHomeIcao] = useState<string | null>(null);
+  const [homeLat, setHomeLat] = useState<number>(-33.9244);
+  const [homeLon, setHomeLon] = useState<number>(150.9886);
+  const [showIcaoSetup, setShowIcaoSetup] = useState(false);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -64,11 +230,16 @@ export default function DashboardPage() {
       setUser(session.user);
       setFirstName(session.user.user_metadata?.first_name || "");
 
-      const { data: profile } = await supabase.from("profiles").select("tier, access_expires_at").eq("id", session.user.id).single();
+      const { data: profile } = await supabase.from("profiles").select("tier, access_expires_at, home_icao, home_lat, home_lon").eq("id", session.user.id).single();
       if (profile) {
         setTier(profile.tier || "");
         if (profile.access_expires_at) {
           setExpiresAt(new Date(profile.access_expires_at).toLocaleDateString("en-AU", { day: "numeric", month: "long", year: "numeric" }));
+        }
+        if (profile.home_icao) {
+          setHomeIcao(profile.home_icao);
+          setHomeLat(profile.home_lat || -33.9244);
+          setHomeLon(profile.home_lon || 150.9886);
         }
       }
 
@@ -76,6 +247,22 @@ export default function DashboardPage() {
     }
     init();
   }, [router]);
+
+  const handleSaveIcao = async (icao: string) => {
+    const coords = AERODROME_COORDS[icao] || null;
+    const lat = coords ? coords.lat : -33.9;
+    const lon = coords ? coords.lon : 151.2;
+
+    // Save to profile
+    if (user) {
+      await supabase.from("profiles").update({ home_icao: icao, home_lat: lat, home_lon: lon }).eq("id", user.id);
+    }
+
+    setHomeIcao(icao);
+    setHomeLat(lat);
+    setHomeLon(lon);
+    setShowIcaoSetup(false);
+  };
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -97,7 +284,7 @@ export default function DashboardPage() {
 
   return (
     <div className="quiz-root">
-      <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+      <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=DM+Mono:wght@400&display=swap" rel="stylesheet" />
 
       <nav className="quiz-nav">
         <a href="/dashboard" className="quiz-logo-link">
@@ -144,6 +331,13 @@ export default function DashboardPage() {
           />
           <ShareButton />
         </div>
+
+        {/* Weather section */}
+        {homeIcao && !showIcaoSetup ? (
+          <WeatherWidget icao={homeIcao} lat={homeLat} lon={homeLon} onChangeIcao={() => setShowIcaoSetup(true)} />
+        ) : (
+          <IcaoSetup onSave={handleSaveIcao} />
+        )}
 
         <div style={{ padding: "18px 20px", borderRadius: 14, background: "#131F33", border: "1px solid rgba(255,255,255,0.06)", marginBottom: 32 }}>
           <p style={{ fontSize: 14, color: "#8899AA", margin: 0, lineHeight: 1.6 }}>
