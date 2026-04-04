@@ -173,20 +173,52 @@ export default function StudyQuizPage() {
   }, [router]);
 
   const fetchQuestions = useCallback(async () => {
-    if (!authed) return;
+    if (!authed || !userId) return;
     setLoading(true); setError("");
     try {
+      // Fetch all questions for this subject/level
       const res = await fetch(
         `${SUPABASE_URL}/rest/v1/questions?subject=eq.${encodeURIComponent(subjectName)}&level=eq.${levelUpper}&select=*`,
         { headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` } }
       );
       if (!res.ok) throw new Error("Failed to load");
-      const data: Question[] = await res.json();
-      if (data.length === 0) { setError(`No questions found for ${levelUpper} ${subjectName}.`); setLoading(false); return; }
-      setQuestions(data.sort(() => Math.random() - 0.5).slice(0, QUIZ_LENGTH));
+      const allQuestions: Question[] = await res.json();
+      if (allQuestions.length === 0) { setError(`No questions found for ${levelUpper} ${subjectName}.`); setLoading(false); return; }
+
+      // Fetch user's previously answered question IDs for this subject
+      let seenIds: Set<number> = new Set();
+      try {
+        const histRes = await fetch(
+          `${SUPABASE_URL}/rest/v1/user_answers?user_id=eq.${userId}&subject=eq.${encodeURIComponent(subjectName)}&level=eq.${levelUpper}&select=question_id,answered_at&order=answered_at.desc`,
+          { headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${accessToken}` } }
+        );
+        if (histRes.ok) {
+          const history: { question_id: number; answered_at: string }[] = await histRes.json();
+          seenIds = new Set(history.map(h => h.question_id));
+        }
+      } catch { /* proceed without history */ }
+
+      // Split into unseen and seen
+      const unseen = allQuestions.filter(q => !seenIds.has(q.id));
+      const seen = allQuestions.filter(q => seenIds.has(q.id));
+
+      // Shuffle both pools
+      unseen.sort(() => Math.random() - 0.5);
+      seen.sort(() => Math.random() - 0.5);
+
+      // Prioritise unseen, fill remaining with seen
+      const selected = [...unseen.slice(0, QUIZ_LENGTH)];
+      if (selected.length < QUIZ_LENGTH) {
+        selected.push(...seen.slice(0, QUIZ_LENGTH - selected.length));
+      }
+
+      // Final shuffle so unseen aren't always first
+      selected.sort(() => Math.random() - 0.5);
+
+      setQuestions(selected);
     } catch { setError("Could not load questions."); }
     setLoading(false);
-  }, [authed, subjectName, levelUpper]);
+  }, [authed, userId, accessToken, subjectName, levelUpper]);
 
   useEffect(() => { fetchQuestions(); }, [fetchQuestions]);
 
