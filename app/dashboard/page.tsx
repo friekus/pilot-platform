@@ -84,21 +84,28 @@ function WeatherWidget({ icao, lat, lon, onChangeIcao }: { icao: string; lat: nu
   useEffect(() => {
     async function fetchWeather() {
       setLoading(true); setError("");
+      // Fetch METAR and TAF independently
       try {
-        // Fetch METAR
-        const metarRes = await fetch(`https://aviationweather.gov/api/data/metar?ids=${icao}&format=raw`);
+        const metarRes = await fetch(`/api/weather?icao=${icao}&type=metar`);
         if (metarRes.ok) {
-          const text = await metarRes.text();
-          setMetar(text.trim() || "No METAR available");
-        }
-        // Fetch TAF
-        const tafRes = await fetch(`https://aviationweather.gov/api/data/taf?ids=${icao}&format=raw`);
-        if (tafRes.ok) {
-          const text = await tafRes.text();
-          setTaf(text.trim() || "No TAF available");
+          const json = await metarRes.json();
+          setMetar(json.data || "No METAR available for this station");
+        } else {
+          setMetar("No METAR available for this station");
         }
       } catch {
-        setError("Could not fetch weather data");
+        setMetar("Could not load METAR");
+      }
+      try {
+        const tafRes = await fetch(`/api/weather?icao=${icao}&type=taf`);
+        if (tafRes.ok) {
+          const json = await tafRes.json();
+          setTaf(json.data || "No TAF available for this station");
+        } else {
+          setTaf("No TAF available for this station");
+        }
+      } catch {
+        setTaf("Could not load TAF");
       }
       setLoading(false);
     }
@@ -328,6 +335,11 @@ export default function DashboardPage() {
             href="/careers" accent="#5D9CEC"
             icon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" /><path d="M2 12h20" /></svg>}
             title="Career hub" desc="Interactive operator map. See who's hiring and where the jobs are."
+          />
+          <DashCard
+            href="/resources" accent="#8E6AC8"
+            icon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" /><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" /><line x1="9" y1="7" x2="16" y2="7" /><line x1="9" y1="11" x2="14" y2="11" /></svg>}
+            title="Resources" desc="Study guides, reference cards, and tools from CASA, BOM, and Airservices."
           />
           <ShareButton />
         </div>
