@@ -295,6 +295,64 @@ export default function StudyLevelPage() {
           </div>
         )}
 
+        {/* Overall progress summary */}
+        {Object.keys(progress).length > 0 && (() => {
+          const totalAnswered = Object.values(progress).reduce((sum, p) => sum + p.totalAnswered, 0);
+          const totalCorrect = Object.values(progress).reduce((sum, p) => sum + p.correctCount, 0);
+          const avgScore = totalAnswered > 0 ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
+          const quizzesTaken = Math.max(1, Math.floor(totalAnswered / 10));
+          const subjectsStudied = Object.keys(progress).length;
+
+          // Find best and weakest
+          let bestSubject = "";
+          let bestScore = 0;
+          let weakestSubject = "";
+          let weakestScore = 100;
+          Object.entries(progress).forEach(([subj, p]) => {
+            if (p.totalAnswered > 0) {
+              const pct = Math.round((p.correctCount / p.totalAnswered) * 100);
+              if (pct >= bestScore) { bestSubject = subj; bestScore = pct; }
+              if (pct <= weakestScore) { weakestSubject = subj; weakestScore = pct; }
+            }
+          });
+
+          return (
+            <div style={{ marginTop: 32 }}>
+              <h3 style={{ fontSize: 15, fontWeight: 600, fontFamily: "'Space Grotesk', sans-serif", color: "#FFF", margin: "0 0 14px" }}>
+                Your {levelFull[level] || levelName} progress
+              </h3>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10, marginBottom: 12 }}>
+                <div style={{ padding: "16px 14px", borderRadius: 12, background: "#131F33", border: "1px solid rgba(255,255,255,0.06)", textAlign: "center" }}>
+                  <div style={{ fontSize: 22, fontWeight: 700, color: "#FFF", fontFamily: "'Space Grotesk', sans-serif" }}>{totalAnswered}</div>
+                  <div style={{ fontSize: 12, color: "#6B7B8D", marginTop: 4 }}>Questions answered</div>
+                </div>
+                <div style={{ padding: "16px 14px", borderRadius: 12, background: "#131F33", border: "1px solid rgba(255,255,255,0.06)", textAlign: "center" }}>
+                  <div style={{ fontSize: 22, fontWeight: 700, color: avgScore >= 70 ? "#00D4AA" : avgScore >= 50 ? "#F6BB42" : "#E96B56", fontFamily: "'Space Grotesk', sans-serif" }}>{avgScore}%</div>
+                  <div style={{ fontSize: 12, color: "#6B7B8D", marginTop: 4 }}>Average score</div>
+                </div>
+                <div style={{ padding: "16px 14px", borderRadius: 12, background: "#131F33", border: "1px solid rgba(255,255,255,0.06)", textAlign: "center" }}>
+                  <div style={{ fontSize: 22, fontWeight: 700, color: "#FFF", fontFamily: "'Space Grotesk', sans-serif" }}>{subjectsStudied}/7</div>
+                  <div style={{ fontSize: 12, color: "#6B7B8D", marginTop: 4 }}>Subjects studied</div>
+                </div>
+              </div>
+              {bestSubject && weakestSubject && (
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                  <div style={{ padding: "14px 16px", borderRadius: 12, background: "#131F33", border: "1px solid rgba(255,255,255,0.06)" }}>
+                    <div style={{ fontSize: 11, color: "#4A5568", marginBottom: 4, textTransform: "uppercase", letterSpacing: "0.05em" }}>Strongest</div>
+                    <div style={{ fontSize: 15, fontWeight: 600, color: "#00D4AA" }}>{bestSubject}</div>
+                    <div style={{ fontSize: 12, color: "#6B7B8D", marginTop: 2 }}>{bestScore}% correct</div>
+                  </div>
+                  <div style={{ padding: "14px 16px", borderRadius: 12, background: "#131F33", border: "1px solid rgba(255,255,255,0.06)" }}>
+                    <div style={{ fontSize: 11, color: "#4A5568", marginBottom: 4, textTransform: "uppercase", letterSpacing: "0.05em" }}>Needs work</div>
+                    <div style={{ fontSize: 15, fontWeight: 600, color: "#E96B56" }}>{weakestSubject}</div>
+                    <div style={{ fontSize: 12, color: "#6B7B8D", marginTop: 2 }}>{weakestScore}% correct</div>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })()}
+
         <div style={{ marginTop: 40, padding: "20px 0", borderTop: "1px solid rgba(255,255,255,0.06)", textAlign: "center" }}>
           <p style={{ fontSize: 12, color: "#4A5568", lineHeight: 1.6, margin: 0 }}>
             <a href="/terms" style={{ color: "#4A5568", textDecoration: "underline" }}>Terms</a>

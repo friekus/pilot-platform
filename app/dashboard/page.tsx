@@ -4,9 +4,6 @@ import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 import { useRouter } from "next/navigation";
 
-const SUPABASE_URL = "https://cbvzjovbheiavmkalmaz.supabase.co";
-const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNidnpqb3ZiaGVpYXZta2FsbWF6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDA2MDUsImV4cCI6MjA4OTkxNjYwNX0.elpc_IUb9dot2ljnFMXGQnWAQ1aAb8krb2-QxC2jnKw";
-
 function Logo({ size = 34 }: { size?: number }) {
   const s = size, cx = s / 2, cy = s / 2;
   return (<svg width={s} height={s} viewBox={`0 0 ${s} ${s}`} fill="none"><rect width={s} height={s} rx={s * 0.25} fill="#0F1D2F" /><circle cx={cx} cy={cy} r={s * 0.35} fill="none" stroke="#00D4AA" strokeWidth={0.7} opacity={0.3} /><path d={`M${cx} ${s * 0.2} L${s * 0.775} ${s * 0.725} L${cx} ${s * 0.6} L${s * 0.225} ${s * 0.725} Z`} fill="#00D4AA" /></svg>);
@@ -52,25 +49,12 @@ function ShareButton() {
   );
 }
 
-type UserStats = {
-  totalAnswered: number;
-  totalCorrect: number;
-  averageScore: number;
-  subjectsStudied: number;
-  quizzesTaken: number;
-  bestSubject: string;
-  bestSubjectScore: number;
-  weakestSubject: string;
-  weakestSubjectScore: number;
-};
-
 export default function DashboardPage() {
   const [user, setUser] = useState<any>(null);
   const [firstName, setFirstName] = useState("");
   const [tier, setTier] = useState("");
   const [expiresAt, setExpiresAt] = useState("");
   const [loading, setLoading] = useState(true);
-  const [stats, setStats] = useState<UserStats | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -87,54 +71,6 @@ export default function DashboardPage() {
           setExpiresAt(new Date(profile.access_expires_at).toLocaleDateString("en-AU", { day: "numeric", month: "long", year: "numeric" }));
         }
       }
-
-      // Fetch user stats from user_answers
-      try {
-        const res = await fetch(
-          `${SUPABASE_URL}/rest/v1/user_answers?user_id=eq.${session.user.id}&select=subject,is_correct,question_id`,
-          { headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${session.access_token}` } }
-        );
-        const answers: { subject: string; is_correct: boolean; question_id: number }[] = await res.json();
-
-        if (answers && answers.length > 0) {
-          const totalAnswered = answers.length;
-          const totalCorrect = answers.filter(a => a.is_correct).length;
-          const averageScore = Math.round((totalCorrect / totalAnswered) * 100);
-
-          // Subjects studied
-          const subjectSet = new Set(answers.map(a => a.subject));
-          const subjectsStudied = subjectSet.size;
-
-          // Quizzes taken (roughly — every 10 answers = 1 quiz)
-          const quizzesTaken = Math.floor(totalAnswered / 10) || (totalAnswered > 0 ? 1 : 0);
-
-          // Per-subject scores
-          const subjectStats: Record<string, { correct: number; total: number }> = {};
-          answers.forEach(a => {
-            if (!subjectStats[a.subject]) subjectStats[a.subject] = { correct: 0, total: 0 };
-            subjectStats[a.subject].total++;
-            if (a.is_correct) subjectStats[a.subject].correct++;
-          });
-
-          let bestSubject = "";
-          let bestSubjectScore = 0;
-          let weakestSubject = "";
-          let weakestSubjectScore = 100;
-
-          Object.entries(subjectStats).forEach(([subject, s]) => {
-            const pct = Math.round((s.correct / s.total) * 100);
-            if (pct >= bestSubjectScore) { bestSubject = subject; bestSubjectScore = pct; }
-            if (pct <= weakestSubjectScore) { weakestSubject = subject; weakestSubjectScore = pct; }
-          });
-
-          setStats({
-            totalAnswered, totalCorrect, averageScore,
-            subjectsStudied, quizzesTaken,
-            bestSubject, bestSubjectScore,
-            weakestSubject, weakestSubjectScore,
-          });
-        }
-      } catch { /* no stats yet */ }
 
       setLoading(false);
     }
@@ -207,54 +143,6 @@ export default function DashboardPage() {
             title="Career hub" desc="Interactive operator map. See who's hiring and where the jobs are."
           />
           <ShareButton />
-        </div>
-
-        {/* YOUR PROGRESS — personalised stats */}
-        <div style={{ marginBottom: 32 }}>
-          <h3 style={{ fontSize: 15, fontWeight: 600, fontFamily: "'Space Grotesk', sans-serif", color: "#FFF", margin: "0 0 14px" }}>
-            Your progress
-          </h3>
-
-          {stats ? (
-            <>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10, marginBottom: 12 }}>
-                <div style={{ padding: "16px 14px", borderRadius: 12, background: "#131F33", border: "1px solid rgba(255,255,255,0.06)", textAlign: "center" }}>
-                  <div style={{ fontSize: 22, fontWeight: 700, color: "#FFF", fontFamily: "'Space Grotesk', sans-serif" }}>{stats.totalAnswered}</div>
-                  <div style={{ fontSize: 12, color: "#6B7B8D", marginTop: 4 }}>Questions answered</div>
-                </div>
-                <div style={{ padding: "16px 14px", borderRadius: 12, background: "#131F33", border: "1px solid rgba(255,255,255,0.06)", textAlign: "center" }}>
-                  <div style={{ fontSize: 22, fontWeight: 700, color: stats.averageScore >= 80 ? "#00D4AA" : stats.averageScore >= 60 ? "#F6BB42" : "#E96B56", fontFamily: "'Space Grotesk', sans-serif" }}>{stats.averageScore}%</div>
-                  <div style={{ fontSize: 12, color: "#6B7B8D", marginTop: 4 }}>Average score</div>
-                </div>
-                <div style={{ padding: "16px 14px", borderRadius: 12, background: "#131F33", border: "1px solid rgba(255,255,255,0.06)", textAlign: "center" }}>
-                  <div style={{ fontSize: 22, fontWeight: 700, color: "#FFF", fontFamily: "'Space Grotesk', sans-serif" }}>{stats.quizzesTaken}</div>
-                  <div style={{ fontSize: 12, color: "#6B7B8D", marginTop: 4 }}>Quizzes taken</div>
-                </div>
-              </div>
-
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-                <div style={{ padding: "14px 16px", borderRadius: 12, background: "#131F33", border: "1px solid rgba(255,255,255,0.06)" }}>
-                  <div style={{ fontSize: 11, color: "#4A5568", marginBottom: 4, textTransform: "uppercase", letterSpacing: "0.05em" }}>Strongest subject</div>
-                  <div style={{ fontSize: 15, fontWeight: 600, color: "#00D4AA" }}>{stats.bestSubject}</div>
-                  <div style={{ fontSize: 12, color: "#6B7B8D", marginTop: 2 }}>{stats.bestSubjectScore}% correct</div>
-                </div>
-                <div style={{ padding: "14px 16px", borderRadius: 12, background: "#131F33", border: "1px solid rgba(255,255,255,0.06)" }}>
-                  <div style={{ fontSize: 11, color: "#4A5568", marginBottom: 4, textTransform: "uppercase", letterSpacing: "0.05em" }}>Needs work</div>
-                  <div style={{ fontSize: 15, fontWeight: 600, color: "#E96B56" }}>{stats.weakestSubject}</div>
-                  <div style={{ fontSize: 12, color: "#6B7B8D", marginTop: 2 }}>{stats.weakestSubjectScore}% correct</div>
-                </div>
-              </div>
-            </>
-          ) : (
-            <div style={{ padding: "24px 20px", borderRadius: 14, background: "#131F33", border: "1px solid rgba(255,255,255,0.06)", textAlign: "center" }}>
-              <p style={{ fontSize: 14, color: "#6B7B8D", margin: "0 0 12px", lineHeight: 1.6 }}>
-                You haven&apos;t taken any quizzes yet. Jump into the study hub to start tracking your progress.
-              </p>
-              <a href="/study" style={{ fontSize: 14, color: "#00D4AA", textDecoration: "none", fontWeight: 600 }}>
-                Start studying →
-              </a>
-            </div>
-          )}
         </div>
 
         <div style={{ padding: "18px 20px", borderRadius: 14, background: "#131F33", border: "1px solid rgba(255,255,255,0.06)", marginBottom: 32 }}>
