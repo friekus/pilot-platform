@@ -147,6 +147,7 @@ export default function StudyQuizPage() {
 
   const [authed, setAuthed] = useState(false);
   const [userId, setUserId] = useState<string | undefined>();
+  const [accessToken, setAccessToken] = useState<string>("");
   const [questions, setQuestions] = useState<Question[]>([]);
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState<string | null>(null);
@@ -164,7 +165,9 @@ export default function StudyQuizPage() {
     async function checkAuth() {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) { router.push("/login"); return; }
-      setAuthed(true); setUserId(session.user.id);
+      setAuthed(true);
+      setUserId(session.user.id);
+      setAccessToken(session.access_token);
     }
     checkAuth();
   }, [router]);
@@ -188,11 +191,37 @@ export default function StudyQuizPage() {
   useEffect(() => { fetchQuestions(); }, [fetchQuestions]);
 
   const handleSelect = (letter: string) => { if (!showResult) setSelected(letter); };
+
   const handleSubmit = () => {
     if (!selected) return;
+    const q = questions[current];
+    const correct = selected === q.correct_answer;
     setShowResult(true);
-    setAnswers(prev => [...prev, { question: questions[current], selected, correct: selected === questions[current].correct_answer }]);
+    setAnswers(prev => [...prev, { question: q, selected, correct }]);
+
+    // Record answer to user_answers table
+    if (userId && accessToken) {
+      fetch(`${SUPABASE_URL}/rest/v1/user_answers`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          apikey: SUPABASE_ANON,
+          Authorization: `Bearer ${accessToken}`,
+          Prefer: "return=minimal",
+        },
+        body: JSON.stringify({
+          user_id: userId,
+          question_id: q.id,
+          subject: q.subject,
+          level: q.level,
+          selected_answer: selected,
+          correct_answer: q.correct_answer,
+          is_correct: correct,
+        }),
+      }).catch(() => {}); // fire and forget
+    }
   };
+
   const handleNext = () => {
     if (current + 1 >= questions.length) { setQuizComplete(true); }
     else { setCurrent(c => c + 1); setSelected(null); setShowResult(false); }
@@ -294,7 +323,6 @@ export default function StudyQuizPage() {
                "Don\u2019t worry \u2014 this is how you learn. Review the topic breakdown below and try again."}
             </p>
 
-            {/* Share card */}
             <ShareCard score={score} total={answered} pct={pct} subject={subjectName} level={levelUpper} />
 
             <div className="quiz-breakdown">
