@@ -13,6 +13,7 @@ const SUPABASE_URL = "https://cbvzjovbheiavmkalmaz.supabase.co";
 const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNidnpqb3ZiaGVpYXZta2FsbWF6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDA2MDUsImV4cCI6MjA4OTkxNjYwNX0.elpc_IUb9dot2ljnFMXGQnWAQ1aAb8krb2-QxC2jnKw";
 
 type SubjectCount = { subject: string; count: number };
+type SubjectProgress = { uniqueAnswered: number; totalQuestions: number; correctCount: number; totalAnswered: number; };
 
 const levelNames: Record<string, string> = {
   rpl: "RPL", ppl: "PPL", cpl: "CPL", irex: "IREX",
@@ -107,14 +108,29 @@ function getSubjectIcon(subject: string, color: string, size: number = 22) {
   }
 }
 
+function ProgressRing({ pct, color, size = 36 }: { pct: number; color: string; size?: number }) {
+  const r = (size - 4) / 2;
+  const circumference = 2 * Math.PI * r;
+  const offset = circumference - (pct / 100) * circumference;
+  return (
+    <svg width={size} height={size} style={{ transform: "rotate(-90deg)" }}>
+      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="3" />
+      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={color} strokeWidth="3" strokeLinecap="round"
+        strokeDasharray={circumference} strokeDashoffset={offset} style={{ transition: "stroke-dashoffset 0.5s ease" }} />
+    </svg>
+  );
+}
+
 export default function StudyLevelPage() {
   const params = useParams();
   const level = typeof params.level === "string" ? params.level : "";
   const levelName = levelNames[level] || level.toUpperCase();
 
   const [user, setUser] = useState<any>(null);
+  const [accessToken, setAccessToken] = useState("");
   const [loading, setLoading] = useState(true);
   const [subjects, setSubjects] = useState<SubjectCount[]>([]);
+  const [progress, setProgress] = useState<Record<string, SubjectProgress>>({});
   const router = useRouter();
 
   useEffect(() => {
@@ -122,7 +138,10 @@ export default function StudyLevelPage() {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) return router.push("/login");
       setUser(session.user);
+      setAccessToken(session.access_token);
+
       try {
+        // Fetch question counts per subject
         const res = await fetch(
           `${SUPABASE_URL}/rest/v1/questions?level=eq.${levelName}&select=subject`,
           { headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` } }
@@ -134,6 +153,31 @@ export default function StudyLevelPage() {
           .map(([subject, count]) => ({ subject, count }))
           .sort((a, b) => b.count - a.count);
         setSubjects(sorted);
+
+        // Fetch user progress from user_answers
+        const progressRes = await fetch(
+          `${SUPABASE_URL}/rest/v1/user_answers?user_id=eq.${session.user.id}&level=eq.${levelName}&select=subject,question_id,is_correct`,
+          { headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${session.access_token}` } }
+        );
+        const answers: { subject: string; question_id: number; is_correct: boolean }[] = await progressRes.json();
+
+        if (answers && answers.length > 0) {
+          const prog: Record<string, SubjectProgress> = {};
+          answers.forEach(a => {
+            if (!prog[a.subject]) prog[a.subject] = { uniqueAnswered: 0, totalQuestions: 0, correctCount: 0, totalAnswered: 0 };
+            prog[a.subject].totalAnswered++;
+            if (a.is_correct) prog[a.subject].correctCount++;
+          });
+
+          // Count unique questions per subject
+          Object.keys(prog).forEach(subj => {
+            const uniqueQIds = new Set(answers.filter(a => a.subject === subj).map(a => a.question_id));
+            prog[subj].uniqueAnswered = uniqueQIds.size;
+            prog[subj].totalQuestions = counts[subj] || 25;
+          });
+
+          setProgress(prog);
+        }
       } catch { /* fallback */ }
       setLoading(false);
     }
@@ -206,6 +250,11 @@ export default function StudyLevelPage() {
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {subjects.map(s => {
               const meta = subjectMeta[s.subject] || { description: "", color: "#00D4AA" };
+              const prog = progress[s.subject];
+              const completionPct = prog ? Math.round((prog.uniqueAnswered / prog.totalQuestions) * 100) : 0;
+              const scorePct = prog && prog.totalAnswered > 0 ? Math.round((prog.correctCount / prog.totalAnswered) * 100) : -1;
+              const scoreColor = scorePct >= 70 ? "#00D4AA" : scorePct >= 50 ? "#F6BB42" : scorePct >= 0 ? "#E96B56" : "rgba(255,255,255,0.06)";
+
               return (
                 <a
                   key={s.subject}
@@ -220,9 +269,25 @@ export default function StudyLevelPage() {
                     <div className="subject-name">{s.subject}</div>
                     <div className="subject-desc">{meta.description}</div>
                   </div>
-                  <div className="subject-meta">
-                    <span className="subject-count">{s.count} questions</span>
-                    <span className="subject-arrow">→</span>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+                    {prog ? (
+                      <div style={{ position: "relative", width: 36, height: 36 }}>
+                        <ProgressRing pct={completionPct} color={scoreColor} size={36} />
+                        <div style={{
+                          position: "absolute", top: 0, left: 0, width: 36, height: 36,
+                          display: "flex", alignItems: "center", justifyContent: "center",
+                          fontSize: 10, fontWeight: 700, color: scoreColor,
+                          fontFamily: "'Space Grotesk', sans-serif",
+                        }}>
+                          {scorePct}%
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="subject-meta">
+                        <span className="subject-count">{s.count} Qs</span>
+                        <span className="subject-arrow">→</span>
+                      </div>
+                    )}
                   </div>
                 </a>
               );
