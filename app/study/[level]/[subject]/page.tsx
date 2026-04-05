@@ -14,6 +14,12 @@ type Question = {
 };
 type AnswerRecord = { question: Question; selected: string; correct: boolean; };
 
+function RenderText({ text }: { text: string }) {
+  const parts = text.split('\n');
+  if (parts.length === 1) return <>{text}</>;
+  return <>{parts.map((part, i) => <span key={i}>{part}{i < parts.length - 1 && <br />}</span>)}</>;
+}
+
 const slugToSubject: Record<string, string> = {
   "aerodynamics": "Aerodynamics", "air-law": "Air Law", "meteorology": "Meteorology",
   "human-factors": "Human Factors", "navigation": "Navigation", "performance": "Performance", "systems": "Systems",
@@ -318,7 +324,7 @@ export default function StudyQuizPage() {
               <div className="quiz-subtopic">{rq.subtopic}</div>
               <FlagButton questionId={rq.id} userId={userId} />
             </div>
-            <h2 className="quiz-question">{rq.question}</h2>
+            <h2 className="quiz-question"><RenderText text={rq.question} /></h2>
             <div className="quiz-options">
               {rOpts.map(opt => {
                 let cls = "quiz-option";
@@ -330,8 +336,7 @@ export default function StudyQuizPage() {
             </div>
             <div className="quiz-explanation">
               <div className={`quiz-result-badge ${ra.correct ? "correct" : "incorrect"}`}>{ra.correct ? "You answered correctly" : `You answered ${ra.selected} \u2014 correct answer is ${rq.correct_answer}`}</div>
-              <p className="quiz-explanation-text">{rq.explanation}</p>
-              {rq.reference && <p className="quiz-reference">Ref: {rq.reference}</p>}
+              <p className="quiz-explanation-text"><RenderText text={rq.explanation} /></p>              {rq.reference && <p className="quiz-reference">Ref: {rq.reference}</p>}
             </div>
             <div style={{ display: "flex", gap: 10, marginTop: 20 }}>
               {reviewIndex > 0 && <button onClick={() => setReviewIndex(i => i - 1)} className="quiz-btn" style={{ flex: 1 }}>Previous</button>}
@@ -413,7 +418,7 @@ export default function StudyQuizPage() {
                 <div className="quiz-subtopic">{q.subtopic}</div>
                 <FlagButton questionId={q.id} userId={userId} />
               </div>
-              <h2 className="quiz-question">{q.question}</h2>
+              <h2 className="quiz-question"><RenderText text={q.question} /></h2>
               <div className="quiz-options">
                 {options.map(opt => {
                   let cls = "quiz-option";
@@ -426,7 +431,7 @@ export default function StudyQuizPage() {
               {showResult && (
                 <div className="quiz-explanation">
                   <div className={`quiz-result-badge ${selected === q.correct_answer ? "correct" : "incorrect"}`}>{selected === q.correct_answer ? "Correct!" : `Incorrect \u2014 the answer is ${q.correct_answer}`}</div>
-                  <p className="quiz-explanation-text">{q.explanation}</p>
+                  <p className="quiz-explanation-text"><RenderText text={q.explanation} /></p>
                   {q.reference && <p className="quiz-reference">Ref: {q.reference}</p>}
                   <button onClick={handleNext} className="quiz-btn quiz-btn-primary quiz-next">{current + 1 >= questions.length ? "See results" : "Next question"}</button>
                 </div>
