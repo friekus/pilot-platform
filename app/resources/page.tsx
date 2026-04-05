@@ -92,7 +92,7 @@ const tools: ToolItem[] = [
     description: "Practice time, speed, distance, fuel, wind triangle, density altitude, and TAS calculations.",
     href: "/resources/tools/e6b",
     accent: "#00D4AA",
-    available: false,
+    available: true,
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
         <circle cx="12" cy="12" r="10" /><path d="M12 6V8" /><path d="M6 12H8" /><path d="M16 12H18" />
