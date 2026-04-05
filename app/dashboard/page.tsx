@@ -118,7 +118,7 @@ function IcaoSetup({ onSave }: { onSave: (icao: string) => void }) {
         Set your home aerodrome
       </h3>
       <p style={{ fontSize: 13, color: "#6B7B8D", margin: "0 0 16px", lineHeight: 1.5 }}>
-        Enter your home aerodrome ICAO code to see live METAR, TAF, and weather radar on your dashboard.
+        Enter your home aerodrome ICAO code to see a live weather radar on your dashboard.
       </p>
       <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
         <input
