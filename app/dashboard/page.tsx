@@ -76,82 +76,18 @@ const AERODROME_COORDS: Record<string, { lat: number; lon: number; name: string 
 };
 
 function WeatherWidget({ icao, lat, lon, onChangeIcao }: { icao: string; lat: number; lon: number; onChangeIcao: () => void }) {
-  const [metar, setMetar] = useState<string>("");
-  const [taf, setTaf] = useState<string>("");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    async function fetchWeather() {
-      setLoading(true); setError("");
-      // Fetch METAR and TAF independently
-      try {
-        const metarRes = await fetch(`/api/weather?icao=${icao}&type=metar`);
-        if (metarRes.ok) {
-          const json = await metarRes.json();
-          setMetar(json.data || "No METAR available for this station");
-        } else {
-          setMetar("No METAR available for this station");
-        }
-      } catch {
-        setMetar("Could not load METAR");
-      }
-      try {
-        const tafRes = await fetch(`/api/weather?icao=${icao}&type=taf`);
-        if (tafRes.ok) {
-          const json = await tafRes.json();
-          setTaf(json.data || "No TAF available for this station");
-        } else {
-          setTaf("No TAF available for this station");
-        }
-      } catch {
-        setTaf("Could not load TAF");
-      }
-      setLoading(false);
-    }
-    if (icao) fetchWeather();
-  }, [icao]);
-
   return (
     <div style={{ marginBottom: 24 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
         <h3 style={{ fontSize: 15, fontWeight: 600, fontFamily: "'Space Grotesk', sans-serif", color: "#FFF", margin: 0 }}>
-          Weather — {icao}
+          Weather radar — {icao}
         </h3>
         <button onClick={onChangeIcao} style={{ fontSize: 12, color: "#4A5568", background: "none", border: "none", cursor: "pointer", textDecoration: "underline", fontFamily: "'DM Sans', sans-serif" }}>
           Change aerodrome
         </button>
       </div>
 
-      {loading ? (
-        <div style={{ padding: "20px", borderRadius: 12, background: "#131F33", border: "1px solid rgba(255,255,255,0.06)", textAlign: "center" }}>
-          <p style={{ fontSize: 13, color: "#6B7B8D", margin: 0 }}>Loading weather...</p>
-        </div>
-      ) : error ? (
-        <div style={{ padding: "20px", borderRadius: 12, background: "#131F33", border: "1px solid rgba(255,255,255,0.06)", textAlign: "center" }}>
-          <p style={{ fontSize: 13, color: "#E96B56", margin: 0 }}>{error}</p>
-        </div>
-      ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          {/* METAR */}
-          <div style={{ padding: "14px 16px", borderRadius: 12, background: "#131F33", border: "1px solid rgba(255,255,255,0.06)" }}>
-            <div style={{ fontSize: 11, color: "#00D4AA", marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.05em", fontWeight: 600 }}>METAR</div>
-            <pre style={{ fontSize: 13, color: "#CCD6E0", margin: 0, fontFamily: "'DM Mono', 'SF Mono', 'Consolas', monospace", whiteSpace: "pre-wrap", wordBreak: "break-all", lineHeight: 1.5 }}>
-              {metar || "No METAR available for this station"}
-            </pre>
-          </div>
-          {/* TAF */}
-          <div style={{ padding: "14px 16px", borderRadius: 12, background: "#131F33", border: "1px solid rgba(255,255,255,0.06)" }}>
-            <div style={{ fontSize: 11, color: "#5D9CEC", marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.05em", fontWeight: 600 }}>TAF</div>
-            <pre style={{ fontSize: 13, color: "#CCD6E0", margin: 0, fontFamily: "'DM Mono', 'SF Mono', 'Consolas', monospace", whiteSpace: "pre-wrap", wordBreak: "break-all", lineHeight: 1.5 }}>
-              {taf || "No TAF available for this station"}
-            </pre>
-          </div>
-        </div>
-      )}
-
-      {/* Windy embed */}
-      <div style={{ marginTop: 12, borderRadius: 12, overflow: "hidden", border: "1px solid rgba(255,255,255,0.06)" }}>
+      <div style={{ borderRadius: 12, overflow: "hidden", border: "1px solid rgba(255,255,255,0.06)" }}>
         <iframe
           src={`https://embed.windy.com/embed.html?type=map&location=coordinates&metricRain=mm&metricTemp=°C&metricWind=kt&zoom=8&overlay=radar&product=radar&level=surface&lat=${lat}&lon=${lon}&pressure=true&message=true`}
           width="100%"
