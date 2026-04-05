@@ -185,34 +185,52 @@ export default function StudyQuizPage() {
       const allQuestions: Question[] = await res.json();
       if (allQuestions.length === 0) { setError(`No questions found for ${levelUpper} ${subjectName}.`); setLoading(false); return; }
 
-      // Fetch user's previously answered question IDs for this subject
-      let seenIds: Set<number> = new Set();
+      // Fetch user's answer history for this subject
+      // Get the most recent answer per question to determine if they got it right
+      let incorrectIds: Set<number> = new Set();
+      let correctIds: Set<number> = new Set();
       try {
         const histRes = await fetch(
-          `${SUPABASE_URL}/rest/v1/user_answers?user_id=eq.${userId}&subject=eq.${encodeURIComponent(subjectName)}&level=eq.${levelUpper}&select=question_id,answered_at&order=answered_at.desc`,
+          `${SUPABASE_URL}/rest/v1/user_answers?user_id=eq.${userId}&subject=eq.${encodeURIComponent(subjectName)}&level=eq.${levelUpper}&select=question_id,is_correct,answered_at&order=answered_at.desc`,
           { headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${accessToken}` } }
         );
         if (histRes.ok) {
-          const history: { question_id: number; answered_at: string }[] = await histRes.json();
-          seenIds = new Set(history.map(h => h.question_id));
+          const history: { question_id: number; is_correct: boolean; answered_at: string }[] = await histRes.json();
+          // For each question, use the most recent attempt (history is sorted desc)
+          const mostRecent: Record<number, boolean> = {};
+          history.forEach(h => {
+            if (!(h.question_id in mostRecent)) {
+              mostRecent[h.question_id] = h.is_correct;
+            }
+          });
+          Object.entries(mostRecent).forEach(([qid, correct]) => {
+            if (correct) correctIds.add(Number(qid));
+            else incorrectIds.add(Number(qid));
+          });
         }
       } catch { /* proceed without history */ }
 
-      // Split into unseen and seen
-      const unseen = allQuestions.filter(q => !seenIds.has(q.id));
-      const seen = allQuestions.filter(q => seenIds.has(q.id));
+      // Split into three priority pools
+      const unseen = allQuestions.filter(q => !incorrectIds.has(q.id) && !correctIds.has(q.id));
+      const incorrect = allQuestions.filter(q => incorrectIds.has(q.id));
+      const correct = allQuestions.filter(q => correctIds.has(q.id));
 
-      // Shuffle both pools
+      // Shuffle each pool
       unseen.sort(() => Math.random() - 0.5);
-      seen.sort(() => Math.random() - 0.5);
+      incorrect.sort(() => Math.random() - 0.5);
+      correct.sort(() => Math.random() - 0.5);
 
-      // Prioritise unseen, fill remaining with seen
-      const selected = [...unseen.slice(0, QUIZ_LENGTH)];
-      if (selected.length < QUIZ_LENGTH) {
-        selected.push(...seen.slice(0, QUIZ_LENGTH - selected.length));
+      // Priority: unseen first, then previously incorrect, then previously correct
+      const selected: Question[] = [];
+      for (const pool of [unseen, incorrect, correct]) {
+        for (const q of pool) {
+          if (selected.length >= QUIZ_LENGTH) break;
+          selected.push(q);
+        }
+        if (selected.length >= QUIZ_LENGTH) break;
       }
 
-      // Final shuffle so unseen aren't always first
+      // Final shuffle so priority order isn't obvious
       selected.sort(() => Math.random() - 0.5);
 
       setQuestions(selected);
