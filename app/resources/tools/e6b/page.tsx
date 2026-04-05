@@ -11,7 +11,7 @@ function Logo({ size = 34 }: { size?: number }) {
 
 type CalcTab = "tsd" | "fuel" | "wind" | "da" | "tas" | "conversions";
 
-const tabs: { id: CalcTab; label: string }[] = [
+const tabsList: { id: CalcTab; label: string }[] = [
   { id: "tsd", label: "Time / Speed / Distance" },
   { id: "fuel", label: "Fuel" },
   { id: "wind", label: "Wind Triangle" },
@@ -54,78 +54,81 @@ function ResultBox({ label, value, unit, color }: { label: string; value: string
   );
 }
 
-function WorkingStep({ step, formula, result }: { step: string; formula?: string; result?: string }) {
+function WorkingStep({ explanation, formula }: { explanation: string; formula?: string }) {
+  const [showFormula, setShowFormula] = useState(false);
   return (
-    <div style={{ padding: "8px 0", borderBottom: "1px solid rgba(255,255,255,0.03)" }}>
-      <div style={{ fontSize: 13, color: "#8899AA", lineHeight: 1.5 }}>{step}</div>
-      {formula && <div style={{ fontSize: 13, color: "#5D9CEC", fontFamily: "'DM Mono', 'SF Mono', monospace", marginTop: 2 }}>{formula}</div>}
-      {result && <div style={{ fontSize: 13, color: "#00D4AA", fontWeight: 600, marginTop: 2 }}>{result}</div>}
+    <div style={{ padding: "10px 0", borderBottom: "1px solid rgba(255,255,255,0.03)" }}>
+      <div style={{ fontSize: 13, color: "#CCD6E0", lineHeight: 1.6 }}>{explanation}</div>
+      {formula && (
+        <>
+          <button
+            onClick={() => setShowFormula(!showFormula)}
+            style={{
+              fontSize: 11, color: "#4A5568", background: "none", border: "none",
+              cursor: "pointer", padding: "4px 0", fontFamily: "'DM Sans', sans-serif",
+              textDecoration: "underline", marginTop: 2,
+            }}
+          >
+            {showFormula ? "Hide formula" : "Show formula"}
+          </button>
+          {showFormula && (
+            <div style={{
+              fontSize: 12, color: "#5D9CEC", fontFamily: "'DM Mono', 'SF Mono', monospace",
+              marginTop: 4, padding: "6px 10px", borderRadius: 6,
+              background: "rgba(93,156,236,0.06)", border: "1px solid rgba(93,156,236,0.1)",
+            }}>
+              {formula}
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 }
 
 function CalcButton({ onClick, disabled }: { onClick: () => void; disabled?: boolean }) {
   return (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      className="quiz-btn quiz-btn-primary"
-      style={{ width: "100%", marginTop: 8, marginBottom: 16 }}
-    >
+    <button onClick={onClick} disabled={disabled} className="quiz-btn quiz-btn-primary" style={{ width: "100%", marginTop: 8, marginBottom: 16 }}>
       Calculate
     </button>
   );
 }
 
+// ============ TSD ============
 function TSDCalculator() {
   const [mode, setMode] = useState<"distance" | "speed" | "time">("distance");
   const [speed, setSpeed] = useState("");
   const [time, setTime] = useState("");
   const [distance, setDistance] = useState("");
-  const [result, setResult] = useState<{ value: number; working: { step: string; formula?: string; result?: string }[] } | null>(null);
+  const [result, setResult] = useState<{ value: number; steps: { explanation: string; formula?: string }[] } | null>(null);
 
   const calculate = () => {
     if (mode === "distance" && speed && time) {
-      const s = parseFloat(speed);
-      const t = parseFloat(time);
+      const s = parseFloat(speed); const t = parseFloat(time);
       const d = (s * t) / 60;
-      setResult({
-        value: Math.round(d * 10) / 10,
-        working: [
-          { step: "Distance = Speed × Time", formula: `D = ${s} kt × ${t} min ÷ 60` },
-          { step: "Result", result: `${Math.round(d * 10) / 10} NM` },
-        ],
-      });
+      setResult({ value: Math.round(d * 10) / 10, steps: [
+        { explanation: `You're travelling at ${s} knots, which means you cover ${s} nautical miles every 60 minutes.` },
+        { explanation: `In ${t} minutes, you cover ${s} × ${t} ÷ 60 = ${Math.round(d * 10) / 10} NM.`, formula: `Distance = Speed × Time ÷ 60 = ${s} × ${t} ÷ 60 = ${Math.round(d * 10) / 10} NM` },
+      ]});
     } else if (mode === "speed" && distance && time) {
-      const d = parseFloat(distance);
-      const t = parseFloat(time);
+      const d = parseFloat(distance); const t = parseFloat(time);
       const s = (d / t) * 60;
-      setResult({
-        value: Math.round(s * 10) / 10,
-        working: [
-          { step: "Speed = Distance ÷ Time × 60", formula: `S = ${d} NM ÷ ${t} min × 60` },
-          { step: "Result", result: `${Math.round(s * 10) / 10} kt` },
-        ],
-      });
+      setResult({ value: Math.round(s * 10) / 10, steps: [
+        { explanation: `You covered ${d} NM in ${t} minutes.` },
+        { explanation: `To find speed, divide the distance by time and multiply by 60 to convert to knots (NM per hour): ${d} ÷ ${t} × 60 = ${Math.round(s * 10) / 10} kt.`, formula: `Speed = Distance ÷ Time × 60 = ${d} ÷ ${t} × 60 = ${Math.round(s * 10) / 10} kt` },
+      ]});
     } else if (mode === "time" && speed && distance) {
-      const s = parseFloat(speed);
-      const d = parseFloat(distance);
+      const s = parseFloat(speed); const d = parseFloat(distance);
       const t = (d / s) * 60;
-      setResult({
-        value: Math.round(t * 10) / 10,
-        working: [
-          { step: "Time = Distance ÷ Speed × 60", formula: `T = ${d} NM ÷ ${s} kt × 60` },
-          { step: "Result", result: `${Math.round(t * 10) / 10} min` },
-        ],
-      });
+      const hrs = Math.floor(t / 60); const mins = Math.round(t % 60);
+      setResult({ value: Math.round(t * 10) / 10, steps: [
+        { explanation: `You need to cover ${d} NM at a speed of ${s} knots.` },
+        { explanation: `Divide the distance by speed, then multiply by 60 to get the time in minutes: ${d} ÷ ${s} × 60 = ${Math.round(t * 10) / 10} minutes${hrs > 0 ? ` (${hrs}h ${mins}m)` : ""}.`, formula: `Time = Distance ÷ Speed × 60 = ${d} ÷ ${s} × 60 = ${Math.round(t * 10) / 10} min` },
+      ]});
     }
   };
 
-  const modeOptions = [
-    { id: "distance" as const, label: "Find Distance" },
-    { id: "speed" as const, label: "Find Speed" },
-    { id: "time" as const, label: "Find Time" },
-  ];
+  const modeOptions = [{ id: "distance" as const, label: "Find Distance" }, { id: "speed" as const, label: "Find Speed" }, { id: "time" as const, label: "Find Time" }];
 
   return (
     <div>
@@ -145,8 +148,8 @@ function TSDCalculator() {
         <>
           <ResultBox label={mode === "distance" ? "Distance" : mode === "speed" ? "Groundspeed" : "Time"} value={result.value} unit={mode === "distance" ? "NM" : mode === "speed" ? "kt" : "min"} />
           <div style={{ padding: "12px 16px", borderRadius: 12, background: "#131F33", border: "1px solid rgba(255,255,255,0.06)" }}>
-            <div style={{ fontSize: 11, color: "#4A5568", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8 }}>Working</div>
-            {result.working.map((w, i) => <WorkingStep key={i} {...w} />)}
+            <div style={{ fontSize: 11, color: "#4A5568", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8 }}>How it works</div>
+            {result.steps.map((w, i) => <WorkingStep key={i} {...w} />)}
           </div>
         </>
       )}
@@ -154,48 +157,43 @@ function TSDCalculator() {
   );
 }
 
+// ============ FUEL ============
 function FuelCalculator() {
   const [mode, setMode] = useState<"required" | "rate" | "endurance">("required");
   const [rate, setRate] = useState("");
   const [time, setTime] = useState("");
   const [fuel, setFuel] = useState("");
-  const [result, setResult] = useState<{ value: number; unit: string; working: { step: string; formula?: string; result?: string }[] } | null>(null);
+  const [result, setResult] = useState<{ value: number; unit: string; steps: { explanation: string; formula?: string }[] } | null>(null);
 
   const calculate = () => {
     if (mode === "required" && rate && time) {
-      const r = parseFloat(rate);
-      const t = parseFloat(time);
+      const r = parseFloat(rate); const t = parseFloat(time);
       const f = (r * t) / 60;
-      setResult({ value: Math.round(f * 10) / 10, unit: "L", working: [
-        { step: "Fuel Required = Rate × Time", formula: `F = ${r} L/hr × ${t} min ÷ 60` },
-        { step: "Result", result: `${Math.round(f * 10) / 10} L` },
+      setResult({ value: Math.round(f * 10) / 10, unit: "L", steps: [
+        { explanation: `Your aircraft burns ${r} litres per hour.` },
+        { explanation: `Over ${t} minutes of flight, you'll use ${r} × ${t} ÷ 60 = ${Math.round(f * 10) / 10} litres.`, formula: `Fuel = Rate × Time ÷ 60 = ${r} × ${t} ÷ 60 = ${Math.round(f * 10) / 10} L` },
+        { explanation: `Don't forget to add your fixed reserve (typically 30 minutes for day VFR) and variable reserve (10% of trip fuel) on top of this figure.` },
       ]});
     } else if (mode === "rate" && fuel && time) {
-      const f = parseFloat(fuel);
-      const t = parseFloat(time);
+      const f = parseFloat(fuel); const t = parseFloat(time);
       const r = (f / t) * 60;
-      setResult({ value: Math.round(r * 10) / 10, unit: "L/hr", working: [
-        { step: "Fuel Rate = Fuel ÷ Time × 60", formula: `R = ${f} L ÷ ${t} min × 60` },
-        { step: "Result", result: `${Math.round(r * 10) / 10} L/hr` },
+      setResult({ value: Math.round(r * 10) / 10, unit: "L/hr", steps: [
+        { explanation: `You used ${f} litres over ${t} minutes of flight.` },
+        { explanation: `Divide the fuel used by time, then multiply by 60 to get the hourly rate: ${f} ÷ ${t} × 60 = ${Math.round(r * 10) / 10} L/hr.`, formula: `Rate = Fuel ÷ Time × 60 = ${f} ÷ ${t} × 60 = ${Math.round(r * 10) / 10} L/hr` },
       ]});
     } else if (mode === "endurance" && fuel && rate) {
-      const f = parseFloat(fuel);
-      const r = parseFloat(rate);
+      const f = parseFloat(fuel); const r = parseFloat(rate);
       const t = (f / r) * 60;
-      const hrs = Math.floor(t / 60);
-      const mins = Math.round(t % 60);
-      setResult({ value: Math.round(t * 10) / 10, unit: "min", working: [
-        { step: "Endurance = Fuel ÷ Rate × 60", formula: `T = ${f} L ÷ ${r} L/hr × 60` },
-        { step: "Result", result: `${Math.round(t * 10) / 10} min (${hrs}h ${mins}m)` },
+      const hrs = Math.floor(t / 60); const mins = Math.round(t % 60);
+      setResult({ value: Math.round(t * 10) / 10, unit: "min", steps: [
+        { explanation: `You have ${f} litres of fuel and your aircraft burns ${r} litres per hour.` },
+        { explanation: `Divide the available fuel by the burn rate, then multiply by 60 to get the endurance in minutes: ${f} ÷ ${r} × 60 = ${Math.round(t * 10) / 10} minutes (${hrs}h ${mins}m).`, formula: `Endurance = Fuel ÷ Rate × 60 = ${f} ÷ ${r} × 60 = ${Math.round(t * 10) / 10} min` },
+        { explanation: `This is total endurance — your usable flight time will be less after subtracting your fixed and variable reserves.` },
       ]});
     }
   };
 
-  const modeOptions = [
-    { id: "required" as const, label: "Fuel Required" },
-    { id: "rate" as const, label: "Fuel Rate" },
-    { id: "endurance" as const, label: "Endurance" },
-  ];
+  const modeOptions = [{ id: "required" as const, label: "Fuel Required" }, { id: "rate" as const, label: "Fuel Rate" }, { id: "endurance" as const, label: "Endurance" }];
 
   return (
     <div>
@@ -215,8 +213,8 @@ function FuelCalculator() {
         <>
           <ResultBox label={mode === "required" ? "Fuel Required" : mode === "rate" ? "Fuel Rate" : "Endurance"} value={result.value} unit={result.unit} />
           <div style={{ padding: "12px 16px", borderRadius: 12, background: "#131F33", border: "1px solid rgba(255,255,255,0.06)" }}>
-            <div style={{ fontSize: 11, color: "#4A5568", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8 }}>Working</div>
-            {result.working.map((w, i) => <WorkingStep key={i} {...w} />)}
+            <div style={{ fontSize: 11, color: "#4A5568", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8 }}>How it works</div>
+            {result.steps.map((w, i) => <WorkingStep key={i} {...w} />)}
           </div>
         </>
       )}
@@ -224,51 +222,70 @@ function FuelCalculator() {
   );
 }
 
+// ============ WIND TRIANGLE ============
 function WindTriangle() {
   const [tc, setTc] = useState("");
   const [tas, setTas] = useState("");
   const [windDir, setWindDir] = useState("");
   const [windSpd, setWindSpd] = useState("");
-  const [result, setResult] = useState<{ heading: number; gs: number; wca: number; working: { step: string; formula?: string; result?: string }[] } | null>(null);
+  const [result, setResult] = useState<{ heading: number; gs: number; wca: number; steps: { explanation: string; formula?: string }[] } | null>(null);
 
   const calculate = () => {
     if (!tc || !tas || !windDir || !windSpd) return;
-    const tcVal = parseFloat(tc);
-    const tasVal = parseFloat(tas);
-    const wdVal = parseFloat(windDir);
-    const wsVal = parseFloat(windSpd);
+    const tcVal = parseFloat(tc); const tasVal = parseFloat(tas);
+    const wdVal = parseFloat(windDir); const wsVal = parseFloat(windSpd);
 
     const toRad = (d: number) => (d * Math.PI) / 180;
     const toDeg = (r: number) => (r * 180) / Math.PI;
 
-    // Wind angle relative to track
     const windAngle = toRad(wdVal - tcVal);
-
-    // Wind correction angle (crosswind component)
     const xWind = wsVal * Math.sin(windAngle);
+    const hWind = wsVal * Math.cos(windAngle);
     const wcaRad = Math.asin(Math.min(1, Math.max(-1, xWind / tasVal)));
     const wca = toDeg(wcaRad);
 
-    // Heading
     let heading = tcVal + wca;
     if (heading < 0) heading += 360;
     if (heading >= 360) heading -= 360;
 
-    // Groundspeed
-    const headWind = wsVal * Math.cos(windAngle);
-    const gs = tasVal * Math.cos(wcaRad) - headWind;
+    const gs = tasVal * Math.cos(wcaRad) - hWind;
+
+    const absXWind = Math.abs(Math.round(xWind * 10) / 10);
+    const absWCA = Math.abs(Math.round(wca * 10) / 10);
+    const xWindSide = xWind > 0 ? "right" : xWind < 0 ? "left" : "neither side";
+    const wcaDir = wca > 0 ? "right (into the wind)" : wca < 0 ? "left (into the wind)" : "zero";
+    const hWindType = hWind > 0 ? "headwind" : "tailwind";
+    const absHWind = Math.abs(Math.round(hWind * 10) / 10);
 
     setResult({
       heading: Math.round(heading),
       gs: Math.round(gs),
       wca: Math.round(wca * 10) / 10,
-      working: [
-        { step: "1. Calculate wind angle relative to track", formula: `Wind angle = ${wdVal}° - ${tcVal}° = ${Math.round(wdVal - tcVal)}°` },
-        { step: "2. Find crosswind component", formula: `X-wind = ${wsVal} × sin(${Math.round(wdVal - tcVal)}°) = ${Math.round(xWind * 10) / 10} kt` },
-        { step: "3. Calculate wind correction angle (WCA)", formula: `WCA = arcsin(${Math.round(xWind * 10) / 10} ÷ ${tasVal}) = ${Math.round(wca * 10) / 10}°` },
-        { step: "4. Find heading", result: `HDG = ${tcVal}° + ${Math.round(wca * 10) / 10}° = ${Math.round(heading)}°` },
-        { step: "5. Calculate headwind component", formula: `H-wind = ${wsVal} × cos(${Math.round(wdVal - tcVal)}°) = ${Math.round(headWind * 10) / 10} kt` },
-        { step: "6. Find groundspeed", result: `GS = ${tasVal} × cos(${Math.round(wca * 10) / 10}°) - (${Math.round(headWind * 10) / 10}) = ${Math.round(gs)} kt` },
+      steps: [
+        {
+          explanation: `The wind is from ${wdVal}° and your desired track is ${tcVal}°. That means the wind is coming from ${Math.abs(Math.round(wdVal - tcVal))}° relative to your track — it's hitting you from the ${xWind > 0 ? "right" : xWind < 0 ? "left" : "nose"}.`,
+          formula: `Wind angle = ${wdVal}° - ${tcVal}° = ${Math.round(wdVal - tcVal)}°`,
+        },
+        {
+          explanation: `The crosswind component is ${absXWind} kt, pushing you to the ${xWindSide} of your intended track. This is calculated by multiplying the wind speed (${wsVal} kt) by the sine of the wind angle (${Math.round(wdVal - tcVal)}°).`,
+          formula: `Crosswind = ${wsVal} × sin(${Math.round(wdVal - tcVal)}°) = ${Math.round(xWind * 10) / 10} kt`,
+        },
+        {
+          explanation: `To correct for this crosswind and stay on track, you need to point the nose ${absWCA}° to the ${wca > 0 ? "right" : "left"}. This is your Wind Correction Angle (WCA). It's found by dividing the crosswind component (${absXWind} kt) by your TAS (${tasVal} kt), then taking the inverse sine of that ratio.`,
+          formula: `WCA = arcsin(${Math.round(xWind * 10) / 10} ÷ ${tasVal}) = ${Math.round(wca * 10) / 10}°`,
+        },
+        {
+          explanation: `Your heading is your track (${tcVal}°) plus the WCA (${Math.round(wca * 10) / 10}°) = ${Math.round(heading)}°. This is the direction you need to point the aircraft to maintain a track of ${tcVal}°.`,
+          formula: `Heading = ${tcVal}° + (${Math.round(wca * 10) / 10}°) = ${Math.round(heading)}°`,
+        },
+        {
+          explanation: `The ${hWindType} component is ${absHWind} kt. This is calculated by multiplying the wind speed (${wsVal} kt) by the cosine of the wind angle. A positive value means ${hWindType === "headwind" ? "the wind is slowing you down" : "the wind is pushing you along"}.`,
+          formula: `${hWindType === "headwind" ? "Headwind" : "Tailwind"} = ${wsVal} × cos(${Math.round(wdVal - tcVal)}°) = ${Math.round(hWind * 10) / 10} kt`,
+        },
+        {
+          explanation: `Your groundspeed is ${Math.round(gs)} kt. This is your TAS (${tasVal} kt) adjusted for the heading correction and ${hWindType === "headwind" ? "reduced by" : "increased by"} the ${absHWind} kt ${hWindType}.`,
+          formula: `GS = ${tasVal} × cos(${Math.round(wca * 10) / 10}°) - (${Math.round(hWind * 10) / 10}) = ${Math.round(gs)} kt`,
+        },
       ],
     });
   };
@@ -288,8 +305,8 @@ function WindTriangle() {
             <ResultBox label="WCA" value={`${result.wca > 0 ? "+" : ""}${result.wca}°`} color={result.wca > 0 ? "#F6BB42" : "#5D9CEC"} />
           </div>
           <div style={{ padding: "12px 16px", borderRadius: 12, background: "#131F33", border: "1px solid rgba(255,255,255,0.06)" }}>
-            <div style={{ fontSize: 11, color: "#4A5568", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8 }}>Working</div>
-            {result.working.map((w, i) => <WorkingStep key={i} {...w} />)}
+            <div style={{ fontSize: 11, color: "#4A5568", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8 }}>How it works</div>
+            {result.steps.map((w, i) => <WorkingStep key={i} {...w} />)}
           </div>
         </>
       )}
@@ -297,44 +314,40 @@ function WindTriangle() {
   );
 }
 
+// ============ DENSITY ALTITUDE ============
 function DensityAltitude() {
   const [elevation, setElevation] = useState("");
   const [qnh, setQnh] = useState("");
   const [oat, setOat] = useState("");
-  const [result, setResult] = useState<{ pa: number; da: number; isa: number; working: { step: string; formula?: string; result?: string }[] } | null>(null);
+  const [result, setResult] = useState<{ pa: number; da: number; steps: { explanation: string; formula?: string }[] } | null>(null);
 
   const calculate = () => {
     if (!elevation || !qnh || !oat) return;
-    const elev = parseFloat(elevation);
-    const qnhVal = parseFloat(qnh);
-    const oatVal = parseFloat(oat);
+    const elev = parseFloat(elevation); const qnhVal = parseFloat(qnh); const oatVal = parseFloat(oat);
 
-    // Pressure altitude
     const pa = elev + (1013 - qnhVal) * 30;
-
-    // ISA temperature at pressure altitude
     const isa = 15 - (pa / 1000) * 2;
-
-    // ISA deviation
     const isaDev = oatVal - isa;
-
-    // Density altitude
     const da = pa + isaDev * 120;
 
-    setResult({
-      pa: Math.round(pa),
-      da: Math.round(da),
-      isa: Math.round(isa * 10) / 10,
-      working: [
-        { step: "1. Calculate pressure altitude", formula: `PA = ${elev} + (1013 - ${qnhVal}) × 30` },
-        { step: "", result: `PA = ${elev} + ${Math.round((1013 - qnhVal) * 30)} = ${Math.round(pa)} ft` },
-        { step: "2. Find ISA temperature at pressure altitude", formula: `ISA = 15 - (${Math.round(pa)} ÷ 1000) × 2` },
-        { step: "", result: `ISA = ${Math.round(isa * 10) / 10}°C` },
-        { step: "3. Calculate ISA deviation", formula: `Deviation = ${oatVal}°C - ${Math.round(isa * 10) / 10}°C = ${isaDev > 0 ? "+" : ""}${Math.round(isaDev * 10) / 10}°C` },
-        { step: "4. Calculate density altitude", formula: `DA = ${Math.round(pa)} + (${Math.round(isaDev * 10) / 10} × 120)` },
-        { step: "", result: `DA = ${Math.round(da)} ft` },
-      ],
-    });
+    setResult({ pa: Math.round(pa), da: Math.round(da), steps: [
+      {
+        explanation: `First, find the pressure altitude. The standard pressure is 1013 hPa. Your QNH is ${qnhVal} hPa, which is ${Math.round(1013 - qnhVal)} hPa ${qnhVal < 1013 ? "below" : qnhVal > 1013 ? "above" : "at"} standard. Each 1 hPa difference equals 30 feet, so the pressure correction is ${Math.abs(Math.round((1013 - qnhVal) * 30))} ft ${qnhVal < 1013 ? "added to" : "subtracted from"} your elevation.`,
+        formula: `PA = ${elev} + (1013 - ${qnhVal}) × 30 = ${elev} + ${Math.round((1013 - qnhVal) * 30)} = ${Math.round(pa)} ft`,
+      },
+      {
+        explanation: `Next, find what the temperature should be at this pressure altitude according to the International Standard Atmosphere (ISA). ISA temperature decreases by 2°C for every 1,000 ft above sea level, starting from 15°C at sea level. At ${Math.round(pa)} ft, ISA temperature is ${Math.round(isa * 10) / 10}°C.`,
+        formula: `ISA temp = 15 - (${Math.round(pa)} ÷ 1000) × 2 = ${Math.round(isa * 10) / 10}°C`,
+      },
+      {
+        explanation: `The actual outside air temperature is ${oatVal}°C, which is ${Math.abs(Math.round(isaDev * 10) / 10)}°C ${isaDev > 0 ? "warmer" : "cooler"} than ISA. This is called the ISA deviation. ${isaDev > 0 ? "Warmer air is less dense, so the aircraft performs as if it were at a higher altitude." : isaDev < 0 ? "Cooler air is more dense, so the aircraft performs as if it were at a lower altitude." : "The air density matches standard conditions."}`,
+        formula: `ISA deviation = ${oatVal}°C - ${Math.round(isa * 10) / 10}°C = ${isaDev > 0 ? "+" : ""}${Math.round(isaDev * 10) / 10}°C`,
+      },
+      {
+        explanation: `Finally, calculate density altitude by adding 120 ft for every 1°C of ISA deviation to the pressure altitude. The density altitude is ${Math.round(da)} ft — this is the altitude the aircraft "thinks" it's at in terms of performance.`,
+        formula: `DA = ${Math.round(pa)} + (${Math.round(isaDev * 10) / 10} × 120) = ${Math.round(da)} ft`,
+      },
+    ]});
   };
 
   return (
@@ -350,8 +363,8 @@ function DensityAltitude() {
             <ResultBox label="Density Altitude" value={result.da} unit="ft" />
           </div>
           <div style={{ padding: "12px 16px", borderRadius: 12, background: "#131F33", border: "1px solid rgba(255,255,255,0.06)" }}>
-            <div style={{ fontSize: 11, color: "#4A5568", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8 }}>Working</div>
-            {result.working.map((w, i) => <WorkingStep key={i} {...w} />)}
+            <div style={{ fontSize: 11, color: "#4A5568", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8 }}>How it works</div>
+            {result.steps.map((w, i) => <WorkingStep key={i} {...w} />)}
           </div>
         </>
       )}
@@ -359,46 +372,41 @@ function DensityAltitude() {
   );
 }
 
+// ============ TAS ============
 function TASCalculator() {
   const [cas, setCas] = useState("");
   const [pa, setPa] = useState("");
   const [oat, setOat] = useState("");
-  const [result, setResult] = useState<{ tas: number; working: { step: string; formula?: string; result?: string }[] } | null>(null);
+  const [result, setResult] = useState<{ tas: number; steps: { explanation: string; formula?: string }[] } | null>(null);
 
   const calculate = () => {
     if (!cas || !pa || !oat) return;
-    const casVal = parseFloat(cas);
-    const paVal = parseFloat(pa);
-    const oatVal = parseFloat(oat);
+    const casVal = parseFloat(cas); const paVal = parseFloat(pa); const oatVal = parseFloat(oat);
 
-    // ISA temp at PA
     const isa = 15 - (paVal / 1000) * 2;
     const isaDev = oatVal - isa;
-
-    // Approximate TAS correction: +2% per 1000ft PA + adjustment for ISA dev
-    // More accurate formula using air density ratio
-    const tempK = oatVal + 273.15;
-    const isaK = isa + 273.15;
-
-    // Simple E6B approximation: TAS = CAS × (1 + PA/500/100) adjusted for temp
-    // Better: TAS ≈ CAS + (CAS × PA / 60000) + (CAS × ISAdev × PA / 10000000)
-    // Most accurate simple formula: TAS = CAS × sqrt((OAT+273)/(ISA+273)) × (1 + PA/20000)^(roughly)
-    // Using the standard approximation: +2% per 1000ft
     const pctCorrection = paVal / 1000 * 2;
-    const tempCorrection = isaDev * 0.5; // rough temp adjustment %
-    const tas = casVal * (1 + (pctCorrection + tempCorrection) / 100);
+    const tempCorrection = isaDev * 0.5;
+    const totalCorrection = pctCorrection + tempCorrection;
+    const tas = casVal * (1 + totalCorrection / 100);
 
-    setResult({
-      tas: Math.round(tas),
-      working: [
-        { step: "1. Find ISA temperature at pressure altitude", formula: `ISA = 15 - (${paVal} ÷ 1000) × 2 = ${Math.round(isa * 10) / 10}°C` },
-        { step: "2. Calculate ISA deviation", formula: `Deviation = ${oatVal}°C - ${Math.round(isa * 10) / 10}°C = ${isaDev > 0 ? "+" : ""}${Math.round(isaDev * 10) / 10}°C` },
-        { step: "3. Altitude correction (+2% per 1,000 ft PA)", formula: `${Math.round(pctCorrection * 10) / 10}% for ${paVal} ft` },
-        { step: "4. Temperature correction", formula: `${isaDev > 0 ? "+" : ""}${Math.round(tempCorrection * 10) / 10}% for ${isaDev > 0 ? "+" : ""}${Math.round(isaDev * 10) / 10}°C deviation` },
-        { step: "5. Apply correction to CAS", formula: `TAS = ${casVal} × (1 + ${Math.round((pctCorrection + tempCorrection) * 10) / 10}%)` },
-        { step: "", result: `TAS ≈ ${Math.round(tas)} kt` },
-      ],
-    });
+    setResult({ tas: Math.round(tas), steps: [
+      {
+        explanation: `As altitude increases, air becomes less dense. Your airspeed indicator reads CAS (${casVal} kt), but the aircraft is actually moving faster through the thinner air. We need to correct for this to find the True Airspeed (TAS).`,
+      },
+      {
+        explanation: `At ${paVal} ft pressure altitude, the ISA temperature would be ${Math.round(isa * 10) / 10}°C. Your actual OAT is ${oatVal}°C, which is ${Math.abs(Math.round(isaDev * 10) / 10)}°C ${isaDev > 0 ? "warmer" : "cooler"} than ISA.`,
+        formula: `ISA = 15 - (${paVal} ÷ 1000) × 2 = ${Math.round(isa * 10) / 10}°C | Deviation = ${isaDev > 0 ? "+" : ""}${Math.round(isaDev * 10) / 10}°C`,
+      },
+      {
+        explanation: `The altitude correction is approximately +2% per 1,000 ft of pressure altitude. At ${paVal} ft, that's +${Math.round(pctCorrection * 10) / 10}%. ${isaDev !== 0 ? `The temperature deviation adds another ${isaDev > 0 ? "+" : ""}${Math.round(tempCorrection * 10) / 10}% (about 0.5% per °C of ISA deviation).` : "The temperature is ISA standard, so no additional correction."}`,
+        formula: `Altitude correction: +${Math.round(pctCorrection * 10) / 10}% | Temp correction: ${isaDev > 0 ? "+" : ""}${Math.round(tempCorrection * 10) / 10}% | Total: +${Math.round(totalCorrection * 10) / 10}%`,
+      },
+      {
+        explanation: `Applying the total correction of +${Math.round(totalCorrection * 10) / 10}% to your CAS of ${casVal} kt gives a TAS of approximately ${Math.round(tas)} kt.`,
+        formula: `TAS = ${casVal} × (1 + ${Math.round(totalCorrection * 10) / 10}%) = ${Math.round(tas)} kt`,
+      },
+    ]});
   };
 
   return (
@@ -411,8 +419,8 @@ function TASCalculator() {
         <>
           <ResultBox label="True Airspeed (TAS)" value={result.tas} unit="kt" />
           <div style={{ padding: "12px 16px", borderRadius: 12, background: "#131F33", border: "1px solid rgba(255,255,255,0.06)" }}>
-            <div style={{ fontSize: 11, color: "#4A5568", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8 }}>Working</div>
-            {result.working.map((w, i) => <WorkingStep key={i} {...w} />)}
+            <div style={{ fontSize: 11, color: "#4A5568", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 8 }}>How it works</div>
+            {result.steps.map((w, i) => <WorkingStep key={i} {...w} />)}
           </div>
         </>
       )}
@@ -420,6 +428,7 @@ function TASCalculator() {
   );
 }
 
+// ============ CONVERSIONS ============
 function Conversions() {
   const conversions = [
     { label: "Nautical Miles → Kilometres", from: "NM", to: "km", factor: 1.852 },
@@ -433,8 +442,8 @@ function Conversions() {
     { label: "Litres → Imp Gallons", from: "L", to: "IG", factor: 0.21997 },
     { label: "Kilograms → Pounds", from: "kg", to: "lb", factor: 2.20462 },
     { label: "Pounds → Kilograms", from: "lb", to: "kg", factor: 0.45359 },
-    { label: "°C → °F", from: "°C", to: "°F", factor: 0, special: "ctof" },
-    { label: "°F → °C", from: "°F", to: "°C", factor: 0, special: "ftoc" },
+    { label: "°C → °F", from: "°C", to: "°F", factor: 0, special: "ctof" as const },
+    { label: "°F → °C", from: "°F", to: "°C", factor: 0, special: "ftoc" as const },
     { label: "hPa → inHg", from: "hPa", to: "inHg", factor: 0.02953 },
     { label: "inHg → hPa", from: "inHg", to: "hPa", factor: 33.8639 },
   ];
@@ -448,13 +457,9 @@ function Conversions() {
     const val = parseFloat(input);
     const conv = conversions[selected];
     let output: number;
-    if (conv.special === "ctof") {
-      output = val * 9 / 5 + 32;
-    } else if (conv.special === "ftoc") {
-      output = (val - 32) * 5 / 9;
-    } else {
-      output = val * conv.factor;
-    }
+    if (conv.special === "ctof") { output = val * 9 / 5 + 32; }
+    else if (conv.special === "ftoc") { output = (val - 32) * 5 / 9; }
+    else { output = val * conv.factor; }
     setResult(`${Math.round(output * 100) / 100} ${conv.to}`);
   };
 
@@ -462,19 +467,9 @@ function Conversions() {
     <div>
       <div style={{ marginBottom: 14 }}>
         <label style={{ fontSize: 12, color: "#6B7B8D", display: "block", marginBottom: 4, fontFamily: "'DM Sans', sans-serif" }}>Conversion type</label>
-        <select
-          value={selected}
-          onChange={e => { setSelected(parseInt(e.target.value)); setResult(null); }}
-          style={{
-            width: "100%", padding: "10px 14px", borderRadius: 10,
-            border: "1px solid rgba(255,255,255,0.1)", background: "#0F1D2F",
-            color: "#FFF", fontSize: 14, fontFamily: "'DM Sans', sans-serif",
-            outline: "none", appearance: "none",
-          }}
-        >
-          {conversions.map((c, i) => (
-            <option key={i} value={i}>{c.label}</option>
-          ))}
+        <select value={selected} onChange={e => { setSelected(parseInt(e.target.value)); setResult(null); }}
+          style={{ width: "100%", padding: "10px 14px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.1)", background: "#0F1D2F", color: "#FFF", fontSize: 14, fontFamily: "'DM Sans', sans-serif", outline: "none", appearance: "none" }}>
+          {conversions.map((c, i) => (<option key={i} value={i}>{c.label}</option>))}
         </select>
       </div>
       <InputField label={`Value in ${conversions[selected].from}`} value={input} onChange={setInput} placeholder="0" unit={conversions[selected].from} />
@@ -484,6 +479,7 @@ function Conversions() {
   );
 }
 
+// ============ MAIN PAGE ============
 export default function E6BPage() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<CalcTab>("tsd");
@@ -504,66 +500,34 @@ export default function E6BPage() {
   };
 
   if (loading) {
-    return (
-      <div className="quiz-root">
-        <div className="quiz-container">
-          <div className="quiz-loading"><div className="quiz-spinner"></div><p>Loading...</p></div>
-        </div>
-      </div>
-    );
+    return (<div className="quiz-root"><div className="quiz-container"><div className="quiz-loading"><div className="quiz-spinner"></div><p>Loading...</p></div></div></div>);
   }
 
   return (
     <div className="quiz-root">
       <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=DM+Mono:wght@400&display=swap" rel="stylesheet" />
-
       <nav className="quiz-nav">
-        <a href="/dashboard" className="quiz-logo-link">
-          <Logo size={34} />
-          <span className="quiz-logo-text">Vectored</span>
-        </a>
+        <a href="/dashboard" className="quiz-logo-link"><Logo size={34} /><span className="quiz-logo-text">Vectored</span></a>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <button onClick={handleLogout} style={{ padding: "6px 14px", borderRadius: 100, border: "1px solid rgba(255,255,255,0.08)", background: "transparent", color: "#6B7B8D", fontSize: 12, cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}>
-            Log out
-          </button>
+          <button onClick={handleLogout} style={{ padding: "6px 14px", borderRadius: 100, border: "1px solid rgba(255,255,255,0.08)", background: "transparent", color: "#6B7B8D", fontSize: 12, cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}>Log out</button>
         </div>
       </nav>
-
       <div className="quiz-container">
         <div style={{ marginBottom: 8 }}>
           <a href="/resources" style={{ fontSize: 13, color: "#4A5568", textDecoration: "none" }}>← Resources</a>
         </div>
-
         <div style={{ marginBottom: 24 }}>
-          <h1 style={{ fontSize: 28, fontWeight: 700, fontFamily: "'Space Grotesk', sans-serif", color: "#FFF", margin: "0 0 8px" }}>
-            E6B Flight Computer
-          </h1>
-          <p style={{ fontSize: 15, color: "#8899AA", margin: 0, lineHeight: 1.6 }}>
-            Digital flight calculator with step-by-step working. Select a calculation type below.
-          </p>
+          <h1 style={{ fontSize: 28, fontWeight: 700, fontFamily: "'Space Grotesk', sans-serif", color: "#FFF", margin: "0 0 8px" }}>E6B Flight Computer</h1>
+          <p style={{ fontSize: 15, color: "#8899AA", margin: 0, lineHeight: 1.6 }}>Digital flight calculator with step-by-step explanations. Select a calculation type below.</p>
         </div>
-
-        {/* Tabs */}
         <div style={{ display: "flex", gap: 6, marginBottom: 24, flexWrap: "wrap" }}>
-          {tabs.map(t => (
-            <button
-              key={t.id}
-              onClick={() => setActiveTab(t.id)}
-              style={{
-                padding: "8px 16px", borderRadius: 10,
-                border: `1px solid ${activeTab === t.id ? "#00D4AA" : "rgba(255,255,255,0.08)"}`,
-                background: activeTab === t.id ? "rgba(0,212,170,0.08)" : "#131F33",
-                color: activeTab === t.id ? "#00D4AA" : "#6B7B8D",
-                fontSize: 13, cursor: "pointer",
-                fontFamily: "'DM Sans', sans-serif", fontWeight: activeTab === t.id ? 600 : 400,
-              }}
-            >
+          {tabsList.map(t => (
+            <button key={t.id} onClick={() => setActiveTab(t.id)}
+              style={{ padding: "8px 16px", borderRadius: 10, border: `1px solid ${activeTab === t.id ? "#00D4AA" : "rgba(255,255,255,0.08)"}`, background: activeTab === t.id ? "rgba(0,212,170,0.08)" : "#131F33", color: activeTab === t.id ? "#00D4AA" : "#6B7B8D", fontSize: 13, cursor: "pointer", fontFamily: "'DM Sans', sans-serif", fontWeight: activeTab === t.id ? 600 : 400 }}>
               {t.label}
             </button>
           ))}
         </div>
-
-        {/* Calculator body */}
         <div className="quiz-card" style={{ padding: "24px 20px" }}>
           {activeTab === "tsd" && <TSDCalculator />}
           {activeTab === "fuel" && <FuelCalculator />}
@@ -572,11 +536,8 @@ export default function E6BPage() {
           {activeTab === "tas" && <TASCalculator />}
           {activeTab === "conversions" && <Conversions />}
         </div>
-
         <div style={{ marginTop: 24, textAlign: "center" }}>
-          <p style={{ fontSize: 11, color: "#4A5568" }}>
-            This calculator is a study aid. Always verify calculations with your physical E6B for flight planning.
-          </p>
+          <p style={{ fontSize: 11, color: "#4A5568" }}>This calculator is a study aid. Always verify calculations with your physical E6B for flight planning.</p>
         </div>
       </div>
     </div>
