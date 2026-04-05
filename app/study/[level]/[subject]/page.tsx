@@ -11,6 +11,7 @@ type Question = {
   id: number; subject: string; level: string; subtopic: string;
   question: string; option_a: string; option_b: string; option_c: string; option_d: string;
   correct_answer: string; explanation: string; reference: string;
+  explanation_image?: string | null;
 };
 type AnswerRecord = { question: Question; selected: string; correct: boolean; };
 
@@ -336,7 +337,9 @@ export default function StudyQuizPage() {
             </div>
             <div className="quiz-explanation">
               <div className={`quiz-result-badge ${ra.correct ? "correct" : "incorrect"}`}>{ra.correct ? "You answered correctly" : `You answered ${ra.selected} \u2014 correct answer is ${rq.correct_answer}`}</div>
-              <p className="quiz-explanation-text"><RenderText text={rq.explanation} /></p>              {rq.reference && <p className="quiz-reference">Ref: {rq.reference}</p>}
+              <p className="quiz-explanation-text"><RenderText text={rq.explanation} /></p>
+              {rq.explanation_image && <div style={{ marginTop: 16 }} dangerouslySetInnerHTML={{ __html: rq.explanation_image }} />}
+              {rq.reference && <p className="quiz-reference">Ref: {rq.reference}</p>}
             </div>
             <div style={{ display: "flex", gap: 10, marginTop: 20 }}>
               {reviewIndex > 0 && <button onClick={() => setReviewIndex(i => i - 1)} className="quiz-btn" style={{ flex: 1 }}>Previous</button>}
@@ -432,6 +435,7 @@ export default function StudyQuizPage() {
                 <div className="quiz-explanation">
                   <div className={`quiz-result-badge ${selected === q.correct_answer ? "correct" : "incorrect"}`}>{selected === q.correct_answer ? "Correct!" : `Incorrect \u2014 the answer is ${q.correct_answer}`}</div>
                   <p className="quiz-explanation-text"><RenderText text={q.explanation} /></p>
+                  {q.explanation_image && <div style={{ marginTop: 16 }} dangerouslySetInnerHTML={{ __html: q.explanation_image }} />}
                   {q.reference && <p className="quiz-reference">Ref: {q.reference}</p>}
                   <button onClick={handleNext} className="quiz-btn quiz-btn-primary quiz-next">{current + 1 >= questions.length ? "See results" : "Next question"}</button>
                 </div>
