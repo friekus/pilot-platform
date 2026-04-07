@@ -12,6 +12,7 @@ type Question = {
   question: string; option_a: string; option_b: string; option_c: string; option_d: string;
   correct_answer: string; explanation: string; reference: string;
   explanation_image?: string | null;
+  question_image?: string | null;
 };
 type AnswerRecord = { question: Question; selected: string; correct: boolean; };
 
@@ -325,6 +326,7 @@ export default function StudyQuizPage() {
               <div className="quiz-subtopic">{rq.subtopic}</div>
               <FlagButton questionId={rq.id} userId={userId} />
             </div>
+            {rq.question_image && <div style={{ marginTop: 8, marginBottom: 8 }} dangerouslySetInnerHTML={{ __html: rq.question_image }} />}
             <h2 className="quiz-question"><RenderText text={rq.question} /></h2>
             <div className="quiz-options">
               {rOpts.map(opt => {
@@ -421,6 +423,7 @@ export default function StudyQuizPage() {
                 <div className="quiz-subtopic">{q.subtopic}</div>
                 <FlagButton questionId={q.id} userId={userId} />
               </div>
+              {q.question_image && <div style={{ marginTop: 8, marginBottom: 8 }} dangerouslySetInnerHTML={{ __html: q.question_image }} />}
               <h2 className="quiz-question"><RenderText text={q.question} /></h2>
               <div className="quiz-options">
                 {options.map(opt => {
