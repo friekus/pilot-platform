@@ -472,7 +472,7 @@ export default function StudyQuizPage() {
               )}
             </div>
             <div style={{ marginTop: 24, textAlign: "center" }}>
-              <p style={{ fontSize: 11, color: "#4A5568" }}>Vectored is a study aid only. Not affiliated with or endorsed by CASA. <a href="/terms" style={{ color: "#4A5568" }}>Terms</a> {"\u00B7"} <a href="/privacy" style={{ color: "#4A5568" }}>Privacy</a></p>
+              <p style={{ fontSize: 11, color: "#4A5568" }}>Vectored is a study aid only. Not affiliated with or endorsed by CASA. <a href="/terms" target="_blank" rel="noopener noreferrer" style={{ color: "#4A5568" }}>Terms</a> {"\u00B7"} <a href="/privacy" target="_blank" rel="noopener noreferrer" style={{ color: "#4A5568" }}>Privacy</a></p>
             </div>
           </>
         )}
