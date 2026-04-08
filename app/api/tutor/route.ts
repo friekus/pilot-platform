@@ -27,6 +27,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Question context is required' }, { status: 400 });
     }
 
+    const apiKey = process.env.ANTHROPIC_API_KEY;
+    if (!apiKey) {
+      console.error('ANTHROPIC_API_KEY is not set in environment variables');
+      return NextResponse.json({ error: 'API key not configured' }, { status: 500 });
+    }
+
     // Build the context message from the question data
     const letters: Record<string, string> = {
       A: questionContext.option_a,
@@ -71,11 +77,18 @@ REFERENCE: ${questionContext.reference}`;
       }
     }
 
+    // Ensure first message is from user
+    if (merged.length > 0 && merged[0].role !== 'user') {
+      merged.unshift({ role: 'user', content: 'Hello, I have a question about the topic.' });
+    }
+
+    console.log('Calling Anthropic API with', merged.length, 'messages');
+
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY || '',
+        'x-api-key': apiKey,
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
@@ -86,16 +99,55 @@ REFERENCE: ${questionContext.reference}`;
       }),
     });
 
+    const responseText = await response.text();
+    
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Anthropic API error:', response.status, errorText);
+      console.error('Anthropic API error:', response.status, responseText);
+      
+      // If the model isn't available, try fallback
+      if (response.status === 400 || response.status === 404) {
+        console.log('Trying fallback model claude-3-5-sonnet-20241022...');
+        const fallbackResponse = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': apiKey,
+            'anthropic-version': '2023-06-01',
+          },
+          body: JSON.stringify({
+            model: 'claude-3-5-sonnet-20241022',
+            max_tokens: 1000,
+            system: SYSTEM_PROMPT,
+            messages: merged,
+          }),
+        });
+
+        const fallbackText = await fallbackResponse.text();
+        
+        if (!fallbackResponse.ok) {
+          console.error('Fallback model also failed:', fallbackResponse.status, fallbackText);
+          return NextResponse.json(
+            { error: 'Failed to get response from tutor. Status: ' + fallbackResponse.status },
+            { status: 500 }
+          );
+        }
+
+        const fallbackData = JSON.parse(fallbackText);
+        const fallbackReply = fallbackData.content
+          ?.filter((b: { type: string }) => b.type === 'text')
+          .map((b: { text: string }) => b.text)
+          .join('') || 'I could not generate a response. Please try again.';
+
+        return NextResponse.json({ reply: fallbackReply });
+      }
+
       return NextResponse.json(
-        { error: 'Failed to get response from tutor' },
+        { error: 'Failed to get response from tutor. Status: ' + response.status },
         { status: 500 }
       );
     }
 
-    const data = await response.json();
+    const data = JSON.parse(responseText);
     const reply = data.content
       ?.filter((b: { type: string }) => b.type === 'text')
       .map((b: { text: string }) => b.text)
