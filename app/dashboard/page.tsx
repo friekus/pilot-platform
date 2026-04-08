@@ -296,9 +296,9 @@ export default function DashboardPage() {
 
         <div style={{ padding: "20px 0", borderTop: "1px solid rgba(255,255,255,0.06)", textAlign: "center" }}>
           <p style={{ fontSize: 12, color: "#4A5568", lineHeight: 1.6, margin: 0 }}>
-            <a href="/terms" style={{ color: "#4A5568", textDecoration: "underline" }}>Terms</a>
+            <a href="/terms" target="_blank" rel="noopener noreferrer" style={{ color: "#4A5568", textDecoration: "underline" }}>Terms</a>
             {" · "}
-            <a href="/privacy" style={{ color: "#4A5568", textDecoration: "underline" }}>Privacy</a>
+            <a href="/privacy" target="_blank" rel="noopener noreferrer" style={{ color: "#4A5568", textDecoration: "underline" }}>Privacy</a>
             {" · "}
             <span>vectored.com.au</span>
           </p>
