@@ -3,6 +3,7 @@ import "../../../quiz/quiz.css";
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "../../../lib/supabase";
 import { useRouter, useParams } from "next/navigation";
+import TutorChat from "../../../../components/TutorChat";
 
 const SUPABASE_URL = "https://cbvzjovbheiavmkalmaz.supabase.co";
 const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNidnpqb3ZiaGVpYXZta2FsbWF6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDA2MDUsImV4cCI6MjA4OTkxNjYwNX0.elpc_IUb9dot2ljnFMXGQnWAQ1aAb8krb2-QxC2jnKw";
@@ -166,6 +167,7 @@ export default function StudyQuizPage() {
   const [error, setError] = useState("");
   const [reviewMode, setReviewMode] = useState(false);
   const [reviewIndex, setReviewIndex] = useState(0);
+  const [tutorKey, setTutorKey] = useState(0);
   const router = useRouter();
   const QUIZ_LENGTH = 10;
 
@@ -184,7 +186,6 @@ export default function StudyQuizPage() {
     if (!authed || !userId) return;
     setLoading(true); setError("");
     try {
-      // Fetch all questions for this subject/level
       const res = await fetch(
         `${SUPABASE_URL}/rest/v1/questions?subject=eq.${encodeURIComponent(subjectName)}&level=eq.${levelUpper}&select=*`,
         { headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` } }
@@ -193,8 +194,6 @@ export default function StudyQuizPage() {
       const allQuestions: Question[] = await res.json();
       if (allQuestions.length === 0) { setError(`No questions found for ${levelUpper} ${subjectName}.`); setLoading(false); return; }
 
-      // Fetch user's answer history for this subject
-      // Get the most recent answer per question to determine if they got it right
       let incorrectIds: Set<number> = new Set();
       let correctIds: Set<number> = new Set();
       try {
@@ -204,7 +203,6 @@ export default function StudyQuizPage() {
         );
         if (histRes.ok) {
           const history: { question_id: number; is_correct: boolean; answered_at: string }[] = await histRes.json();
-          // For each question, use the most recent attempt (history is sorted desc)
           const mostRecent: Record<number, boolean> = {};
           history.forEach(h => {
             if (!(h.question_id in mostRecent)) {
@@ -218,17 +216,14 @@ export default function StudyQuizPage() {
         }
       } catch { /* proceed without history */ }
 
-      // Split into three priority pools
       const unseen = allQuestions.filter(q => !incorrectIds.has(q.id) && !correctIds.has(q.id));
       const incorrect = allQuestions.filter(q => incorrectIds.has(q.id));
       const correct = allQuestions.filter(q => correctIds.has(q.id));
 
-      // Shuffle each pool
       unseen.sort(() => Math.random() - 0.5);
       incorrect.sort(() => Math.random() - 0.5);
       correct.sort(() => Math.random() - 0.5);
 
-      // Priority: unseen first, then previously incorrect, then previously correct
       const selected: Question[] = [];
       for (const pool of [unseen, incorrect, correct]) {
         for (const q of pool) {
@@ -238,9 +233,7 @@ export default function StudyQuizPage() {
         if (selected.length >= QUIZ_LENGTH) break;
       }
 
-      // Final shuffle so priority order isn't obvious
       selected.sort(() => Math.random() - 0.5);
-
       setQuestions(selected);
     } catch { setError("Could not load questions."); }
     setLoading(false);
@@ -255,9 +248,9 @@ export default function StudyQuizPage() {
     const q = questions[current];
     const correct = selected === q.correct_answer;
     setShowResult(true);
+    setTutorKey(prev => prev + 1);
     setAnswers(prev => [...prev, { question: q, selected, correct }]);
 
-    // Record answer to user_answers table
     if (userId && accessToken) {
       fetch(`${SUPABASE_URL}/rest/v1/user_answers`, {
         method: "POST",
@@ -276,7 +269,7 @@ export default function StudyQuizPage() {
           correct_answer: q.correct_answer,
           is_correct: correct,
         }),
-      }).catch(() => {}); // fire and forget
+      }).catch(() => {});
     }
   };
 
@@ -342,6 +335,23 @@ export default function StudyQuizPage() {
               <p className="quiz-explanation-text"><RenderText text={rq.explanation} /></p>
               {rq.explanation_image && <div style={{ marginTop: 16 }} dangerouslySetInnerHTML={{ __html: rq.explanation_image }} />}
               {rq.reference && <p className="quiz-reference">Ref: {rq.reference}</p>}
+              <TutorChat
+                key={`review-${reviewIndex}`}
+                questionContext={{
+                  subject: rq.subject,
+                  subtopic: rq.subtopic,
+                  question: rq.question,
+                  option_a: rq.option_a,
+                  option_b: rq.option_b,
+                  option_c: rq.option_c,
+                  option_d: rq.option_d,
+                  correct_answer: rq.correct_answer,
+                  selected_answer: ra.selected,
+                  is_correct: ra.correct,
+                  explanation: rq.explanation,
+                  reference: rq.reference,
+                }}
+              />
             </div>
             <div style={{ display: "flex", gap: 10, marginTop: 20 }}>
               {reviewIndex > 0 && <button onClick={() => setReviewIndex(i => i - 1)} className="quiz-btn" style={{ flex: 1 }}>Previous</button>}
@@ -434,12 +444,29 @@ export default function StudyQuizPage() {
                 })}
               </div>
               {!showResult && <button onClick={handleSubmit} className="quiz-btn quiz-btn-primary quiz-submit" disabled={!selected}>Check answer</button>}
-              {showResult && (
+              {showResult && selected && (
                 <div className="quiz-explanation">
                   <div className={`quiz-result-badge ${selected === q.correct_answer ? "correct" : "incorrect"}`}>{selected === q.correct_answer ? "Correct!" : `Incorrect \u2014 the answer is ${q.correct_answer}`}</div>
                   <p className="quiz-explanation-text"><RenderText text={q.explanation} /></p>
                   {q.explanation_image && <div style={{ marginTop: 16 }} dangerouslySetInnerHTML={{ __html: q.explanation_image }} />}
                   {q.reference && <p className="quiz-reference">Ref: {q.reference}</p>}
+                  <TutorChat
+                    key={`quiz-${tutorKey}`}
+                    questionContext={{
+                      subject: q.subject,
+                      subtopic: q.subtopic,
+                      question: q.question,
+                      option_a: q.option_a,
+                      option_b: q.option_b,
+                      option_c: q.option_c,
+                      option_d: q.option_d,
+                      correct_answer: q.correct_answer,
+                      selected_answer: selected,
+                      is_correct: selected === q.correct_answer,
+                      explanation: q.explanation,
+                      reference: q.reference,
+                    }}
+                  />
                   <button onClick={handleNext} className="quiz-btn quiz-btn-primary quiz-next">{current + 1 >= questions.length ? "See results" : "Next question"}</button>
                 </div>
               )}
