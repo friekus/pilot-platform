@@ -1,5 +1,5 @@
 "use client";
-import "../../quiz/quiz.css";
+import "../quiz/quiz.css";
 
 function Logo({ size = 34 }: { size?: number }) {
   const s = size, cx = s / 2, cy = s / 2;
