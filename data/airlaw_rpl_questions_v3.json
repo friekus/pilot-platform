@@ -1,0 +1,586 @@
+[
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Licence privileges and limitations",
+    "difficulty": 1,
+    "question": "Under what conditions may an RPL holder fly without further endorsement?",
+    "option_a": "Day VFR only",
+    "option_b": "Day or night VFR",
+    "option_c": "Day VFR or IFR",
+    "option_d": "Day or night IFR",
+    "correct_answer": "A",
+    "explanation": "CASR 61.460(d) authorises an RPL holder to pilot only when the flight is conducted by day under the VFR. Night and IFR operations are outside RPL privileges.",
+    "reference": "CASR 61.460 — Privileges of recreational pilot licences",
+    "tags": [
+      "RPL",
+      "privileges"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Licence privileges and limitations",
+    "difficulty": 1,
+    "question": "The maximum certificated take-off weight for an aeroplane flown on RPL privileges is:",
+    "option_a": "1,000 kg",
+    "option_b": "1,500 kg",
+    "option_c": "2,000 kg",
+    "option_d": "5,700 kg",
+    "correct_answer": "B",
+    "explanation": "CASR 61.460(b) limits RPL operations to aircraft with a maximum certificated take-off weight not exceeding 1,500 kg.",
+    "reference": "CASR 61.460 — Privileges of recreational pilot licences",
+    "tags": [
+      "RPL",
+      "MTOW"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Licence privileges and limitations",
+    "difficulty": 2,
+    "question": "Without a recreational navigation endorsement, an RPL holder may not fly beyond:",
+    "option_a": "10 NM of the departure aerodrome",
+    "option_b": "25 NM of the departure aerodrome",
+    "option_c": "50 NM of the departure aerodrome",
+    "option_d": "the local flying training area",
+    "correct_answer": "B",
+    "explanation": "CASR 61.470(1)(a) restricts RPL operations without a navigation endorsement to within 25 NM of the departure aerodrome (or to a flight training area).",
+    "reference": "CASR 61.470 — Limitations on exercise of privileges of recreational pilot licences—endorsements",
+    "tags": [
+      "RPL",
+      "navigation endorsement"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Licence privileges and limitations",
+    "difficulty": 2,
+    "question": "An RPL holder without a controlled airspace endorsement wishes to enter Class C airspace. They:",
+    "option_a": "may enter with an ATC clearance",
+    "option_b": "may enter if they hold a flight radio endorsement",
+    "option_c": "must remain clear of controlled airspace",
+    "option_d": "may enter at or above 5,000 ft AMSL",
+    "correct_answer": "C",
+    "explanation": "CASR 61.470(2) requires a controlled airspace endorsement before an RPL holder may pilot an aircraft in controlled airspace. A clearance does not substitute for the endorsement.",
+    "reference": "CASR 61.470 — Limitations on exercise of privileges of recreational pilot licences—endorsements",
+    "tags": [
+      "RPL",
+      "controlled airspace"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Licence privileges and limitations",
+    "difficulty": 2,
+    "question": "To take off or land at a controlled aerodrome, an RPL holder must hold a:",
+    "option_a": "controlled aerodrome endorsement",
+    "option_b": "controlled airspace endorsement",
+    "option_c": "flight radio endorsement only",
+    "option_d": "navigation endorsement",
+    "correct_answer": "A",
+    "explanation": "CASR 61.470(3) requires a controlled aerodrome endorsement for an RPL holder to operate at a controlled aerodrome.",
+    "reference": "CASR 61.470 — Limitations on exercise of privileges of recreational pilot licences—endorsements",
+    "tags": [
+      "RPL",
+      "controlled aerodrome"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Licence privileges and limitations",
+    "difficulty": 3,
+    "question": "An RPL holder with a Class 2 medical certificate plans to carry two passengers on a private day VFR flight. They:",
+    "option_a": "may not carry more than one passenger",
+    "option_b": "may carry two passengers",
+    "option_c": "must be accompanied by another pilot",
+    "option_d": "must hold a controlled airspace endorsement",
+    "correct_answer": "B",
+    "explanation": "CASR 61.465(2) permits an RPL holder to carry more than one passenger when they hold a current Class 1 or Class 2 medical certificate. With a Class 2 medical the two-passenger limit does not apply.",
+    "reference": "CASR 61.465 — Limitations on exercise of privileges of recreational pilot licences—general",
+    "tags": [
+      "RPL",
+      "medical",
+      "passengers"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Licence privileges and limitations",
+    "difficulty": 3,
+    "question": "An RPL holder without a Class 1 or Class 2 medical wishes to fly above 10,000 ft AMSL. They:",
+    "option_a": "may do so within 25 NM of the departure aerodrome",
+    "option_b": "must hold a Class 1 or Class 2 medical or be accompanied",
+    "option_c": "must hold a recreational navigation endorsement",
+    "option_d": "may do so by day VFR only",
+    "correct_answer": "B",
+    "explanation": "CASR 61.465(3) limits flight above 10,000 ft AMSL to RPL holders who hold a Class 1 or 2 medical, or who are accompanied by another suitably qualified pilot.",
+    "reference": "CASR 61.465 — Limitations on exercise of privileges of recreational pilot licences—general",
+    "tags": [
+      "RPL",
+      "altitude",
+      "medical"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Right of way rules",
+    "difficulty": 1,
+    "question": "Two aeroplanes are approaching head-on at the same altitude. Each pilot must alter heading to the:",
+    "option_a": "right",
+    "option_b": "left",
+    "option_c": "lower aircraft's side",
+    "option_d": "highest visibility side",
+    "correct_answer": "A",
+    "explanation": "CASR 91.330 (item 6 of the right of way table) and the additional rule for head-on encounters require each pilot to alter heading to the right.",
+    "reference": "CASR 91.330 — Right of way rules; CASR 91.335 — Additional right of way rules",
+    "tags": [
+      "right of way",
+      "head-on"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Right of way rules",
+    "difficulty": 2,
+    "question": "Two aeroplanes are converging at approximately the same altitude. Right of way belongs to the aircraft:",
+    "option_a": "with the other on its left",
+    "option_b": "with the other on its right",
+    "option_c": "at the higher altitude",
+    "option_d": "with greater airspeed",
+    "correct_answer": "A",
+    "explanation": "CASR 91.330 item 6 requires the aircraft that has the other aircraft on its right to give way; therefore the aircraft with the other on its left has right of way.",
+    "reference": "CASR 91.330 — Right of way rules",
+    "tags": [
+      "right of way",
+      "converging"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Right of way rules",
+    "difficulty": 2,
+    "question": "An aeroplane being overtaken by another aeroplane:",
+    "option_a": "must descend immediately",
+    "option_b": "must give way",
+    "option_c": "has right of way",
+    "option_d": "must turn right",
+    "correct_answer": "C",
+    "explanation": "CASR 91.330 item 4 requires the overtaking aircraft to give way; the aircraft being overtaken has right of way.",
+    "reference": "CASR 91.330 — Right of way rules",
+    "tags": [
+      "right of way",
+      "overtaking"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Right of way rules",
+    "difficulty": 2,
+    "question": "A power-driven aeroplane and an unpowered glider are converging at the same altitude. Right of way belongs to:",
+    "option_a": "the glider",
+    "option_b": "the aeroplane",
+    "option_c": "the higher aircraft",
+    "option_d": "the slower aircraft",
+    "correct_answer": "A",
+    "explanation": "CASR 91.330 item 5 lists the order of give-way categories; a power-driven aircraft must give way to an unpowered glider.",
+    "reference": "CASR 91.330 — Right of way rules",
+    "tags": [
+      "right of way",
+      "glider"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Right of way rules",
+    "difficulty": 3,
+    "question": "Two heavier-than-air aircraft are on approach to land at the same aerodrome. Right of way belongs to the aircraft that is:",
+    "option_a": "lower",
+    "option_b": "higher",
+    "option_c": "faster",
+    "option_d": "first to call final",
+    "correct_answer": "A",
+    "explanation": "CASR 91.330 item 3 requires the higher aircraft to give way to the lower aircraft on approach, except that the lower aircraft must not cut in front of an aircraft in the final stages of an approach.",
+    "reference": "CASR 91.330 — Right of way rules",
+    "tags": [
+      "right of way",
+      "approach"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Right of way rules",
+    "difficulty": 3,
+    "question": "An aircraft compelled to land in an emergency has:",
+    "option_a": "right of way over all other aircraft",
+    "option_b": "right of way over IFR aircraft only",
+    "option_c": "no priority unless ATC declares so",
+    "option_d": "right of way only at controlled aerodromes",
+    "correct_answer": "A",
+    "explanation": "CASR 91.330 item 1 requires all other aircraft to give way to an aircraft compelled to land. The rule applies regardless of airspace or ATC involvement.",
+    "reference": "CASR 91.330 — Right of way rules",
+    "tags": [
+      "right of way",
+      "emergency"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Pilot in command responsibilities",
+    "difficulty": 1,
+    "question": "Final authority over an aircraft during a flight rests with the:",
+    "option_a": "operator",
+    "option_b": "owner",
+    "option_c": "ATC",
+    "option_d": "pilot in command",
+    "correct_answer": "D",
+    "explanation": "CASR 91.215 gives the pilot in command final authority over the aircraft and over the maintenance of discipline by all persons on board.",
+    "reference": "CASR 91.215 — Authority and responsibilities of pilot in command",
+    "tags": [
+      "PIC",
+      "authority"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Pilot in command responsibilities",
+    "difficulty": 2,
+    "question": "The pilot in command must comply with the:",
+    "option_a": "Bob Tait notes",
+    "option_b": "aircraft flight manual instructions",
+    "option_c": "operator's training manual only",
+    "option_d": "AIP en route chart only",
+    "correct_answer": "B",
+    "explanation": "CASR 91.095 requires the pilot in command to comply with the aircraft flight manual instructions and any conditions on the certificate of airworthiness.",
+    "reference": "CASR 91.095 — Compliance with flight manual etc.",
+    "tags": [
+      "PIC",
+      "AFM compliance"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Pilot in command responsibilities",
+    "difficulty": 2,
+    "question": "Before take-off, the pilot in command must check that the aircraft has:",
+    "option_a": "a current insurance certificate",
+    "option_b": "a current maintenance release or certificate of release to service",
+    "option_c": "two altimeters fitted",
+    "option_d": "passed an annual inspection within 6 months",
+    "correct_answer": "B",
+    "explanation": "Part 91 MOS 10.02(g) requires the PIC to confirm a maintenance release or certificate of release to service is in force before take-off, under the matters checked under CASR 91.245.",
+    "reference": "CASR 91.245 — Matters to be checked before take-off; Part 91 MOS section 10.02 — Matters to be checked before take-off",
+    "tags": [
+      "PIC",
+      "pre-flight"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Pilot in command responsibilities",
+    "difficulty": 2,
+    "question": "Responsibility for ensuring the aircraft is loaded within weight and balance limits rests with the:",
+    "option_a": "loadmaster",
+    "option_b": "operator",
+    "option_c": "pilot in command",
+    "option_d": "engineer",
+    "correct_answer": "C",
+    "explanation": "CASR 91.215(2)(b) makes the pilot in command responsible for the safety of cargo on the aircraft and the safe operation of the aircraft, which includes loading within limits.",
+    "reference": "CASR 91.215 — Authority and responsibilities of pilot in command",
+    "tags": [
+      "PIC",
+      "weight and balance"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Pilot in command responsibilities",
+    "difficulty": 2,
+    "question": "A passenger refuses to fasten their seat belt for taxi. The pilot in command must:",
+    "option_a": "depart and brief them in the air",
+    "option_b": "direct the passenger to comply",
+    "option_c": "ignore the refusal if the taxiway is short",
+    "option_d": "delegate to a crew member",
+    "correct_answer": "B",
+    "explanation": "CASR 91.220 authorises the pilot in command to direct any person on the aircraft regarding safety. The PIC must direct compliance before commencing the flight.",
+    "reference": "CASR 91.220 — Actions and directions by operator or pilot in command",
+    "tags": [
+      "PIC",
+      "passengers"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Pilot in command responsibilities",
+    "difficulty": 3,
+    "question": "Becoming aware of a hazard to air navigation not in published information, the pilot in command must:",
+    "option_a": "report it on landing only",
+    "option_b": "report it as soon as circumstances permit",
+    "option_c": "log it in the aircraft journey log",
+    "option_d": "advise the operator within 24 hours",
+    "correct_answer": "B",
+    "explanation": "CASR 91.675 requires the PIC to report hazards to air navigation as soon as circumstances permit, to ATS or the relevant aerodrome operator.",
+    "reference": "CASR 91.675 — Pilot in command to report hazards to air navigation",
+    "tags": [
+      "PIC",
+      "hazards",
+      "reporting"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Aerodromes",
+    "difficulty": 1,
+    "question": "An aircraft is in the vicinity of a non-controlled aerodrome when it is within:",
+    "option_a": "5 NM and at or below 3,000 ft AGL",
+    "option_b": "10 NM and at or below 3,000 ft AGL",
+    "option_c": "10 NM and at or below 5,000 ft AGL",
+    "option_d": "25 NM and at or below 5,000 ft AGL",
+    "correct_answer": "B",
+    "explanation": "CASR 91.360 defines an aircraft as in the vicinity of a non-controlled aerodrome when within 10 NM of the aerodrome and at or below 3,000 ft AGL.",
+    "reference": "CASR 91.360 — Meaning of in the vicinity of a non-controlled aerodrome",
+    "tags": [
+      "aerodrome",
+      "vicinity"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Aerodromes",
+    "difficulty": 2,
+    "question": "Standard circuit direction at an Australian non-controlled aerodrome is:",
+    "option_a": "always right hand",
+    "option_b": "always left hand",
+    "option_c": "left hand unless otherwise published",
+    "option_d": "right hand unless otherwise published",
+    "correct_answer": "C",
+    "explanation": "AIP ENR 1.1 §9.4 specifies left-hand circuits at non-controlled aerodromes unless an alternative direction is published in the aeronautical information for that aerodrome.",
+    "reference": "AIP ENR 1.1 section 9.4 — Circuit Height",
+    "tags": [
+      "aerodrome",
+      "circuit direction"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Aerodromes",
+    "difficulty": 2,
+    "question": "A pilot in command takes off from a non-controlled aerodrome. They contravene CASR if they begin the take-off when:",
+    "option_a": "another aircraft is within 10 NM",
+    "option_b": "another aircraft on a conflicting path is on final",
+    "option_c": "wind is across the runway",
+    "option_d": "the area QNH has changed",
+    "correct_answer": "B",
+    "explanation": "CASR 91.370 prohibits a take-off or landing at a non-controlled aerodrome if there is a risk of conflict with another aircraft using the aerodrome.",
+    "reference": "CASR 91.370 — Take-off or landing at non-controlled aerodrome—all aircraft",
+    "tags": [
+      "aerodrome",
+      "non-controlled"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Aerodromes",
+    "difficulty": 2,
+    "question": "An RPL pilot may operate at a controlled aerodrome only when in compliance with:",
+    "option_a": "ATC clearances and instructions",
+    "option_b": "VFRG procedures only",
+    "option_c": "the operator's procedures only",
+    "option_d": "the AIP supplement only",
+    "correct_answer": "A",
+    "explanation": "CASR 91.405 governs the operation of aircraft in aerodrome traffic at controlled aerodromes; pilots must comply with ATC clearances and instructions.",
+    "reference": "CASR 91.405 — Aircraft in aerodrome traffic at controlled aerodromes",
+    "tags": [
+      "aerodrome",
+      "controlled"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Aerodromes",
+    "difficulty": 3,
+    "question": "An aerodrome may be used for a flight operation only if it is:",
+    "option_a": "certified or registered",
+    "option_b": "approved for the type of operation",
+    "option_c": "depicted on the en route chart",
+    "option_d": "equipped with paved runways",
+    "correct_answer": "B",
+    "explanation": "CASR 91.410 requires that an aerodrome be approved (in the manner prescribed) for the type of operation conducted there; certification status alone is not the test.",
+    "reference": "CASR 91.410 — Use of aerodromes",
+    "tags": [
+      "aerodrome",
+      "approval"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "VFR visibility and cloud clearance",
+    "difficulty": 1,
+    "question": "The minimum in-flight visibility for VFR in Class G at or below 3,000 ft AMSL or 1,000 ft AGL is:",
+    "option_a": "1,500 m",
+    "option_b": "3,000 m",
+    "option_c": "5,000 m",
+    "option_d": "8,000 m",
+    "correct_answer": "C",
+    "explanation": "Part 91 MOS Table 2.07(3) item 4 prescribes 5,000 m flight visibility, clear of cloud, in sight of ground or water for an aircraft in Class G at or below 3,000 ft AMSL or 1,000 ft AGL (whichever is higher).",
+    "reference": "Part 91 MOS Chapter 2 Division 2.4 section 2.07 — VMC criteria",
+    "tags": [
+      "VFR",
+      "VMC",
+      "Class G"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "VFR visibility and cloud clearance",
+    "difficulty": 2,
+    "question": "VFR cloud separation in Class G at 4,500 ft AMSL is:",
+    "option_a": "clear of cloud",
+    "option_b": "500 ft below, 1,000 ft above, 1 NM horizontal",
+    "option_c": "1,500 m horizontal, 1,000 ft vertical",
+    "option_d": "1,500 m horizontal, 500 ft vertical",
+    "correct_answer": "C",
+    "explanation": "Part 91 MOS Table 2.07(3) item 2 prescribes 1,500 m horizontal and 1,000 ft vertical from cloud for VFR aircraft in Class A, B, C, E or G below 10,000 ft AMSL above the lower-level allowances.",
+    "reference": "Part 91 MOS Chapter 2 Division 2.4 section 2.07 — VMC criteria",
+    "tags": [
+      "VFR",
+      "VMC",
+      "cloud separation"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "VFR visibility and cloud clearance",
+    "difficulty": 2,
+    "question": "At or above 10,000 ft AMSL, the VFR minimum flight visibility is:",
+    "option_a": "3,000 m",
+    "option_b": "5,000 m",
+    "option_c": "5 NM",
+    "option_d": "8,000 m",
+    "correct_answer": "D",
+    "explanation": "Part 91 MOS Table 2.07(3) item 1 prescribes 8,000 m flight visibility for aircraft at or above 10,000 ft AMSL in Class A, B, C, E or G airspace.",
+    "reference": "Part 91 MOS Chapter 2 Division 2.4 section 2.07 — VMC criteria",
+    "tags": [
+      "VFR",
+      "VMC",
+      "high level"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "VFR visibility and cloud clearance",
+    "difficulty": 3,
+    "question": "A VFR aeroplane is in Class G at 2,500 ft AMSL and 900 ft AGL over rising terrain. The applicable VMC minima are:",
+    "option_a": "5,000 m, clear of cloud, in sight of ground or water",
+    "option_b": "5,000 m, 1,500 m horizontal and 1,000 ft vertical from cloud",
+    "option_c": "8,000 m, 1,500 m horizontal and 1,000 ft vertical from cloud",
+    "option_d": "1,600 m, clear of cloud",
+    "correct_answer": "A",
+    "explanation": "Part 91 MOS Table 2.07(3) item 4 applies because the aircraft is at or below the higher of 3,000 ft AMSL or 1,000 ft AGL: 5,000 m flight visibility, clear of cloud, in sight of ground or water.",
+    "reference": "Part 91 MOS Chapter 2 Division 2.4 section 2.07 — VMC criteria",
+    "tags": [
+      "VFR",
+      "VMC",
+      "Class G"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "VFR visibility and cloud clearance",
+    "difficulty": 3,
+    "question": "VMC criteria in Class D airspace require:",
+    "option_a": "5,000 m visibility, 1,500 m horizontal and 1,000 ft vertical from cloud",
+    "option_b": "5,000 m visibility, 600 m horizontal and 500 ft below / 1,000 ft above cloud",
+    "option_c": "8,000 m visibility, clear of cloud",
+    "option_d": "1,500 m visibility, clear of cloud",
+    "correct_answer": "B",
+    "explanation": "Part 91 MOS Table 2.07(3) item 3 sets Class D VMC at 5,000 m flight visibility, 600 m horizontal from cloud, 1,000 ft above and 500 ft below cloud.",
+    "reference": "Part 91 MOS Chapter 2 Division 2.4 section 2.07 — VMC criteria",
+    "tags": [
+      "VFR",
+      "VMC",
+      "Class D"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Minimum heights",
+    "difficulty": 1,
+    "question": "The minimum height for an aeroplane over a populous area is:",
+    "option_a": "500 ft AGL",
+    "option_b": "1,000 ft above the highest feature within 600 m radius",
+    "option_c": "1,500 ft AMSL",
+    "option_d": "2,000 ft above the highest obstacle",
+    "correct_answer": "B",
+    "explanation": "CASR 91.265(2) prohibits an aeroplane being flown below 1,000 ft above the highest feature or obstacle within a horizontal radius of 600 m of the point on the ground or water immediately below it.",
+    "reference": "CASR 91.265 — Minimum height rules—populous areas and public gatherings",
+    "tags": [
+      "minimum heights",
+      "populous"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Minimum heights",
+    "difficulty": 2,
+    "question": "Over an area other than a populous area or public gathering, the minimum height is:",
+    "option_a": "300 ft above the highest feature",
+    "option_b": "500 ft above the highest feature",
+    "option_c": "1,000 ft above the highest feature",
+    "option_d": "1,500 ft AMSL",
+    "correct_answer": "B",
+    "explanation": "CASR 91.267(2) prohibits flight below 500 ft above the highest feature or obstacle within 600 m of the aircraft over non-populous areas.",
+    "reference": "CASR 91.267 — Minimum height rules—other areas",
+    "tags": [
+      "minimum heights",
+      "other areas"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Minimum heights",
+    "difficulty": 2,
+    "question": "Minimum height rules over a populous area do not apply when the aircraft is:",
+    "option_a": "performing aerobatics",
+    "option_b": "below the cloud base",
+    "option_c": "taking off or landing in prescribed circumstances",
+    "option_d": "operating at maximum continuous power",
+    "correct_answer": "C",
+    "explanation": "CASR 91.265(4)(a) and Part 91 MOS 12.01 exempt an aircraft taking off or landing in the prescribed circumstances (normal climb to cruising level, or continuous descent to the threshold).",
+    "reference": "CASR 91.265 — Minimum height rules—populous areas and public gatherings; Part 91 MOS section 12.01 — Minimum height rules — populous areas and public gatherings",
+    "tags": [
+      "minimum heights",
+      "exemptions"
+    ]
+  }
+]
