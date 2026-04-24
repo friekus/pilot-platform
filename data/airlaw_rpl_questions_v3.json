@@ -582,5 +582,294 @@
       "minimum heights",
       "exemptions"
     ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Minimum heights",
+    "difficulty": 2,
+    "question": "Over a populous area the 1,000 ft minimum is measured above:",
+    "option_a": "AMSL",
+    "option_b": "AGL",
+    "option_c": "the highest feature within 600 m radius",
+    "option_d": "the highest obstacle within 5 NM",
+    "correct_answer": "C",
+    "explanation": "CASR 91.265(2)(a) states the height is 1,000 ft above the highest feature or obstacle within a horizontal radius of 600 m of the point on the ground or water immediately below the aeroplane.",
+    "reference": "CASR 91.265 — Minimum height rules—populous areas and public gatherings",
+    "tags": [
+      "minimum heights",
+      "populous"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Minimum heights",
+    "difficulty": 3,
+    "question": "An aeroplane is over a beach lined with houses at 700 ft AGL. This is:",
+    "option_a": "lawful — the populous-area rule does not apply over water",
+    "option_b": "lawful — only 500 ft is required",
+    "option_c": "unlawful — populous-area minima are not met",
+    "option_d": "lawful — beaches are exempt",
+    "correct_answer": "C",
+    "explanation": "A beach lined with houses meets the populous-area test. CASR 91.265(2) requires 1,000 ft above the highest feature within 600 m radius; 700 ft does not satisfy that.",
+    "reference": "CASR 91.265 — Minimum height rules—populous areas and public gatherings",
+    "tags": [
+      "minimum heights",
+      "populous"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Airspace classification",
+    "difficulty": 1,
+    "question": "Australian uncontrolled airspace is designated as:",
+    "option_a": "Class A",
+    "option_b": "Class C",
+    "option_c": "Class E",
+    "option_d": "Class G",
+    "correct_answer": "D",
+    "explanation": "AIP ENR 1.4 §3 classifies all uncontrolled airspace in Australia as Class G. Classes A, C, D and E are controlled.",
+    "reference": "AIP ENR 1.4 section 3 — Class G Airspace",
+    "tags": [
+      "airspace",
+      "Class G"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Airspace classification",
+    "difficulty": 2,
+    "question": "Class A airspace in Australia is available to:",
+    "option_a": "IFR flights only",
+    "option_b": "VFR flights only",
+    "option_c": "VFR or IFR flights",
+    "option_d": "approved military flights only",
+    "correct_answer": "A",
+    "explanation": "Class A is reserved for IFR operations. CASR 91.285 confirms that VFR flight in Class A requires CASA approval; AIP ENR 1.4 §1 lists Class A as IFR-only airspace.",
+    "reference": "CASR 91.285 — VFR flights—flights in class A airspace; AIP ENR 1.4 section 1 — Controlled Airspace",
+    "tags": [
+      "airspace",
+      "Class A"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Airspace classification",
+    "difficulty": 2,
+    "question": "In Class C airspace, a VFR flight receives from ATC:",
+    "option_a": "no service",
+    "option_b": "traffic information only",
+    "option_c": "separation from IFR and traffic information on other VFR",
+    "option_d": "separation from all aircraft",
+    "correct_answer": "C",
+    "explanation": "AIP ENR 1.4 §1 states Class C provides separation between IFR and VFR, and traffic information on other VFR aircraft to the VFR.",
+    "reference": "AIP ENR 1.4 section 1 — Controlled Airspace",
+    "tags": [
+      "airspace",
+      "Class C"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Airspace classification",
+    "difficulty": 2,
+    "question": "VFR flights in Class E airspace in Australia:",
+    "option_a": "require an ATC clearance",
+    "option_b": "must squawk 1200",
+    "option_c": "must lodge a flight notification",
+    "option_d": "do not require a clearance",
+    "correct_answer": "D",
+    "explanation": "AIP ENR 1.4 §2 states VFR flights in Class E do not require an ATC clearance; only IFR aircraft are separated and cleared.",
+    "reference": "AIP ENR 1.4 section 2 — Class E Airspace",
+    "tags": [
+      "airspace",
+      "Class E"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Airspace classification",
+    "difficulty": 3,
+    "question": "An RPL holder without endorsements plans to fly in Class G near a Class D control zone. They must:",
+    "option_a": "obtain a clearance to operate within 5 NM",
+    "option_b": "remain clear of the control zone",
+    "option_c": "monitor the tower frequency only",
+    "option_d": "lodge an IFR flight notification",
+    "correct_answer": "B",
+    "explanation": "Without a controlled aerodrome endorsement, CASR 61.470(3) prohibits the RPL holder from operating at a controlled aerodrome; they must remain clear of the Class D control zone.",
+    "reference": "CASR 61.470 — Limitations on exercise of privileges of recreational pilot licences—endorsements; AIP ENR 1.4 section 1.3 — Control Zone",
+    "tags": [
+      "airspace",
+      "RPL",
+      "Class D"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Emergencies and SAR",
+    "difficulty": 1,
+    "question": "The transponder code for a general emergency is:",
+    "option_a": "7000",
+    "option_b": "7500",
+    "option_c": "7600",
+    "option_d": "7700",
+    "correct_answer": "D",
+    "explanation": "Squawk 7700 is the worldwide ICAO transponder code for emergency. Squawk 7600 indicates radio failure, 7500 indicates unlawful interference.",
+    "reference": "AIP ENR 1.6 — ATS Surveillance Services and Procedures",
+    "tags": [
+      "emergency",
+      "transponder"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Emergencies and SAR",
+    "difficulty": 2,
+    "question": "Following total radio failure, the transponder should be set to:",
+    "option_a": "1200",
+    "option_b": "7500",
+    "option_c": "7600",
+    "option_d": "7700",
+    "correct_answer": "C",
+    "explanation": "Squawk 7600 indicates radio communication failure. AIP ENR 1.6 publishes the transponder codes used in Australia.",
+    "reference": "AIP ENR 1.6 — ATS Surveillance Services and Procedures",
+    "tags": [
+      "emergency",
+      "radio failure"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Emergencies and SAR",
+    "difficulty": 2,
+    "question": "Transponder code 7500 indicates:",
+    "option_a": "unlawful interference",
+    "option_b": "general emergency",
+    "option_c": "radio failure",
+    "option_d": "minimum fuel",
+    "correct_answer": "A",
+    "explanation": "Squawk 7500 indicates unlawful interference (hijack). Squawk 7700 = general emergency, 7600 = radio failure.",
+    "reference": "AIP ENR 1.6 — ATS Surveillance Services and Procedures",
+    "tags": [
+      "emergency",
+      "transponder"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Emergencies and SAR",
+    "difficulty": 3,
+    "question": "The SAR phase declared when an aircraft is reasonably certain to be in distress is:",
+    "option_a": "INCERFA",
+    "option_b": "DETRESFA",
+    "option_c": "ALERFA",
+    "option_d": "MAYDAY",
+    "correct_answer": "B",
+    "explanation": "AIP GEN 3.6 defines DETRESFA as the distress phase, declared when reasonable certainty exists that an aircraft and its occupants are in grave and imminent danger. INCERFA = uncertainty, ALERFA = alert.",
+    "reference": "AIP GEN 3.6 — Search and Rescue",
+    "tags": [
+      "SAR",
+      "distress"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Emergencies and SAR",
+    "difficulty": 2,
+    "question": "A pilot encountering grave and imminent danger transmits a radio call prefixed:",
+    "option_a": "PAN PAN, PAN PAN, PAN PAN",
+    "option_b": "MAYDAY, MAYDAY, MAYDAY",
+    "option_c": "SECURITE, SECURITE, SECURITE",
+    "option_d": "EMERGENCY, EMERGENCY, EMERGENCY",
+    "correct_answer": "B",
+    "explanation": "CASR 91.700 prescribes use of the distress signal MAYDAY (spoken three times) when the aircraft is in grave and imminent danger. PAN PAN is the urgency signal.",
+    "reference": "CASR 91.700 — Aviation distress signals",
+    "tags": [
+      "emergency",
+      "MAYDAY"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Documentation",
+    "difficulty": 1,
+    "question": "Which document is NOT required to be carried on board for a private VFR flight by day within 50 NM of departure?",
+    "option_a": "Pilot's flight crew licence",
+    "option_b": "Pilot's medical certificate",
+    "option_c": "Aircraft flight manual instructions",
+    "option_d": "Pilot's personal logbook",
+    "correct_answer": "D",
+    "explanation": "CASR 91.105(2) lists the licence, medical and AFM instructions among required documents; the personal logbook is not among them. CASR 61.345 governs logbook upkeep but does not require it on board.",
+    "reference": "CASR 91.105 — Carriage of documents",
+    "tags": [
+      "documentation",
+      "carriage"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Documentation",
+    "difficulty": 2,
+    "question": "The pilot in command must carry their flight crew licence and medical certificate:",
+    "option_a": "on board the aircraft for every flight",
+    "option_b": "in the aircraft journey log",
+    "option_c": "at the operator's base",
+    "option_d": "only when more than 50 NM from departure",
+    "correct_answer": "A",
+    "explanation": "CASR 91.105(2)(a) requires both the medical certificate and the flight crew licence to be carried on the aircraft for each flight; CASR 61.420 mirrors this requirement for licence holders.",
+    "reference": "CASR 91.105 — Carriage of documents; CASR 61.420 — Limitations on exercise of privileges of pilot licences—carriage of documents",
+    "tags": [
+      "documentation",
+      "licence"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Documentation",
+    "difficulty": 2,
+    "question": "The aircraft flight manual instructions for the aircraft must be:",
+    "option_a": "kept at the operator's base",
+    "option_b": "available to ATC on request",
+    "option_c": "carried on the aircraft for the flight",
+    "option_d": "produced annually for inspection",
+    "correct_answer": "C",
+    "explanation": "CASR 91.105(2)(c) requires the aircraft flight manual instructions to be carried on the aircraft when the flight begins.",
+    "reference": "CASR 91.105 — Carriage of documents",
+    "tags": [
+      "documentation",
+      "AFM instructions"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Documentation",
+    "difficulty": 3,
+    "question": "Before a private VFR cross-country flight beyond 50 NM, the PIC must additionally carry:",
+    "option_a": "a printed copy of the AIP",
+    "option_b": "the authorised aeronautical information for the flight and the maintenance release",
+    "option_c": "an AFM supplement signed by an instructor",
+    "option_d": "a copy of the most recent NOTAMs",
+    "correct_answer": "B",
+    "explanation": "CASR 91.110 applies to flights other than day VFR within 50 NM of the departure point and requires the authorised aeronautical information for the flight and the maintenance release (or other approved document) to be carried.",
+    "reference": "CASR 91.110 — Carriage of documents for certain flights",
+    "tags": [
+      "documentation",
+      "cross-country"
+    ]
   }
 ]
