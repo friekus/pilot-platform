@@ -1159,5 +1159,289 @@
       "fuel",
       "final reserve"
     ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Fuel requirements",
+    "difficulty": 2,
+    "question": "Trip fuel for a flight must be sufficient to reach the:",
+    "option_a": "nearest alternate aerodrome",
+    "option_b": "point of no return",
+    "option_c": "departure aerodrome plus a 30-minute buffer",
+    "option_d": "destination aerodrome",
+    "correct_answer": "D",
+    "explanation": "Part 91 MOS 19.04(1)(b) defines trip fuel as the fuel required to reach the destination aerodrome. Final reserve, contingency and alternate fuel are separate components.",
+    "reference": "CASR 91.455 — Fuel requirements; Part 91 MOS section 19.04 — Amount of fuel that must be carried for a flight",
+    "tags": [
+      "fuel",
+      "trip fuel"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Fuel requirements",
+    "difficulty": 3,
+    "question": "If the PIC determines that the aircraft will land with less than final reserve fuel, they must broadcast:",
+    "option_a": "MINIMUM FUEL",
+    "option_b": "PAN PAN PAN PAN PAN PAN",
+    "option_c": "MAYDAY, MAYDAY, MAYDAY FUEL",
+    "option_d": "LOW FUEL",
+    "correct_answer": "C",
+    "explanation": "Part 91 MOS 19.06(4) requires the PIC to declare emergency fuel by broadcasting \"MAYDAY, MAYDAY, MAYDAY FUEL\" when the aircraft will land with less than final reserve fuel at the nearest aerodrome where a safe landing can be made.",
+    "reference": "CASR 91.455 — Fuel requirements; Part 91 MOS section 19.06 — Procedures if fuel reaches specified amounts",
+    "tags": [
+      "fuel",
+      "MAYDAY FUEL"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Passenger briefing",
+    "difficulty": 1,
+    "question": "Before take-off, passengers must be briefed on:",
+    "option_a": "aircraft cruise speed and fuel burn",
+    "option_b": "weather forecasts for the route",
+    "option_c": "seatbelt use, emergency exits and brace position",
+    "option_d": "the pilot's flight experience",
+    "correct_answer": "C",
+    "explanation": "Part 91 MOS 20.06 lists the mandatory briefing items, which include seatbelt use, emergency exit location and use, and how and when to adopt the brace position.",
+    "reference": "CASR 91.565 — Passengers—safety briefings and instructions; Part 91 MOS section 20.06 — Passenger safety briefings and instructions",
+    "tags": [
+      "passenger briefing"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Passenger briefing",
+    "difficulty": 2,
+    "question": "For a flight where life jackets are carried, the briefing must include:",
+    "option_a": "a demonstration of ditching procedures",
+    "option_b": "where the jackets are located and how to use them",
+    "option_c": "the survival time in cold water",
+    "option_d": "a warning that jackets must be inflated before departure",
+    "correct_answer": "B",
+    "explanation": "Part 91 MOS 20.06(m) and (n) require the briefing to include where life jackets or life rafts are located, how to use them, and that jackets must not be inflated inside the aircraft.",
+    "reference": "CASR 91.565 — Passengers—safety briefings and instructions; Part 91 MOS section 20.06 — Passenger safety briefings and instructions",
+    "tags": [
+      "passenger briefing",
+      "life jackets"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Passenger briefing",
+    "difficulty": 2,
+    "question": "Smoking on board a small aeroplane is:",
+    "option_a": "permitted only with passenger consent",
+    "option_b": "permitted during cruise",
+    "option_c": "permitted if a no-smoking sign is not illuminated",
+    "option_d": "not permitted during take-off or landing, nor if the PIC has directed no smoking",
+    "correct_answer": "D",
+    "explanation": "CASR 91.530 prohibits smoking during take-off or landing, during any period when the PIC has directed no smoking, and at all times in the aircraft's toilet.",
+    "reference": "CASR 91.530 — When smoking not permitted",
+    "tags": [
+      "passenger briefing",
+      "smoking"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Restricted operations and activities",
+    "difficulty": 2,
+    "question": "Aerobatic manoeuvres may only be conducted in accordance with:",
+    "option_a": "the CASR 91 aerobatic rule and any approval required",
+    "option_b": "the aircraft owner's consent",
+    "option_c": "the operator's safety management system",
+    "option_d": "an ATC clearance",
+    "correct_answer": "A",
+    "explanation": "CASR 91.185 governs the conduct of aerobatic manoeuvres, prescribing the requirements and any approvals needed for the manoeuvre.",
+    "reference": "CASR 91.185 — Conducting aerobatic manoeuvres",
+    "tags": [
+      "aerobatics"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Restricted operations and activities",
+    "difficulty": 2,
+    "question": "Formation flight in Australia is permitted when:",
+    "option_a": "each PIC agrees and the formation complies with the prescribed rules",
+    "option_b": "the lead aircraft has an instrument rating",
+    "option_c": "all aircraft use the same radio frequency as ATC",
+    "option_d": "only the lead pilot is a qualified formation pilot",
+    "correct_answer": "A",
+    "explanation": "CASR 91.205 and Part 91 MOS Chapter 6 require each PIC to agree to the formation and to comply with the prescribed formation-flight rules (briefing, separation, lead responsibility).",
+    "reference": "CASR 91.205 — Flying in formation; Part 91 MOS Chapter 6 — Flying in Formation",
+    "tags": [
+      "formation"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Restricted operations and activities",
+    "difficulty": 3,
+    "question": "Dropping an object from an aircraft in flight is:",
+    "option_a": "permitted over water only",
+    "option_b": "permitted with passenger consent",
+    "option_c": "prohibited unless the regulation's conditions are met",
+    "option_d": "permitted above 1,000 ft AGL",
+    "correct_answer": "C",
+    "explanation": "CASR 91.190 prohibits dropping things from an aircraft unless the conditions in that regulation are met (for example, precautions ensuring no danger to persons or property).",
+    "reference": "CASR 91.190 — Dropping things from aircraft",
+    "tags": [
+      "dropping objects"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Daylight requirements",
+    "difficulty": 2,
+    "question": "For Australian day VFR operations, daylight is the period:",
+    "option_a": "from sunrise to sunset",
+    "option_b": "from beginning of morning civil twilight to end of evening civil twilight",
+    "option_c": "from 15 minutes before sunrise to 15 minutes after sunset",
+    "option_d": "when the sun is at least 6 degrees above the horizon",
+    "correct_answer": "B",
+    "explanation": "AIP GEN 2.2 and the VFRG Glossary define day as the period from the beginning of morning civil twilight to the end of evening civil twilight.",
+    "reference": "AIP GEN 2.2 — Definitions and Abbreviations; VFRG Glossary",
+    "tags": [
+      "daylight",
+      "day definition"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Daylight requirements",
+    "difficulty": 3,
+    "question": "An RPL pilot plans a VFR flight expected to land 10 minutes after the end of evening civil twilight. The flight:",
+    "option_a": "is permitted provided landing lights are on",
+    "option_b": "is permitted within 25 NM of departure",
+    "option_c": "contravenes RPL privileges",
+    "option_d": "is permitted if the pilot holds a night VFR rating",
+    "correct_answer": "C",
+    "explanation": "CASR 61.460(d) restricts RPL privileges to flight conducted by day under the VFR. Landing 10 minutes after the end of evening civil twilight is outside day operations and contravenes RPL privileges.",
+    "reference": "CASR 61.460 — Privileges of recreational pilot licences",
+    "tags": [
+      "daylight",
+      "RPL"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Recency requirements",
+    "difficulty": 2,
+    "question": "To carry a passenger by day, a pilot must have completed in the previous 90 days at least:",
+    "option_a": "1 take-off and 1 landing",
+    "option_b": "2 take-offs and 2 landings by day",
+    "option_c": "3 take-offs and 3 landings by day or night",
+    "option_d": "5 take-offs and 5 landings",
+    "correct_answer": "C",
+    "explanation": "CASR 61.395(1) requires at least 3 take-offs and 3 landings in the previous 90 days, by day or night, in an aircraft of that category. Each take-off must be followed by a climb to at least 500 ft AGL.",
+    "reference": "CASR 61.395 — Limitations on exercise of privileges of pilot licences—recent experience for certain passenger flight activities",
+    "tags": [
+      "recency",
+      "passengers"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Recency requirements",
+    "difficulty": 3,
+    "question": "A pilot's flight review expired two weeks ago. They wish to fly as pilot in command. They may:",
+    "option_a": "fly solo within 25 NM",
+    "option_b": "not exercise the privileges of the licence until a flight review is completed",
+    "option_c": "carry one passenger only",
+    "option_d": "fly for training purposes with any pilot",
+    "correct_answer": "B",
+    "explanation": "CASR 61.400 requires a current flight review; once expired, the pilot must not exercise the privileges of the licence until a flight review is successfully completed.",
+    "reference": "CASR 61.400 — Limitations on exercise of privileges of pilot licences—flight review",
+    "tags": [
+      "recency",
+      "flight review"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Take-off and landing separation",
+    "difficulty": 2,
+    "question": "At a non-controlled aerodrome, a pilot must not commence take-off until:",
+    "option_a": "the preceding departing aircraft is airborne and there is no conflict",
+    "option_b": "the CTAF has been silent for 30 seconds",
+    "option_c": "a position report is acknowledged",
+    "option_d": "the windsock shows headwind",
+    "correct_answer": "A",
+    "explanation": "AIP ENR 1.1 §9.3 sets the separation minima for take-off at a non-controlled aerodrome: the pilot must ensure no conflict with a preceding aircraft and not commence the take-off while risk of collision exists. CASR 91.370 makes it an offence to take-off where conflict exists.",
+    "reference": "CASR 91.370 — Take-off or landing at non-controlled aerodrome—all aircraft; AIP ENR 1.1 section 9.3 — Separation Minima for Take-off",
+    "tags": [
+      "separation",
+      "non-controlled"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Take-off and landing separation",
+    "difficulty": 3,
+    "question": "You are lined up for take-off at a non-controlled aerodrome. An aircraft is on final approach 1 NM out. You may:",
+    "option_a": "depart immediately",
+    "option_b": "depart if you clear the runway before the aircraft touches down",
+    "option_c": "depart if the other pilot confirms they see you",
+    "option_d": "not depart until the landing aircraft has cleared and there is no conflict",
+    "correct_answer": "D",
+    "explanation": "CASR 91.340 gives a landing aircraft right of way over one preparing to take off, and CASR 91.370 prohibits a take-off that creates a conflict. The pilot must wait.",
+    "reference": "CASR 91.340 — Right of way rules for take-off and landing; CASR 91.370 — Take-off or landing at non-controlled aerodrome—all aircraft",
+    "tags": [
+      "separation",
+      "landing priority"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Drugs and alcohol",
+    "difficulty": 1,
+    "question": "A passenger consumes alcohol on board without the pilot in command's permission. This is:",
+    "option_a": "permitted in cruise only",
+    "option_b": "permitted if the passenger is not seated next to the pilot",
+    "option_c": "a contravention by the passenger",
+    "option_d": "permitted if the alcohol was purchased duty-free",
+    "correct_answer": "C",
+    "explanation": "CASR 91.780(1) makes it a contravention for a passenger to consume alcohol on board unless a crew member has provided it, or, where the PIC is the only crew, the PIC has permitted it.",
+    "reference": "CASR 91.780 — Passengers—alcohol",
+    "tags": [
+      "alcohol",
+      "passengers"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Drugs and alcohol",
+    "difficulty": 2,
+    "question": "If a crew member has reasonable grounds to believe a person is affected by a psychoactive substance so that they may be a hazard, the person may be:",
+    "option_a": "prohibited from boarding",
+    "option_b": "seated only in the rear of the aircraft",
+    "option_c": "carried if the PIC gives consent",
+    "option_d": "carried only if accompanied",
+    "correct_answer": "A",
+    "explanation": "CASR 91.790 authorises the operator or a crew member to prohibit a person from boarding if they have reasonable grounds to believe the person is affected by a psychoactive substance to an extent that may present a hazard.",
+    "reference": "CASR 91.790 — Prohibiting person affected by psychoactive substances from boarding",
+    "tags": [
+      "psychoactive substance",
+      "boarding"
+    ]
   }
 ]
