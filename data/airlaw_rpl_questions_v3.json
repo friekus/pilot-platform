@@ -871,5 +871,293 @@
       "documentation",
       "cross-country"
     ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Light signals",
+    "difficulty": 1,
+    "question": "From a control tower to an aircraft in flight, a steady green light means:",
+    "option_a": "return to starting point on aerodrome",
+    "option_b": "give way to other aircraft and continue circling",
+    "option_c": "aerodrome unsafe — do not land",
+    "option_d": "authorised to land if pilot satisfied no collision risk exists",
+    "correct_answer": "D",
+    "explanation": "AIP ENR 1.5 §12.1 states that a steady green light to an aircraft in flight means authorised to land if the pilot is satisfied no collision risk exists.",
+    "reference": "CASR 91.670 — Standard visual signals; AIP ENR 1.5 section 12.1 — Light Signals to Aircraft",
+    "tags": [
+      "light signals",
+      "tower"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Light signals",
+    "difficulty": 2,
+    "question": "From a control tower to an aircraft on the aerodrome, a steady red light means:",
+    "option_a": "stop",
+    "option_b": "taxi clear of landing area in use",
+    "option_c": "return to starting point on aerodrome",
+    "option_d": "authorised to taxi",
+    "correct_answer": "A",
+    "explanation": "AIP ENR 1.5 §12.1 states that a steady red light directed at an aircraft on the aerodrome means stop.",
+    "reference": "CASR 91.670 — Standard visual signals; AIP ENR 1.5 section 12.1 — Light Signals to Aircraft",
+    "tags": [
+      "light signals",
+      "ground"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Light signals",
+    "difficulty": 2,
+    "question": "Red flashes directed at an aircraft in flight mean:",
+    "option_a": "aerodrome unsafe — do not land",
+    "option_b": "return for landing",
+    "option_c": "authorised to land",
+    "option_d": "give way and continue circling",
+    "correct_answer": "A",
+    "explanation": "AIP ENR 1.5 §12.1 indicates red flashes to an aircraft in flight mean the aerodrome is unsafe — do not land.",
+    "reference": "CASR 91.670 — Standard visual signals; AIP ENR 1.5 section 12.1 — Light Signals to Aircraft",
+    "tags": [
+      "light signals",
+      "unsafe"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Light signals",
+    "difficulty": 2,
+    "question": "On the aerodrome, green flashes from the tower mean:",
+    "option_a": "stop",
+    "option_b": "authorised to taxi if pilot satisfied no collision risk exists",
+    "option_c": "return to starting point on aerodrome",
+    "option_d": "authorised to take-off if pilot satisfied no collision risk exists",
+    "correct_answer": "B",
+    "explanation": "AIP ENR 1.5 §12.1 states green flashes on the aerodrome mean authorised to taxi if the pilot is satisfied no collision risk exists.",
+    "reference": "CASR 91.670 — Standard visual signals; AIP ENR 1.5 section 12.1 — Light Signals to Aircraft",
+    "tags": [
+      "light signals",
+      "ground"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Maintenance release and airworthiness",
+    "difficulty": 1,
+    "question": "Before an Australian aircraft may begin a flight, a maintenance release (or approved alternative) must be:",
+    "option_a": "signed by the pilot before start-up",
+    "option_b": "filed with the operator",
+    "option_c": "in force for the aircraft",
+    "option_d": "lodged with CASA annually",
+    "correct_answer": "C",
+    "explanation": "CASR 91.145(2)(d) requires a maintenance release (or an approved alternative document) to be in force for the aircraft and for the flight to comply with any condition on it.",
+    "reference": "CASR 91.145 — Requirements to be met before Australian aircraft may fly",
+    "tags": [
+      "maintenance release",
+      "pre-flight"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Maintenance release and airworthiness",
+    "difficulty": 2,
+    "question": "Before the first flight of the day, the matters to be checked by the pilot in command include:",
+    "option_a": "a weight and balance calculation",
+    "option_b": "a check that a CRS or maintenance release is in force",
+    "option_c": "a test flight at circuit height",
+    "option_d": "a radio check with the operator",
+    "correct_answer": "B",
+    "explanation": "Part 91 MOS 10.02(g) requires a check that there is either a certificate of release to service for the most recent maintenance or a maintenance release for the aircraft.",
+    "reference": "CASR 91.245 — Matters to be checked before take-off; Part 91 MOS section 10.02 — Matters to be checked before take-off",
+    "tags": [
+      "maintenance release",
+      "pre-flight"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Maintenance release and airworthiness",
+    "difficulty": 2,
+    "question": "Authorised aeronautical information and the maintenance release must be carried on board for:",
+    "option_a": "every flight regardless of distance",
+    "option_b": "flights other than day VFR within 50 NM of departure",
+    "option_c": "international flights only",
+    "option_d": "IFR flights only",
+    "correct_answer": "B",
+    "explanation": "CASR 91.110 applies to flights other than day VFR within 50 NM of the point of departure, or flights within a flying training area, and requires the authorised aeronautical information and the maintenance release to be carried.",
+    "reference": "CASR 91.110 — Carriage of documents for certain flights",
+    "tags": [
+      "maintenance release",
+      "documentation"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Maintenance release and airworthiness",
+    "difficulty": 3,
+    "question": "The pilot discovers a defect during flight that affects the safe operation of the aircraft. The PIC must:",
+    "option_a": "land at the nearest suitable aerodrome",
+    "option_b": "continue to destination and report at landing",
+    "option_c": "write up the defect on the MR after landing only",
+    "option_d": "ignore the defect if within MEL limits",
+    "correct_answer": "A",
+    "explanation": "CASR 91.215 requires the PIC to ensure safe operation of the aircraft. A defect affecting safe operation means the PIC must land at the nearest suitable aerodrome (CASR 91.680 for emergencies) and the defect must be recorded.",
+    "reference": "CASR 91.215 — Authority and responsibilities of pilot in command",
+    "tags": [
+      "maintenance release",
+      "defect"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Altimetry and QNH procedures",
+    "difficulty": 2,
+    "question": "Operating below 10,000 ft AMSL on an en route segment in Class G, the altimeter must be set to:",
+    "option_a": "1013.2 hPa",
+    "option_b": "current area QNH",
+    "option_c": "aerodrome QNH from the departure airfield",
+    "option_d": "2992 in. Hg",
+    "correct_answer": "B",
+    "explanation": "Part 91 MOS 11.02(5) requires altimeter settings below the transition altitude (10,000 ft) to be the current local QNH within 100 NM of the aircraft, or the current forecast area QNH.",
+    "reference": "Part 91 MOS section 11.02 — Transition altitude, transition layer and transition level; AIP ENR 1.7 section 2 — Basic altimeter setting procedures",
+    "tags": [
+      "altimetry",
+      "QNH"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Altimetry and QNH procedures",
+    "difficulty": 2,
+    "question": "On climb, when the aircraft passes the transition altitude the altimeter must be changed from:",
+    "option_a": "QNH to 1013.2 hPa",
+    "option_b": "1013.2 hPa to QNH",
+    "option_c": "1013.2 hPa to QFE",
+    "option_d": "QNH to QFE",
+    "correct_answer": "A",
+    "explanation": "Part 91 MOS 11.02(7) requires the altimeter to be changed from QNH to 1013.2 hPa after passing the transition altitude, before levelling off in the transition layer.",
+    "reference": "Part 91 MOS section 11.02 — Transition altitude, transition layer and transition level; AIP ENR 1.7 section 2 — Basic altimeter setting procedures",
+    "tags": [
+      "altimetry",
+      "transition"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Altimetry and QNH procedures",
+    "difficulty": 3,
+    "question": "Before take-off the PIC of a VFR flight may consider a pressure altitude system operative only if, with an accurate QNH set, it reads the site elevation to within:",
+    "option_a": "30 ft",
+    "option_b": "60 ft",
+    "option_c": "75 ft",
+    "option_d": "100 ft",
+    "correct_answer": "D",
+    "explanation": "Part 91 MOS 10.05(1) permits a pressure altitude system for VFR flight only if it reads site elevation to within 100 ft (or 110 ft above 3,300 ft).",
+    "reference": "Part 91 MOS section 10.05 — Checking pressure altitude systems — VFR flight",
+    "tags": [
+      "altimetry",
+      "altimeter check"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Altimetry and QNH procedures",
+    "difficulty": 3,
+    "question": "Above the transition altitude an aircraft's altimeter setting must be:",
+    "option_a": "1013.2 hPa",
+    "option_b": "area QNH",
+    "option_c": "aerodrome QNH",
+    "option_d": "forecast area QNH",
+    "correct_answer": "A",
+    "explanation": "Part 91 MOS 11.02(6) requires altimeter setting of 1013.2 hPa for an operation above the transition altitude, giving a flight level indication.",
+    "reference": "Part 91 MOS section 11.02 — Transition altitude, transition layer and transition level",
+    "tags": [
+      "altimetry",
+      "flight level"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Circuit procedures and joining",
+    "difficulty": 2,
+    "question": "Joining the circuit at a non-controlled aerodrome by overflying should be conducted at:",
+    "option_a": "circuit height",
+    "option_b": "500 ft above circuit height",
+    "option_c": "at least 500 ft above circuit height then descending on the non-traffic side",
+    "option_d": "1,500 ft AGL",
+    "correct_answer": "C",
+    "explanation": "AIP ENR 1.1 §9.12 prescribes overflying the aerodrome at least 500 ft above the circuit height, descending on the non-traffic side to circuit height before joining crosswind.",
+    "reference": "AIP ENR 1.1 section 9.12 — Circuit Entry",
+    "tags": [
+      "circuit",
+      "overfly"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Circuit procedures and joining",
+    "difficulty": 2,
+    "question": "Standard circuit height for fixed-wing aeroplanes at most Australian non-controlled aerodromes is:",
+    "option_a": "500 ft AGL",
+    "option_b": "800 ft AGL",
+    "option_c": "1,000 ft AGL",
+    "option_d": "1,500 ft AGL",
+    "correct_answer": "C",
+    "explanation": "AIP ENR 1.1 §9.4 prescribes the standard circuit height as 1,000 ft AGL for aeroplanes unless a different circuit height is published for the aerodrome.",
+    "reference": "AIP ENR 1.1 section 9.4 — Circuit Height",
+    "tags": [
+      "circuit",
+      "height"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Circuit procedures and joining",
+    "difficulty": 3,
+    "question": "On final approach to a non-controlled aerodrome a pilot observes another aircraft already established on a straight-in approach. The correct action is to:",
+    "option_a": "continue and land first",
+    "option_b": "give way to the established aircraft",
+    "option_c": "call the other aircraft to hold",
+    "option_d": "orbit at circuit height",
+    "correct_answer": "B",
+    "explanation": "CASR 91.395 and AIP ENR 1.1 §9.13 require the pilot joining the circuit to give way to an aircraft already established on a straight-in approach where one is permitted.",
+    "reference": "CASR 91.395 — Straight-in approaches at non-controlled aerodromes; AIP ENR 1.1 section 9.13 — Straight-in Approach",
+    "tags": [
+      "circuit",
+      "straight-in"
+    ]
+  },
+  {
+    "subject": "Air Law",
+    "level": "RPL",
+    "subtopic": "Fuel requirements",
+    "difficulty": 1,
+    "question": "The final reserve fuel for a private day VFR piston aeroplane of 1,500 kg MTOW is:",
+    "option_a": "20 minutes",
+    "option_b": "30 minutes",
+    "option_c": "45 minutes",
+    "option_d": "60 minutes",
+    "correct_answer": "B",
+    "explanation": "Part 91 MOS Table 19.02(2) item 1 prescribes 30 minutes final reserve fuel for a piston aeroplane of MTOW ≤ 5,700 kg on a VFR flight.",
+    "reference": "CASR 91.455 — Fuel requirements; Part 91 MOS section 19.02 — Definitions of final reserve fuel and contingency fuel",
+    "tags": [
+      "fuel",
+      "final reserve"
+    ]
   }
 ]
