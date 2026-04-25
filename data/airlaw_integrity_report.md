@@ -7,8 +7,8 @@ Audit script: `scripts/airlaw/integrity_audit.py`
 ## Summary
 
 - CASR citations used (unique regs): **35**
-- Reference strings used (unique full strings): **52**
-- Reference strings cited only once (singletons): **37**
+- Reference strings used (unique full strings): **53**
+- Reference strings cited only once (singletons): **39**
 - Questions with integrity issues: **0**
 
 ## Unique CASR regulations cited and frequency
@@ -63,7 +63,6 @@ Audit script: `scripts/airlaw/integrity_audit.py`
 | 3 | CASR 61.470 — Limitations on exercise of privileges of recreational pilot licences—endorsements |
 | 3 | CASR 91.215 — Authority and responsibilities of pilot in command |
 | 3 | CASR 91.265 — Minimum height rules—populous areas and public gatherings |
-| 2 | AIP ENR 1.1 section 9.4 — Circuit Height |
 | 2 | CASR 61.465 — Limitations on exercise of privileges of recreational pilot licences—general |
 | 2 | CASR 91.105 — Carriage of documents |
 | 2 | CASR 91.110 — Carriage of documents for certain flights |
@@ -71,6 +70,8 @@ Audit script: `scripts/airlaw/integrity_audit.py`
 | 2 | CASR 91.565 — Passengers—safety briefings and instructions; Part 91 MOS section 20.06 — Passenger safety briefings and instructions |
 | 2 | Part 91 MOS section 11.02 — Transition altitude, transition layer and transition level; AIP ENR 1.7 section 2 — Basic altimeter setting procedures |
 | 1 | AIP ENR 1.1 section 9.12 — Circuit Entry |
+| 1 | AIP ENR 1.1 section 9.2 — Circuit Information |
+| 1 | AIP ENR 1.1 section 9.4 — Circuit Height |
 | 1 | AIP ENR 1.4 section 1 — Controlled Airspace |
 | 1 | AIP ENR 1.4 section 2 — Class E Airspace |
 | 1 | AIP ENR 1.4 section 3 — Class G Airspace |
@@ -111,6 +112,8 @@ Audit script: `scripts/airlaw/integrity_audit.py`
 ## Singleton references (cited exactly once — review for consolidation)
 
 - AIP ENR 1.1 section 9.12 — Circuit Entry
+- AIP ENR 1.1 section 9.2 — Circuit Information
+- AIP ENR 1.1 section 9.4 — Circuit Height
 - AIP ENR 1.4 section 1 — Controlled Airspace
 - AIP ENR 1.4 section 2 — Class E Airspace
 - AIP ENR 1.4 section 3 — Class G Airspace
