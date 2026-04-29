@@ -213,19 +213,25 @@ export default function StudyQuizPage() {
             if (correct) correctIds.add(Number(qid));
             else incorrectIds.add(Number(qid));
           });
+          history.slice(0, 20).forEach(h => { if (h.is_correct) recentCorrectIds.add(h.question_id); });
         }
       } catch { /* proceed without history */ }
 
+      // Build cooldown set: questions answered correctly in the last 20 attempts
+      const recentCorrectIds: Set<number> = new Set();
+
       const unseen = allQuestions.filter(q => !incorrectIds.has(q.id) && !correctIds.has(q.id));
       const incorrect = allQuestions.filter(q => incorrectIds.has(q.id));
-      const correct = allQuestions.filter(q => correctIds.has(q.id));
+      const correctCooled = allQuestions.filter(q => correctIds.has(q.id) && !recentCorrectIds.has(q.id));
+      const correctRecent = allQuestions.filter(q => recentCorrectIds.has(q.id));
 
       unseen.sort(() => Math.random() - 0.5);
       incorrect.sort(() => Math.random() - 0.5);
-      correct.sort(() => Math.random() - 0.5);
+      correctCooled.sort(() => Math.random() - 0.5);
+      correctRecent.sort(() => Math.random() - 0.5);
 
       const selected: Question[] = [];
-      for (const pool of [unseen, incorrect, correct]) {
+      for (const pool of [unseen, incorrect, correctCooled, correctRecent]) {
         for (const q of pool) {
           if (selected.length >= QUIZ_LENGTH) break;
           selected.push(q);
