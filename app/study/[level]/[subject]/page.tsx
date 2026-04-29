@@ -214,6 +214,15 @@ export default function StudyQuizPage() {
             else incorrectIds.add(Number(qid));
           });
           history.slice(0, 20).forEach(h => { if (h.is_correct) recentCorrectIds.add(h.question_id); });
+          // If student has answered every question at least once, reset so bank feels fresh
+          if (Object.keys(mostRecent).length >= allQuestions.length) {
+            await fetch(
+              `${SUPABASE_URL}/rest/v1/user_answers?user_id=eq.${userId}&subject=eq.${encodeURIComponent(subjectName)}&level=eq.${levelUpper}`,
+              { method: 'DELETE', headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${accessToken}`, Prefer: 'return=minimal' } }
+            );
+            incorrectIds = new Set();
+            correctIds = new Set();
+          }
         }
       } catch { /* proceed without history */ }
 
