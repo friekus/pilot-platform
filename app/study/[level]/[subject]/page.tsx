@@ -319,7 +319,7 @@ export default function StudyQuizPage() {
               <div className="quiz-subtopic">{rq.subtopic}</div>
               <FlagButton questionId={rq.id} userId={userId} />
             </div>
-            {rq.question_image && <div style={{ marginTop: 8, marginBottom: 8 }} dangerouslySetInnerHTML={{ __html: rq.question_image }} />}
+            {rq.question_image && <div style={{ marginTop: 8, marginBottom: 8 }}><img src={rq.question_image} alt="" style={{ maxWidth: "100%" }} /></div>}
             <h2 className="quiz-question"><RenderText text={rq.question} /></h2>
             <div className="quiz-options">
               {rOpts.map(opt => {
@@ -333,7 +333,7 @@ export default function StudyQuizPage() {
             <div className="quiz-explanation">
               <div className={`quiz-result-badge ${ra.correct ? "correct" : "incorrect"}`}>{ra.correct ? "You answered correctly" : `You answered ${ra.selected} \u2014 correct answer is ${rq.correct_answer}`}</div>
               <p className="quiz-explanation-text"><RenderText text={rq.explanation} /></p>
-              {rq.explanation_image && <div style={{ marginTop: 16 }} dangerouslySetInnerHTML={{ __html: rq.explanation_image }} />}
+              {rq.explanation_image && <div style={{ marginTop: 16 }}><img src={rq.explanation_image} alt="" style={{ maxWidth: "100%" }} /></div>}
               {rq.reference && <p className="quiz-reference">Ref: {rq.reference}</p>}
               <TutorChat
                 key={`review-${reviewIndex}`}
@@ -433,7 +433,7 @@ export default function StudyQuizPage() {
                 <div className="quiz-subtopic">{q.subtopic}</div>
                 <FlagButton questionId={q.id} userId={userId} />
               </div>
-              {q.question_image && <div style={{ marginTop: 8, marginBottom: 8 }} dangerouslySetInnerHTML={{ __html: q.question_image }} />}
+              {q.question_image && <div style={{ marginTop: 8, marginBottom: 8 }}><img src={q.question_image} alt="" style={{ maxWidth: "100%" }} /></div>}
               <h2 className="quiz-question"><RenderText text={q.question} /></h2>
               <div className="quiz-options">
                 {options.map(opt => {
@@ -448,7 +448,7 @@ export default function StudyQuizPage() {
                 <div className="quiz-explanation">
                   <div className={`quiz-result-badge ${selected === q.correct_answer ? "correct" : "incorrect"}`}>{selected === q.correct_answer ? "Correct!" : `Incorrect \u2014 the answer is ${q.correct_answer}`}</div>
                   <p className="quiz-explanation-text"><RenderText text={q.explanation} /></p>
-                  {q.explanation_image && <div style={{ marginTop: 16 }} dangerouslySetInnerHTML={{ __html: q.explanation_image }} />}
+                  {q.explanation_image && <div style={{ marginTop: 16 }}><img src={q.explanation_image} alt="" style={{ maxWidth: "100%" }} /></div>}
                   {q.reference && <p className="quiz-reference">Ref: {q.reference}</p>}
                   <TutorChat
                     key={`quiz-${tutorKey}`}
