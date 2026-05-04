@@ -196,6 +196,7 @@ export default function StudyQuizPage() {
 
       let incorrectIds: Set<number> = new Set();
       let correctIds: Set<number> = new Set();
+      const answeredAt: Record<number, number> = {};
       try {
         const histRes = await fetch(
           `${SUPABASE_URL}/rest/v1/user_answers?user_id=eq.${userId}&subject=eq.${encodeURIComponent(subjectName)}&level=eq.${levelUpper}&select=question_id,is_correct,answered_at&order=answered_at.desc`,
@@ -213,7 +214,7 @@ export default function StudyQuizPage() {
             if (correct) correctIds.add(Number(qid));
             else incorrectIds.add(Number(qid));
           });
-          history.slice(0, 20).forEach(h => { if (h.is_correct) recentCorrectIds.add(h.question_id); });
+          history.forEach(h => { if (!(h.question_id in answeredAt)) answeredAt[h.question_id] = new Date(h.answered_at).getTime(); });
           // If student has answered every question at least once, reset so bank feels fresh
           if (Object.keys(mostRecent).length >= allQuestions.length) {
             await fetch(
@@ -226,21 +227,17 @@ export default function StudyQuizPage() {
         }
       } catch { /* proceed without history */ }
 
-      // Build cooldown set: questions answered correctly in the last 20 attempts
-      const recentCorrectIds: Set<number> = new Set();
-
       const unseen = allQuestions.filter(q => !incorrectIds.has(q.id) && !correctIds.has(q.id));
       const incorrect = allQuestions.filter(q => incorrectIds.has(q.id));
-      const correctCooled = allQuestions.filter(q => correctIds.has(q.id) && !recentCorrectIds.has(q.id));
-      const correctRecent = allQuestions.filter(q => recentCorrectIds.has(q.id));
+      const correct = allQuestions
+        .filter(q => correctIds.has(q.id))
+        .sort((a, b) => (answeredAt[a.id] || 0) - (answeredAt[b.id] || 0));
 
       unseen.sort(() => Math.random() - 0.5);
       incorrect.sort(() => Math.random() - 0.5);
-      correctCooled.sort(() => Math.random() - 0.5);
-      correctRecent.sort(() => Math.random() - 0.5);
 
       const selected: Question[] = [];
-      for (const pool of [unseen, incorrect, correctCooled, correctRecent]) {
+      for (const pool of [unseen, incorrect, correct]) {
         for (const q of pool) {
           if (selected.length >= QUIZ_LENGTH) break;
           selected.push(q);
