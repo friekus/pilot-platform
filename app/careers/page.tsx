@@ -28,6 +28,7 @@ type Operator = {
   hires_low_hour: string | null;
   part_141_142: string | null;
   is_flight_school: boolean;
+  experience_tier: "entry" | "building" | "established" | "senior" | null;
   background_tips: string | null;
 };
 
@@ -42,8 +43,13 @@ type StateFilter = typeof STATES[number];
 // ---------------------------------------------------------------------------
 function markerColor(op: Operator): { bg: string; ring: string } {
   if (op.is_flight_school) return { bg: "#60A5FA", ring: "#1E40AF" }; // blue — flight school
-  if (op.hires_low_hour === "Yes") return { bg: "#00D4AA", ring: "#047857" }; // green — low-hour friendly
-  return { bg: "#EF9F27", ring: "#92400E" }; // amber — moderate+ experience
+  switch (op.experience_tier) {
+    case "entry":       return { bg: "#00D4AA", ring: "#047857" }; // green — 0-250hrs
+    case "building":    return { bg: "#FBBF24", ring: "#92400E" }; // gold — 250-800hrs
+    case "established": return { bg: "#EF9F27", ring: "#9A3412" }; // amber — 800-1500hrs
+    case "senior":      return { bg: "#DC2626", ring: "#7F1D1D" }; // red — 1500+hrs
+    default:            return { bg: "#6B7280", ring: "#374151" }; // grey — unknown
+  }
 }
 
 function buildDivIcon(L: any, op: Operator) {
@@ -225,7 +231,7 @@ export default function CareersPage() {
         const { data, error: fetchErr } = await supabase
           .from("operators")
           .select(
-            "id, name, state, bases, primary_icao, latitude, longitude, website, phone, email, key_personnel, fleet, operations, min_hours, hires_low_hour, part_141_142, is_flight_school, background_tips"
+            "id, name, state, bases, primary_icao, latitude, longitude, website, phone, email, key_personnel, fleet, operations, min_hours, hires_low_hour, part_141_142, is_flight_school, experience_tier, background_tips"
           )
           .eq("published", true);
 
@@ -538,11 +544,19 @@ export default function CareersPage() {
             <>
               <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
                 <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#00D4AA", display: "inline-block" }} />
-                Low-hour friendly operator
+                Entry (0–250 hrs)
+              </span>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#FBBF24", display: "inline-block" }} />
+                Building (250–800 hrs)
               </span>
               <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
                 <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#EF9F27", display: "inline-block" }} />
-                Moderate+ experience operator
+                Established (800–1500 hrs)
+              </span>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#DC2626", display: "inline-block" }} />
+                Senior (1500+ hrs)
               </span>
             </>
           )}
