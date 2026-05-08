@@ -42,11 +42,11 @@ type StateFilter = typeof STATES[number];
 // Marker styling
 // ---------------------------------------------------------------------------
 function markerColor(op: Operator): { bg: string; ring: string } {
-  if (op.is_flight_school) return { bg: "#60A5FA", ring: "#1E40AF" }; // blue — flight school
+  if (op.is_flight_school) return { bg: "#3B82F6", ring: "#1E3A8A" }; // blue — flight school
   switch (op.experience_tier) {
-    case "entry":       return { bg: "#00D4AA", ring: "#047857" }; // green — 0-250hrs
-    case "building":    return { bg: "#FBBF24", ring: "#92400E" }; // gold — 250-800hrs
-    case "established": return { bg: "#EF9F27", ring: "#9A3412" }; // amber — 800-1500hrs
+    case "entry":       return { bg: "#22C55E", ring: "#15803D" }; // green — 0-250hrs
+    case "building":    return { bg: "#A855F7", ring: "#6B21A8" }; // purple — 250-800hrs
+    case "established": return { bg: "#F97316", ring: "#9A3412" }; // orange — 800-1500hrs
     case "senior":      return { bg: "#DC2626", ring: "#7F1D1D" }; // red — 1500+hrs
     default:            return { bg: "#6B7280", ring: "#374151" }; // grey — unknown
   }
@@ -76,9 +76,9 @@ function buildPopupHtml(op: Operator): string {
     );
 
   const tierMeta: Record<string, { label: string; color: string; bg: string }> = {
-    entry:       { label: "Entry (0–250 hrs)",         color: "#00D4AA", bg: "rgba(0,212,170,0.15)" },
-    building:    { label: "Building (250–800 hrs)",    color: "#FBBF24", bg: "rgba(251,191,36,0.15)" },
-    established: { label: "Established (800–1500 hrs)", color: "#EF9F27", bg: "rgba(239,159,39,0.15)" },
+    entry:       { label: "Entry (0–250 hrs)",          color: "#22C55E", bg: "rgba(34,197,94,0.15)" },
+    building:    { label: "Building (250–800 hrs)",     color: "#A855F7", bg: "rgba(168,85,247,0.15)" },
+    established: { label: "Established (800–1500 hrs)", color: "#F97316", bg: "rgba(249,115,22,0.15)" },
     senior:      { label: "Senior (1500+ hrs)",              color: "#DC2626", bg: "rgba(220,38,38,0.15)" },
   };
 
@@ -548,21 +548,21 @@ export default function CareersPage() {
         {/* Legend */}
         <div style={{ display: "flex", gap: 20, flexWrap: "wrap", marginTop: 16, fontSize: 12, color: "#9CA3AF" }}>
           <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-            <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#60A5FA", display: "inline-block" }} />
+            <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#3B82F6", display: "inline-block" }} />
             Flight school
           </span>
           {hasFullCareersAccess && (
             <>
               <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-                <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#00D4AA", display: "inline-block" }} />
+                <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#22C55E", display: "inline-block" }} />
                 Entry (0–250 hrs)
               </span>
               <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-                <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#FBBF24", display: "inline-block" }} />
+                <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#A855F7", display: "inline-block" }} />
                 Building (250–800 hrs)
               </span>
               <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-                <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#EF9F27", display: "inline-block" }} />
+                <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#F97316", display: "inline-block" }} />
                 Established (800–1500 hrs)
               </span>
               <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
