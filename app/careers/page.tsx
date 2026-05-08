@@ -1,19 +1,25 @@
 "use client";
-import "../quiz/quiz.css";
-import { useState, useEffect, useRef } from "react";
+
+import { useEffect, useMemo, useRef, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 
-const SUPABASE_URL = "https://cbvzjovbheiavmkalmaz.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNidnpqb3ZiaGVpYXZta2FsbWF6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNDA2MDUsImV4cCI6MjA4OTkxNjYwNX0.elpc_IUb9dot2ljnFMXGQnWAQ1aAb8krb2-QxC2jnKw";
+// ---------------------------------------------------------------------------
+// Supabase client
+// ---------------------------------------------------------------------------
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
 type Operator = {
   id: string;
   name: string;
-  slug: string;
   state: string;
-  bases: string;
+  bases: string | null;
+  primary_icao: string | null;
   latitude: number;
   longitude: number;
   website: string | null;
@@ -27,270 +33,536 @@ type Operator = {
   part_141_142: string | null;
   is_flight_school: boolean;
   background_tips: string | null;
-  claim_status: string;
 };
 
-function Logo({ size = 34 }: { size?: number }) {
-  const s = size, cx = s / 2, cy = s / 2;
-  return (
-    <svg width={s} height={s} viewBox={`0 0 ${s} ${s}`} fill="none">
-      <rect width={s} height={s} rx={s * 0.25} fill="#0F1D2F" />
-      <circle cx={cx} cy={cy} r={s * 0.35} fill="none" stroke="#00D4AA" strokeWidth={0.7} opacity={0.3} />
-      <path d={`M${cx} ${s * 0.2} L${s * 0.775} ${s * 0.725} L${cx} ${s * 0.6} L${s * 0.225} ${s * 0.725} Z`} fill="#00D4AA" />
-    </svg>
-  );
+type Tier = "free" | "rpl" | "ppl" | "cpl" | "founding_pilot" | null;
+
+const PAID_CAREERS_TIERS: Tier[] = ["cpl", "founding_pilot"];
+const STATES = ["ALL", "NSW", "VIC", "QLD", "WA", "SA", "TAS", "NT", "ACT"] as const;
+type StateFilter = typeof STATES[number];
+
+// ---------------------------------------------------------------------------
+// Marker styling
+// ---------------------------------------------------------------------------
+function markerColor(op: Operator): { bg: string; ring: string } {
+  if (op.is_flight_school) return { bg: "#60A5FA", ring: "#1E40AF" }; // blue — flight school
+  if (op.hires_low_hour === "Yes") return { bg: "#00D4AA", ring: "#047857" }; // green — low-hour friendly
+  return { bg: "#EF9F27", ring: "#92400E" }; // amber — moderate+ experience
 }
 
-function pinColor(op: Operator): string {
-  if (op.is_flight_school) return "#6C8EBF";
-  const h = (op.hires_low_hour ?? "").toLowerCase();
-  if (h === "yes") return "#00D4AA";
-  if (h === "possibly") return "#F59E0B";
-  if (h === "no") return "#4A6FA5";
-  return "#64748B";
+function buildDivIcon(L: any, op: Operator) {
+  const { bg, ring } = markerColor(op);
+  return L.divIcon({
+    className: "vectored-pin",
+    html: `<span style="
+      display:block;width:14px;height:14px;border-radius:50%;
+      background:${bg};border:2px solid ${ring};
+      box-shadow:0 0 0 2px rgba(11,17,32,0.85);
+    "></span>`,
+    iconSize: [18, 18],
+    iconAnchor: [9, 9],
+  });
 }
 
-function makeSvgIcon(color: string, isSchool: boolean): string {
-  const shape = isSchool
-    ? `<rect x="6" y="6" width="20" height="20" rx="4" fill="${color}" opacity="0.95"/>`
-    : `<circle cx="16" cy="14" r="9" fill="${color}" opacity="0.95"/><polygon points="16,30 10,18 22,18" fill="${color}" opacity="0.95"/>`;
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">${shape}</svg>`;
+// ---------------------------------------------------------------------------
+// Popup HTML — built lazily per click, never for all 108 upfront
+// ---------------------------------------------------------------------------
+function buildPopupHtml(op: Operator): string {
+  const escape = (s: string | null) =>
+    (s ?? "").replace(/[&<>"']/g, (c) =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!)
+    );
+
+  const badge = op.is_flight_school
+    ? `<span style="display:inline-block;font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(96,165,250,0.15);color:#60A5FA;font-weight:600">Flight school</span>`
+    : op.hires_low_hour === "Yes"
+    ? `<span style="display:inline-block;font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(0,212,170,0.15);color:#00D4AA;font-weight:600">Low-hour friendly</span>`
+    : `<span style="display:inline-block;font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(239,159,39,0.15);color:#EF9F27;font-weight:600">Moderate+ experience</span>`;
+
+  const websiteRow = op.website
+    ? `<a href="${escape(op.website)}" target="_blank" rel="noopener noreferrer" style="color:#60A5FA;text-decoration:none;font-size:12px;display:inline-block;margin-top:8px">Visit website →</a>`
+    : "";
+
+  const baseRow = op.bases
+    ? `<div style="font-size:11px;color:#9CA3AF;margin-top:4px">${escape(op.bases)}</div>`
+    : "";
+
+  const fleetRow = op.fleet
+    ? `<div style="font-size:11px;color:#D1D5DB;margin-top:8px"><strong style="color:#9CA3AF">Fleet:</strong> ${escape(op.fleet)}</div>`
+    : "";
+
+  const opsRow = op.operations
+    ? `<div style="font-size:11px;color:#D1D5DB;margin-top:4px"><strong style="color:#9CA3AF">Operations:</strong> ${escape(op.operations)}</div>`
+    : "";
+
+  const hoursRow = op.min_hours
+    ? `<div style="font-size:11px;color:#D1D5DB;margin-top:4px"><strong style="color:#9CA3AF">Min hours:</strong> ${escape(op.min_hours)}</div>`
+    : "";
+
+  const tipsRow = op.background_tips
+    ? `<div style="font-size:11px;color:#D1D5DB;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.08)">${escape(op.background_tips)}</div>`
+    : "";
+
+  return `
+    <div style="font-family:system-ui,-apple-system,sans-serif;color:#F3F4F6;min-width:240px;max-width:300px">
+      <div style="font-size:14px;font-weight:600;color:#FFFFFF">${escape(op.name)}</div>
+      ${baseRow}
+      <div style="margin-top:8px">${badge}</div>
+      ${fleetRow}
+      ${opsRow}
+      ${hoursRow}
+      ${tipsRow}
+      ${websiteRow}
+    </div>
+  `;
 }
 
-function hiresLabel(val: string | null): { text: string; color: string } {
-  const v = (val ?? "").toLowerCase();
-  if (v === "yes") return { text: "Hires low-hour", color: "#00D4AA" };
-  if (v === "possibly") return { text: "Possibly", color: "#F59E0B" };
-  if (v === "no") return { text: "Higher hours req.", color: "#4A6FA5" };
-  if (v === "n/a") return { text: "N/A", color: "#64748B" };
-  return { text: "Unknown", color: "#64748B" };
+// ---------------------------------------------------------------------------
+// Asset loaders — Leaflet + MarkerCluster from CDN, loaded once per page life
+// ---------------------------------------------------------------------------
+const LEAFLET_CSS = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css";
+const LEAFLET_JS = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js";
+const CLUSTER_CSS = "https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.css";
+const CLUSTER_DEFAULT_CSS = "https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.Default.css";
+const CLUSTER_JS = "https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.min.js";
+
+function loadStylesheet(href: string): void {
+  if (document.querySelector(`link[href="${href}"]`)) return;
+  const link = document.createElement("link");
+  link.rel = "stylesheet";
+  link.href = href;
+  document.head.appendChild(link);
 }
 
-const STATES = ["All", "NT", "QLD", "WA", "NSW", "VIC", "SA", "TAS", "ACT"];
+function loadScript(src: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const existing = document.querySelector(`script[src="${src}"]`) as HTMLScriptElement | null;
+    if (existing) {
+      if ((existing as any)._loaded) return resolve();
+      existing.addEventListener("load", () => resolve(), { once: true });
+      existing.addEventListener("error", () => reject(new Error(`Failed: ${src}`)), { once: true });
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = src;
+    script.async = true;
+    script.onload = () => {
+      (script as any)._loaded = true;
+      resolve();
+    };
+    script.onerror = () => reject(new Error(`Failed: ${src}`));
+    document.body.appendChild(script);
+  });
+}
 
+async function ensureLeaflet(): Promise<any> {
+  loadStylesheet(LEAFLET_CSS);
+  loadStylesheet(CLUSTER_CSS);
+  loadStylesheet(CLUSTER_DEFAULT_CSS);
+  await loadScript(LEAFLET_JS);
+  await loadScript(CLUSTER_JS);
+  return (window as any).L;
+}
+
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
 export default function CareersPage() {
-  const mapRef = useRef<HTMLDivElement>(null);
-  const leafletRef = useRef<any>(null);
-  const markersRef = useRef<any[]>([]);
-
+  // Data + auth state
   const [operators, setOperators] = useState<Operator[]>([]);
+  const [tier, setTier] = useState<Tier>(null);
+  const [authReady, setAuthReady] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedState, setSelectedState] = useState("All");
-  const [selectedOp, setSelectedOp] = useState<Operator | null>(null);
+
+  // Filter state
+  const [stateFilter, setStateFilter] = useState<StateFilter>("ALL");
+  const [showFlightSchools, setShowFlightSchools] = useState(true);
+  const [showOperators, setShowOperators] = useState(true);
+  const [search, setSearch] = useState("");
+
+  // Map refs — refs not state, so updates don't trigger re-renders
+  const mapContainerRef = useRef<HTMLDivElement | null>(null);
+  const mapRef = useRef<any>(null);
+  const clusterGroupRef = useRef<any>(null);
+  const leafletRef = useRef<any>(null);
   const [mapReady, setMapReady] = useState(false);
 
-  // Fetch with explicit token
-  async function fetchOperators(token: string | null) {
-    const client = token
-      ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-          global: { headers: { Authorization: `Bearer ${token}` } }
-        })
-      : supabase;
+  const hasFullCareersAccess = PAID_CAREERS_TIERS.includes(tier);
 
-    const { data, error } = await client
-      .from("operators")
-      .select("*")
-      .eq("published", true)
-      .order("name");
-
-    if (error) {
-      setError("Failed to load operators. Please try again.");
-      console.error("Supabase error:", error);
-    } else {
-      setOperators(data ?? []);
-    }
-    setLoading(false);
-  }
-
-  // Use onAuthStateChange so we catch the session as soon as it's restored
+  // -------------------------------------------------------------------------
+  // 1. Load session + tier, then fetch operators
+  // -------------------------------------------------------------------------
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      fetchOperators(session?.access_token ?? null);
-    });
+    let cancelled = false;
 
-    // Also fire immediately in case auth state is already known
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      fetchOperators(session?.access_token ?? null);
-    });
+    (async () => {
+      try {
+        // Wait for any persisted session to restore from localStorage before
+        // querying — RLS policies need a real JWT to evaluate.
+        const { data: sessionData } = await supabase.auth.getSession();
+        if (cancelled) return;
 
-    return () => subscription.unsubscribe();
-  }, []);
+        let resolvedTier: Tier = null;
+        if (sessionData.session?.user) {
+          const { data: profile } = await supabase
+            .from("profiles")
+            .select("tier, access_expires_at")
+            .eq("id", sessionData.session.user.id)
+            .single();
 
-  // Initialise Leaflet
-  useEffect(() => {
-    if (!mapRef.current || mapReady) return;
-    const initMap = async () => {
-      const L = (await import("leaflet")).default;
-      await import("leaflet/dist/leaflet.css");
-      // @ts-ignore
-      const { MarkerClusterGroup } = await import("leaflet.markercluster");
-      await import("leaflet.markercluster/dist/MarkerCluster.css");
-      await import("leaflet.markercluster/dist/MarkerCluster.Default.css");
-      if (!mapRef.current) return;
-      const map = L.map(mapRef.current, { center: [-25.5, 134.0], zoom: 4, zoomControl: true });
-      L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
-        attribution: '&copy; <a href="https://carto.com/">CARTO</a>',
-        subdomains: "abcd", maxZoom: 19,
-      }).addTo(map);
-      leafletRef.current = { map, L, MarkerClusterGroup };
-      setMapReady(true);
+          if (profile) {
+            const expired =
+              profile.access_expires_at !== null &&
+              new Date(profile.access_expires_at) <= new Date();
+            resolvedTier = expired ? "free" : (profile.tier as Tier);
+          }
+        }
+
+        if (cancelled) return;
+        setTier(resolvedTier);
+        setAuthReady(true);
+
+        // Operators fetch — RLS does the gating server-side. Free / RPL / PPL /
+        // anon callers will only see flight schools regardless of what the
+        // client requests.
+        const { data, error: fetchErr } = await supabase
+          .from("operators")
+          .select(
+            "id, name, state, bases, primary_icao, latitude, longitude, website, phone, email, key_personnel, fleet, operations, min_hours, hires_low_hour, part_141_142, is_flight_school, background_tips"
+          )
+          .eq("published", true);
+
+        if (cancelled) return;
+
+        if (fetchErr) {
+          setError(fetchErr.message);
+        } else {
+          setOperators((data ?? []) as Operator[]);
+        }
+        setLoading(false);
+      } catch (e: any) {
+        if (cancelled) return;
+        setError(e?.message ?? "Unknown error");
+        setLoading(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
     };
-    initMap();
   }, []);
 
-  // Render markers
+  // -------------------------------------------------------------------------
+  // 2. Initialise the map — exactly once, after the container is mounted.
+  //    No dependencies that change on filter, search, or operator updates.
+  // -------------------------------------------------------------------------
   useEffect(() => {
-    if (!mapReady || !leafletRef.current) return;
-    const { map, L, MarkerClusterGroup } = leafletRef.current;
-    markersRef.current.forEach((m) => map.removeLayer(m));
-    markersRef.current = [];
-    const filtered = selectedState === "All" ? operators : operators.filter((o) => o.state === selectedState);
-    const cluster = new MarkerClusterGroup({ spiderfyOnMaxZoom: true, showCoverageOnHover: false, maxClusterRadius: 50 });
-    filtered.forEach((op) => {
-      const color = pinColor(op);
-      const icon = L.divIcon({ html: makeSvgIcon(color, op.is_flight_school), className: "", iconSize: [32, 32], iconAnchor: [16, 30], popupAnchor: [0, -30] });
-      const marker = L.marker([op.latitude, op.longitude], { icon });
-      marker.on("click", () => setSelectedOp(op));
-      cluster.addLayer(marker);
-      markersRef.current.push(marker);
-    });
-    map.addLayer(cluster);
-    markersRef.current.push(cluster);
-  }, [operators, selectedState, mapReady]);
+    let cancelled = false;
 
-  const filteredOps = selectedState === "All" ? operators : operators.filter((o) => o.state === selectedState);
-  const schoolCount = operators.filter((o) => o.is_flight_school).length;
-  const operatorCount = operators.filter((o) => !o.is_flight_school).length;
+    (async () => {
+      if (!mapContainerRef.current) return;
+      const L = await ensureLeaflet();
+      if (cancelled || !mapContainerRef.current) return;
+
+      // Guard against double-init in React strict mode
+      if (mapRef.current) return;
+
+      leafletRef.current = L;
+
+      const map = L.map(mapContainerRef.current, {
+        scrollWheelZoom: false,
+        zoomControl: true,
+        preferCanvas: true, // canvas renderer — faster on pan/zoom for many markers
+      }).setView([-25, 134], 4);
+
+      L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; CARTO',
+        maxZoom: 18,
+        subdomains: "abcd",
+      }).addTo(map);
+
+      const cluster = L.markerClusterGroup({
+        showCoverageOnHover: false,
+        spiderfyOnMaxZoom: true,
+        zoomToBoundsOnClick: true,
+        disableClusteringAtZoom: 11,
+        maxClusterRadius: 50,
+        chunkedLoading: true,
+        spiderfyDistanceMultiplier: 1.6,
+      });
+
+      map.addLayer(cluster);
+
+      mapRef.current = map;
+      clusterGroupRef.current = cluster;
+      setMapReady(true);
+    })();
+
+    return () => {
+      cancelled = true;
+      // Tear down only on unmount — never on filter/data changes
+      if (mapRef.current) {
+        mapRef.current.remove();
+        mapRef.current = null;
+        clusterGroupRef.current = null;
+      }
+    };
+  }, []);
+
+  // -------------------------------------------------------------------------
+  // 3. Filter operators (memoised — same array reference unless inputs change)
+  // -------------------------------------------------------------------------
+  const visibleOperators = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return operators.filter((op) => {
+      if (stateFilter !== "ALL" && op.state !== stateFilter) return false;
+      if (op.is_flight_school && !showFlightSchools) return false;
+      if (!op.is_flight_school && !showOperators) return false;
+      if (q) {
+        const haystack = `${op.name} ${op.bases ?? ""} ${op.state}`.toLowerCase();
+        if (!haystack.includes(q)) return false;
+      }
+      return true;
+    });
+  }, [operators, stateFilter, showFlightSchools, showOperators, search]);
+
+  // -------------------------------------------------------------------------
+  // 4. Sync markers to the cluster group whenever visible set changes.
+  //    clearLayers + addLayers (batch) — never recreate the cluster group.
+  // -------------------------------------------------------------------------
+  useEffect(() => {
+    if (!mapReady) return;
+    const L = leafletRef.current;
+    const cluster = clusterGroupRef.current;
+    if (!L || !cluster) return;
+
+    cluster.clearLayers();
+
+    const markers = visibleOperators.map((op) => {
+      const marker = L.marker([op.latitude, op.longitude], {
+        icon: buildDivIcon(L, op),
+        title: op.name,
+      });
+      // Lazy popup — HTML isn't built until the marker is clicked
+      marker.bindPopup(() => buildPopupHtml(op), {
+        maxWidth: 320,
+        className: "vectored-popup",
+      });
+      return marker;
+    });
+
+    cluster.addLayers(markers);
+  }, [visibleOperators, mapReady]);
+
+  // -------------------------------------------------------------------------
+  // Render
+  // -------------------------------------------------------------------------
+  const counts = useMemo(() => {
+    const total = operators.length;
+    const schools = operators.filter((o) => o.is_flight_school).length;
+    const visible = visibleOperators.length;
+    return { total, schools, visible };
+  }, [operators, visibleOperators]);
 
   return (
-    <div style={{ minHeight: "100vh", background: "#0A1628", color: "#E2E8F0", fontFamily: "system-ui, sans-serif" }}>
-      <nav style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 24px", borderBottom: "1px solid rgba(255,255,255,0.06)", background: "#0F1D2F" }}>
-        <a href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
-          <Logo size={34} />
-          <span style={{ fontSize: 18, fontWeight: 700, color: "#E2E8F0", letterSpacing: "-0.02em" }}>Vectored</span>
-        </a>
-        <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
-          <a href="/quiz" style={{ color: "#94A3B8", textDecoration: "none", fontSize: 14 }}>Exam Prep</a>
-          <a href="/careers" style={{ color: "#00D4AA", textDecoration: "none", fontSize: 14, fontWeight: 600 }}>Careers</a>
-          <a href="/resources" style={{ color: "#94A3B8", textDecoration: "none", fontSize: 14 }}>Resources</a>
-        </div>
-      </nav>
+    <div style={{ background: "#0B1120", color: "#F3F4F6", minHeight: "100vh" }}>
+      <style jsx global>{`
+        .leaflet-popup-content-wrapper {
+          background: #1F2937 !important;
+          color: #F3F4F6 !important;
+          border-radius: 8px !important;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+        }
+        .leaflet-popup-tip {
+          background: #1F2937 !important;
+        }
+        .leaflet-popup-close-button {
+          color: #9CA3AF !important;
+        }
+        .marker-cluster-small,
+        .marker-cluster-medium,
+        .marker-cluster-large {
+          background: rgba(96, 165, 250, 0.25) !important;
+        }
+        .marker-cluster-small div,
+        .marker-cluster-medium div,
+        .marker-cluster-large div {
+          background: rgba(96, 165, 250, 0.7) !important;
+          color: #FFFFFF !important;
+          font-weight: 600 !important;
+        }
+      `}</style>
 
-      <div style={{ padding: "32px 24px 20px", maxWidth: 1400, margin: "0 auto" }}>
-        <h1 style={{ fontSize: 28, fontWeight: 700, color: "#E2E8F0", margin: 0, letterSpacing: "-0.03em" }}>Careers Hub</h1>
-        <p style={{ color: "#64748B", marginTop: 6, fontSize: 14 }}>
-          Verified Australian GA operators and flight schools.
-          {!loading && (<> Showing <span style={{ color: "#00D4AA" }}>{operatorCount} operators</span> and <span style={{ color: "#6C8EBF" }}>{schoolCount} flight schools</span>.</>)}
-        </p>
-        <div style={{ display: "flex", gap: 20, marginTop: 12, flexWrap: "wrap" }}>
-          {[
-            { color: "#00D4AA", label: "Hires low-hour" },
-            { color: "#F59E0B", label: "Possibly hires low-hour" },
-            { color: "#4A6FA5", label: "Higher hours required" },
-            { color: "#6C8EBF", shape: "square", label: "Flight school" },
-          ].map(({ color, shape, label }) => (
-            <div key={label} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "#94A3B8" }}>
-              <div style={{ width: 10, height: 10, borderRadius: shape === "square" ? 2 : "50%", background: color, flexShrink: 0 }} />
-              {label}
-            </div>
-          ))}
-        </div>
-      </div>
+      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "48px 24px" }}>
+        <header style={{ marginBottom: 32 }}>
+          <h1 style={{ fontSize: 32, fontWeight: 600, margin: 0 }}>Careers Hub</h1>
+          <p style={{ color: "#9CA3AF", marginTop: 8, maxWidth: 640 }}>
+            Verified Australian general aviation operators and flight schools.
+            {!authReady ? null : hasFullCareersAccess ? (
+              <span> Showing all {counts.total} entries.</span>
+            ) : (
+              <span>
+                {" "}
+                Free preview — showing {counts.schools} verified flight schools. Upgrade to CPL tier for the full operator database.
+              </span>
+            )}
+          </p>
+        </header>
 
-      <div style={{ padding: "0 24px 16px", maxWidth: 1400, margin: "0 auto", display: "flex", gap: 8, flexWrap: "wrap" }}>
-        {STATES.map((s) => (
-          <button key={s} onClick={() => { setSelectedState(s); setSelectedOp(null); }}
-            style={{ padding: "5px 14px", borderRadius: 20, fontSize: 13, fontWeight: 500, cursor: "pointer",
-              border: selectedState === s ? "1px solid #00D4AA" : "1px solid rgba(255,255,255,0.1)",
-              background: selectedState === s ? "rgba(0,212,170,0.12)" : "rgba(255,255,255,0.04)",
-              color: selectedState === s ? "#00D4AA" : "#94A3B8", transition: "all 0.15s" }}>
-            {s}
-          </button>
-        ))}
-        {selectedState !== "All" && (
-          <span style={{ fontSize: 12, color: "#64748B", alignSelf: "center" }}>
-            {filteredOps.length} result{filteredOps.length !== 1 ? "s" : ""}
+        {/* Filters */}
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 12,
+            alignItems: "center",
+            marginBottom: 16,
+            padding: "12px 16px",
+            background: "rgba(255,255,255,0.03)",
+            border: "1px solid rgba(255,255,255,0.06)",
+            borderRadius: 8,
+          }}
+        >
+          <input
+            type="text"
+            placeholder="Search by name or base…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            style={{
+              flex: "1 1 220px",
+              minWidth: 200,
+              padding: "8px 12px",
+              background: "rgba(0,0,0,0.3)",
+              border: "1px solid rgba(255,255,255,0.1)",
+              borderRadius: 6,
+              color: "#F3F4F6",
+              fontSize: 13,
+            }}
+          />
+          <select
+            value={stateFilter}
+            onChange={(e) => setStateFilter(e.target.value as StateFilter)}
+            style={{
+              padding: "8px 12px",
+              background: "rgba(0,0,0,0.3)",
+              border: "1px solid rgba(255,255,255,0.1)",
+              borderRadius: 6,
+              color: "#F3F4F6",
+              fontSize: 13,
+            }}
+          >
+            {STATES.map((s) => (
+              <option key={s} value={s}>
+                {s === "ALL" ? "All states" : s}
+              </option>
+            ))}
+          </select>
+          <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#D1D5DB" }}>
+            <input
+              type="checkbox"
+              checked={showFlightSchools}
+              onChange={(e) => setShowFlightSchools(e.target.checked)}
+            />
+            Flight schools
+          </label>
+          {hasFullCareersAccess && (
+            <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#D1D5DB" }}>
+              <input
+                type="checkbox"
+                checked={showOperators}
+                onChange={(e) => setShowOperators(e.target.checked)}
+              />
+              Operators
+            </label>
+          )}
+          <span style={{ marginLeft: "auto", fontSize: 12, color: "#6B7280" }}>
+            {counts.visible} of {counts.total} shown
           </span>
-        )}
-      </div>
+        </div>
 
-      <div style={{ maxWidth: 1400, margin: "0 auto", padding: "0 24px 40px", display: "grid", gridTemplateColumns: selectedOp ? "1fr 380px" : "1fr", gap: 16 }}>
-        <div style={{ position: "relative", borderRadius: 12, overflow: "hidden", border: "1px solid rgba(255,255,255,0.08)", height: 600 }}>
+        {/* Map */}
+        <div
+          style={{
+            position: "relative",
+            border: "1px solid rgba(255,255,255,0.08)",
+            borderRadius: 8,
+            overflow: "hidden",
+          }}
+        >
+          <div
+            ref={mapContainerRef}
+            style={{ height: 600, width: "100%", background: "#0B1120" }}
+          />
           {loading && (
-            <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "#0F1D2F", zIndex: 10 }}>
-              <div style={{ color: "#64748B", fontSize: 13 }}>Loading operators…</div>
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                background: "rgba(11,17,32,0.7)",
+                color: "#9CA3AF",
+                fontSize: 14,
+                pointerEvents: "none",
+              }}
+            >
+              Loading operators…
             </div>
           )}
           {error && (
-            <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "#0F1D2F", zIndex: 10 }}>
-              <div style={{ color: "#EF4444", fontSize: 13 }}>{error}</div>
+            <div
+              style={{
+                position: "absolute",
+                top: 16,
+                left: 16,
+                right: 16,
+                padding: "12px 16px",
+                background: "rgba(239,68,68,0.15)",
+                border: "1px solid rgba(239,68,68,0.3)",
+                borderRadius: 6,
+                color: "#FCA5A5",
+                fontSize: 13,
+              }}
+            >
+              {error}
             </div>
           )}
-          <div ref={mapRef} style={{ width: "100%", height: "100%" }} />
         </div>
 
-        {selectedOp && (
-          <div style={{ background: "#0F1D2F", borderRadius: 12, border: "1px solid rgba(255,255,255,0.08)", padding: 24, overflowY: "auto", maxHeight: 600, position: "relative" }}>
-            <button onClick={() => setSelectedOp(null)}
-              style={{ position: "absolute", top: 16, right: 16, background: "rgba(255,255,255,0.06)", border: "none", color: "#94A3B8", width: 28, height: 28, borderRadius: 6, cursor: "pointer", fontSize: 14 }}>
-              ✕
-            </button>
-            <div style={{ marginBottom: 16, paddingRight: 32 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-                {selectedOp.is_flight_school && (
-                  <span style={{ fontSize: 10, fontWeight: 600, background: "rgba(108,142,191,0.15)", color: "#6C8EBF", padding: "2px 7px", borderRadius: 4, letterSpacing: "0.05em", textTransform: "uppercase" }}>Flight School</span>
-                )}
-                {(() => { const { text, color } = hiresLabel(selectedOp.hires_low_hour); return (
-                  <span style={{ fontSize: 10, fontWeight: 600, background: `${color}1A`, color, padding: "2px 7px", borderRadius: 4, letterSpacing: "0.05em", textTransform: "uppercase" }}>{text}</span>
-                ); })()}
-              </div>
-              <h2 style={{ fontSize: 18, fontWeight: 700, color: "#E2E8F0", margin: 0, letterSpacing: "-0.02em" }}>{selectedOp.name}</h2>
-              <p style={{ color: "#64748B", fontSize: 13, margin: "4px 0 0" }}>{selectedOp.bases} · {selectedOp.state}</p>
-            </div>
+        {/* Legend */}
+        <div style={{ display: "flex", gap: 20, flexWrap: "wrap", marginTop: 16, fontSize: 12, color: "#9CA3AF" }}>
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+            <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#60A5FA", display: "inline-block" }} />
+            Flight school
+          </span>
+          {hasFullCareersAccess && (
+            <>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#00D4AA", display: "inline-block" }} />
+                Low-hour friendly operator
+              </span>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#EF9F27", display: "inline-block" }} />
+                Moderate+ experience operator
+              </span>
+            </>
+          )}
+        </div>
 
-            {[
-              { label: "Operations", value: selectedOp.operations },
-              { label: "Fleet", value: selectedOp.fleet },
-              { label: "Min. hours", value: selectedOp.min_hours },
-              { label: "Part 141/142", value: selectedOp.part_141_142 },
-              { label: "Key personnel", value: selectedOp.key_personnel },
-            ].map(({ label, value }) => value && value !== "Unknown" && value !== "N/A" ? (
-              <div key={label} style={{ marginBottom: 12 }}>
-                <div style={{ fontSize: 11, fontWeight: 600, color: "#475569", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 3 }}>{label}</div>
-                <div style={{ fontSize: 13, color: "#CBD5E1" }}>{value}</div>
-              </div>
-            ) : null)}
-
-            {selectedOp.background_tips && (
-              <div style={{ marginBottom: 16, padding: "12px 14px", background: "rgba(0,212,170,0.06)", borderRadius: 8, borderLeft: "3px solid rgba(0,212,170,0.4)" }}>
-                <div style={{ fontSize: 11, fontWeight: 600, color: "#00D4AA", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 6 }}>Background</div>
-                <div style={{ fontSize: 13, color: "#94A3B8", lineHeight: 1.6 }}>{selectedOp.background_tips}</div>
-              </div>
-            )}
-
-            <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 8 }}>
-              {selectedOp.website && (
-                <a href={selectedOp.website} target="_blank" rel="noopener noreferrer"
-                  style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 14px", background: "#00D4AA", color: "#0A1628", borderRadius: 8, fontSize: 13, fontWeight: 600, textDecoration: "none" }}>
-                  Visit website ↗
-                </a>
-              )}
-              {selectedOp.phone && (
-                <a href={`tel:${selectedOp.phone}`}
-                  style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 14px", background: "rgba(255,255,255,0.06)", color: "#CBD5E1", borderRadius: 8, fontSize: 13, textDecoration: "none", border: "1px solid rgba(255,255,255,0.08)" }}>
-                  📞 {selectedOp.phone}
-                </a>
-              )}
-              {selectedOp.email && (
-                <a href={`mailto:${selectedOp.email}`}
-                  style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 14px", background: "rgba(255,255,255,0.06)", color: "#CBD5E1", borderRadius: 8, fontSize: 13, textDecoration: "none", border: "1px solid rgba(255,255,255,0.08)" }}>
-                  ✉ {selectedOp.email}
-                </a>
-              )}
-            </div>
-          </div>
-        )}
+        <p style={{ marginTop: 32, fontSize: 11, color: "#6B7280", lineHeight: 1.6 }}>
+          Always verify details directly with operators. Vectored is not a recruitment agency.
+          {" · "}
+          <a href="/terms" target="_blank" rel="noopener noreferrer" style={{ color: "#9CA3AF", textDecoration: "underline" }}>
+            Terms of Use
+          </a>
+          {" · "}
+          <a href="/privacy" target="_blank" rel="noopener noreferrer" style={{ color: "#9CA3AF", textDecoration: "underline" }}>
+            Privacy Policy
+          </a>
+        </p>
       </div>
     </div>
   );
