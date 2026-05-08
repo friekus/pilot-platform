@@ -75,11 +75,22 @@ function buildPopupHtml(op: Operator): string {
       ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!)
     );
 
-  const badge = op.is_flight_school
-    ? `<span style="display:inline-block;font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(96,165,250,0.15);color:#60A5FA;font-weight:600">Flight school</span>`
-    : op.hires_low_hour === "Yes"
-    ? `<span style="display:inline-block;font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(0,212,170,0.15);color:#00D4AA;font-weight:600">Low-hour friendly</span>`
-    : `<span style="display:inline-block;font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(239,159,39,0.15);color:#EF9F27;font-weight:600">Moderate+ experience</span>`;
+  const tierMeta: Record<string, { label: string; color: string; bg: string }> = {
+    entry:       { label: "Entry (0–250 hrs)",         color: "#00D4AA", bg: "rgba(0,212,170,0.15)" },
+    building:    { label: "Building (250–800 hrs)",    color: "#FBBF24", bg: "rgba(251,191,36,0.15)" },
+    established: { label: "Established (800–1500 hrs)", color: "#EF9F27", bg: "rgba(239,159,39,0.15)" },
+    senior:      { label: "Senior (1500+ hrs)",              color: "#DC2626", bg: "rgba(220,38,38,0.15)" },
+  };
+
+  let badge: string;
+  if (op.is_flight_school) {
+    badge = `<span style="display:inline-block;font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(96,165,250,0.15);color:#60A5FA;font-weight:600">Flight school</span>`;
+  } else if (op.experience_tier && tierMeta[op.experience_tier]) {
+    const t = tierMeta[op.experience_tier];
+    badge = `<span style="display:inline-block;font-size:10px;padding:2px 8px;border-radius:8px;background:${t.bg};color:${t.color};font-weight:600">${t.label}</span>`;
+  } else {
+    badge = `<span style="display:inline-block;font-size:10px;padding:2px 8px;border-radius:8px;background:rgba(107,114,128,0.15);color:#9CA3AF;font-weight:600">Tier unknown</span>`;
+  }
 
   const websiteRow = op.website
     ? `<a href="${escape(op.website)}" target="_blank" rel="noopener noreferrer" style="color:#60A5FA;text-decoration:none;font-size:12px;display:inline-block;margin-top:8px">Visit website →</a>`
