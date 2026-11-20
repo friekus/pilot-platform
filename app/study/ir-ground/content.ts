@@ -1,7 +1,7 @@
 // Instrument rating flight test — ground component (CASA form 61-1503, items 2(a)–2(q)).
 // Every figure is taken from primary sources: CASR (Compilation 101, 1 Apr 2026),
-// Part 91 MOS (Compilation 7, 14 Mar 2026), AIP Australia (26 Nov 2026) and the
-// PA-44-180 Seminole G1000 POH (VB-2636). Re-verify after each AIRAC / compilation change.
+// Part 91 MOS (Compilation 7, 14 Mar 2026), AIP Australia (26 Nov 2026),
+// Part 135 MOS (Compilation 4, 14 Mar 2026) and the PA-44-180 Seminole G1000 POH (VB-2636). Re-verify after each AIRAC / compilation change.
 
 export type Fact = { label: string; text: string; ref: string };
 export type Aid = { name: string; lines: string[] };
@@ -17,7 +17,7 @@ export type GroundItem = {
   note?: string;
 };
 
-export const SOURCES_AS_OF = "CASR Comp. 101 (1 Apr 2026) · Part 91 MOS Comp. 7 (14 Mar 2026) · AIP 26 Nov 2026 · PA-44-180 G1000 POH";
+export const SOURCES_AS_OF = "CASR Comp. 101 (1 Apr 2026) · Part 91 MOS Comp. 7 (14 Mar 2026) · Part 135 MOS Comp. 4 (14 Mar 2026) · AIP 26 Nov 2026 · PA-44-180 G1000 POH";
 
 export const groundItems: GroundItem[] = [
   {
@@ -183,17 +183,24 @@ export const groundItems: GroundItem[] = [
     id: "f",
     code: "2(f)",
     title: "Aircraft instrument requirements",
-    summary: "The IFR equipment list, and what the Seminole G1000 needs serviceable.",
+    summary: "The IFR equipment list for private (Part 91) and charter (Part 135) flights, and what the Seminole G1000 needs serviceable.",
     facts: [
-      { label: "IFR navigation", text: "An aeroplane made on or after 6 Feb 2014 needs at least 1 approved GNSS that is not (E)TSO-C129. The Seminole G1000 has two TSO-C145d receivers and TSO-C146d displays, so it complies.", ref: "Part 91 MOS 26.08(1); POH 1.21" },
-      { label: "IFR flight information", text: "Airspeed, pressure altitude, magnetic heading, time (hours, minutes and seconds; can be worn), turn and slip, attitude, vertical speed, stabilised heading, OAT, and an indication that gyro power is adequate.", ref: "Part 91 MOS 26.08(3)" },
-      { label: "Static and pitot", text: "Airspeed, altimeter and VSI must connect to a pilot-selectable alternate static source or a balanced pair of flush static ports. At least 1 airspeed indicator must have protection against condensation or icing (pitot heat).", ref: "Part 91 MOS Table 26.08(4) items 1, 2, 7" },
-      { label: "Power redundancy", text: "Attitude, turn and slip, and stabilised heading each need an alternate power supply, unless their power is independent of the other gyros or a second independent attitude source is fitted. Slip only (not turn) is required if a second independent attitude source exists.", ref: "Part 91 MOS Table 26.08(4) items 5, 6, 8" },
-      { label: "Compass", text: "A direct-reading magnetic compass, or a remote compass plus a standby direct-reading compass.", ref: "Part 91 MOS Table 26.08(4) item 3" },
-      { label: "Altitude alerting", text: "IFR in controlled airspace needs at least an assigned altitude indicator. A full altitude alerting system is needed for piston aircraft above FL150 in controlled airspace.", ref: "Part 91 MOS 26.25" },
+      { label: "Part 91: IFR navigation", text: "An aeroplane made on or after 6 Feb 2014 needs at least 1 approved GNSS that is not (E)TSO-C129. The Seminole G1000 has two TSO-C145d receivers and TSO-C146d displays, so it complies.", ref: "Part 91 MOS 26.08(1); POH 1.21" },
+      { label: "Part 91: IFR flight information", text: "Airspeed, pressure altitude, magnetic heading, time (hours, minutes and seconds; can be worn), turn and slip, attitude, vertical speed, stabilised heading, OAT, and an indication that gyro power is adequate.", ref: "Part 91 MOS 26.08(3)" },
+      { label: "Part 91: Static and pitot", text: "Airspeed, altimeter and VSI must connect to a pilot-selectable alternate static source or a balanced pair of flush static ports. At least 1 airspeed indicator must have protection against condensation or icing (pitot heat).", ref: "Part 91 MOS Table 26.08(4) items 1, 2, 7" },
+      { label: "Part 91: Power redundancy", text: "Attitude, turn and slip, and stabilised heading each need an alternate power supply, unless their power is independent of the other gyros or a second independent attitude source is fitted. Slip only (not turn) is required if a second independent attitude source exists.", ref: "Part 91 MOS Table 26.08(4) items 5, 6, 8" },
+      { label: "Part 91: Compass", text: "A direct-reading magnetic compass, or a remote compass plus a standby direct-reading compass.", ref: "Part 91 MOS Table 26.08(4) item 3" },
+      { label: "Part 91: Altitude alerting", text: "IFR in controlled airspace needs at least an assigned altitude indicator. A full altitude alerting system is needed for piston aircraft above FL150 in controlled airspace.", ref: "Part 91 MOS 26.25" },
       { label: "Seminole IFR minimum", text: "IFR needs the PFD, MFD, both GIAs, at least 1 GPS, the AHRS, ADC and magnetometer, plus standby attitude, airspeed, altimeter and heading. If a standby airspeed, altimeter or heading indication fails, the PFD equivalent must work. 'Fully functional' means no related CAS, annunciations or advisories.", ref: "POH 2.27(o)" },
       { label: "Altimeter check", text: "IFR: an error over ±75 ft makes the altimeter inoperative. One required system and one fitted: an error of 60 to 75 ft lets you fly to the first point of landing to recheck. Only ATC, ATIS, AWIS, AAIS, CA/GRS or WATIR give an accurate QNH. A forecast QNH can't be used.", ref: "Part 91 MOS 10.04, 10.06" },
       { label: "Blocked static", text: "With a blocked static source the altimeter freezes at the blockage altitude and the VSI reads zero. Select alternate static (cabin static reads slightly differently).", ref: "Instrument theory; Part 91 MOS Table 26.08(4) item 2" },
+      { label: "Part 135: single-pilot IFR", text: "Where only 1 pilot is required, you need separate, independent equipment to measure and display pressure altitude and attitude. In practice that means 2 altimeters and 2 attitude sources.", ref: "Part 135 MOS 11.07(2)" },
+      { label: "Part 135: two-pilot IFR", text: "Where 2 pilots are required, airspeed, pressure altitude, turn and slip, attitude, vertical speed and stabilised heading each need separate, independent equipment.", ref: "Part 135 MOS 11.07(3)" },
+      { label: "Part 135: turn and slip and power", text: "Turn and slip is required unless a third independent attitude source is fitted, in which case slip alone will do. Turn and slip, attitude and stabilised heading each need an alternate power supply.", ref: "Part 135 MOS Table 11.07(5) items 5, 6, 8" },
+      { label: "Part 135: standby attitude", text: "Only aeroplanes over 5,700 kg MTOW need a standby attitude indicator. It must run independently of the electrical generating system for 30 minutes after a generator failure, with no crew action.", ref: "Part 135 MOS 11.07(4), Table 11.07(5) item 9" },
+      { label: "Part 135: navigation", text: "IFR: 2 approved GNSS, or 1 approved GNSS plus an ADF or VOR. After any single failure you must still be able to navigate the route and meet the airspace requirements. Night VFR: an approved GNSS, or an ADF or VOR.", ref: "Part 135 MOS 11.09" },
+      { label: "Part 135: autopilot", text: "Single-pilot IFR or night VFR needs an autopilot with at least altitude hold and heading modes. It may be inoperative at the start of a flight only if the flight is in VMC by day.", ref: "Part 135 MOS 11.10" },
+      { label: "Seminole for charter", text: "The G1000 Seminole has PFD and standby attitude, ADC and standby altimeter, dual GNSS and a GFC 700 autopilot with ALT and HDG modes, so it can meet the Part 135 single-pilot IFR fit when all of that is serviceable.", ref: "Part 135 MOS 11.07, 11.09, 11.10; POH 2.27, 2.29" },
     ],
     aids: [
       {
@@ -221,6 +228,16 @@ export const groundItems: GroundItem[] = [
           "Use the standby compass only in steady, unaccelerated flight",
         ],
       },
+      {
+        name: "Charter adds 2-2-2-A",
+        lines: [
+          "2 altimeters (independent pressure altitude)",
+          "2 attitude sources (independent)",
+          "2 navigation systems: 2 GNSS, or GNSS plus ADF or VOR",
+          "Autopilot with ALT and HDG for single-pilot IFR or night VFR",
+          "Standby attitude with 30 minutes' power only above 5,700 kg",
+        ],
+      },
     ],
     questions: [
       { id: "f1", q: "During your pre-flight, the G5 standby attitude shows a failure flag. Can you depart IFR in the Seminole?", hint: "Check the POH 2.27(o) table. Is there a footnote for standby attitude?", answer: "No. The standby attitude is required for IFR, and unlike standby airspeed, altimeter and heading, it has no footnote letting the PFD substitute for it.", ref: "POH 2.27(o)" },
@@ -228,6 +245,9 @@ export const groundItems: GroundItem[] = [
       { id: "f3", q: "You only have the TAF QNH because there's no ATIS or AWIS. Can you use it for the altimeter check?", hint: "Which sources does MOS 10.06 accept?", answer: "No. A QNH in an authorised forecast can't be used to check a pressure altitude system. You need an accurate QNH from ATC, ATIS, AWIS, AAIS, CA/GRS or WATIR.", ref: "Part 91 MOS 10.06(2)" },
       { id: "f4", q: "Why does the Seminole meet the IFR GNSS requirement when an older C129 unit wouldn't?", hint: "When was the aircraft built, and what TSO is the G1000 GNSS?", answer: "An aeroplane made on or after 6 Feb 2014 needs an approved GNSS that is not (E)TSO-C129. The G1000 has TSO-C145d GIAs and TSO-C146d displays.", ref: "Part 91 MOS 26.08(1)(a); POH 1.21" },
       { id: "f5", q: "Pitot heat shows a PITOT HEAT FAIL message before departure into forecast IMC. What's the regulatory issue?", hint: "Table 26.08(4) item 1, clause 2.", answer: "The IFR airspeed indicator must have a means of preventing malfunction from condensation or icing. With pitot heat failed, that requirement isn't met unless the defect is approved as a permissible unserviceability.", ref: "Part 91 MOS Table 26.08(4) item 1; 26.04" },
+      { id: "f6", q: "You're flying a single-pilot charter in the Seminole and the autopilot fails its pre-flight test. Can you depart IFR, or night VFR?", hint: "Part 135 MOS 11.10(3).", answer: "No. For single-pilot IFR or night VFR under Part 135 the autopilot may only be inoperative at the start of the flight if the flight will be in VMC by day. Under Part 91 the autopilot isn't required.", ref: "Part 135 MOS 11.10" },
+      { id: "f7", q: "What does a single-pilot Part 135 IFR flight need that a private Part 91 IFR flight doesn't?", hint: "Think altitude, attitude, navigation and automation.", answer: "Independent second sources of pressure altitude and attitude; 2 approved GNSS, or GNSS plus an ADF or VOR, with single-failure tolerance; and an autopilot with altitude hold and heading modes.", ref: "Part 135 MOS 11.07(2), 11.09, 11.10" },
+      { id: "f8", q: "Some notes say the second attitude indicator must keep working for 30 minutes after an electrical failure. Does that apply to a charter Seminole?", hint: "Which aeroplanes need the Table 11.07(5) item 9 standby?", answer: "No. The 30-minute independent standby attitude is only required for aeroplanes over 5,700 kg MTOW. A Seminole on a single-pilot charter needs separate, independent attitude equipment, but no 30-minute requirement is specified.", ref: "Part 135 MOS 11.07(2), (4), Table 11.07(5) item 9" },
     ],
   },
   {
@@ -353,6 +373,7 @@ export const groundItems: GroundItem[] = [
       { id: "i5", q: "Day IFR to an aerodrome with no instrument approach. What are the alternate minima there?", hint: "Table 8.08(1) item 2.", answer: "LSALT for the final route segment plus 500 ft, and 8 km visibility. At night, with no IAP you can fly, you need an alternate regardless of weather.", ref: "Part 91 MOS Table 8.08(1), 8.05(1)" },
       { id: "i6", q: "The TAF has FEW005 and SCT007 below the alternate minima of 900 ft. Do you need an alternate?", hint: "Cloud below the alternate minima is cumulative.", answer: "Yes. FEW plus SCT below the minima counts as BKN, which is more than SCT below the alternate minima.", ref: "AIP ENR 1.1 10.7.2.1 Note" },
       { id: "i7", q: "Does the Seminole qualify for special alternate minima?", hint: "Count the receivers: LOC, GP, VOR, then DME or GNSS.", answer: "It can. The G1000 has two NAV receivers (VOR, LOC and glideslope in each) and two GNSS receivers, which meets dual LOC, GP, VOR and dual GNSS, provided both NAV receivers are serviceable. The minima are only available while the tower and local MET services are operating.", ref: "AIP ENR 1.5 6.2; POH 2.27, Section 3 (NAV1/NAV2)" },
+      { id: "i8", q: "Airborne, you get a new destination TAF that would now require an alternate, and you don't have the fuel for one. Some notes say you can continue if the forecast arrives within 30 minutes of ETA. What's the rule?", hint: "Read Part 91 MOS 19.04(3) and 19.06(1).", answer: "There's no 30-minutes-of-ETA allowance in the current MOS or AIP. At any time in flight you must carry trip fuel from that point, plus destination alternate fuel and holding fuel if required, plus final reserve. If you can't, proceed to an aerodrome where you can still meet those requirements: turn back, divert, or nominate a closer alternate. Then tell ATS.", ref: "Part 91 MOS 19.04(3), 19.05(2), 19.06(1)" },
     ],
   },
   {
