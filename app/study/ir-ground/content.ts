@@ -116,6 +116,7 @@ export const groundItems: GroundItem[] = [
       { id: "c2", q: "In the last 90 days you've flown three RNP approaches and nothing else. Which kinds of approach can you legally fly today?", hint: "An RNP to LNAV minima is 2D and uses a CDI. What's missing?", answer: "Approaches that are 2D CDI operations, such as RNP to LNAV minima, VOR and LOC. You can't fly a 3D approach like an ILS (no 3D in 90 days) or an azimuth guidance approach like an NDB (no azimuth operation in 90 days).", ref: "CASR 61.870(4)–(7)" },
       { id: "c3", q: "You meet the 90-day rules, but every flight in the last 7 months has been dual with an instructor in a multi-crew setting. Can you go single-pilot IFR?", hint: "61.875 is separate from 61.870.", answer: "No. Single-pilot IFR needs a single-pilot IFR flight or simulated flight in the previous 6 months, lasting at least 1 hour and including at least 1 approach.", ref: "CASR 61.875" },
       { id: "c4", q: "Do approaches flown in a simulator count towards 61.870?", hint: "Read the end of each subregulation.", answer: "Yes, if it is an approved flight simulation training device for the purpose. Every 61.870 requirement can be met in an aircraft or an approved FSTD.", ref: "CASR 61.870" },
+      { id: "c5", q: "You're not IFR-recent. How can you legally get current again?", hint: "61.870 limits flying under the IFR. Where can approaches be flown without being IFR?", answer: "Fly the approaches in an approved FSTD, or fly them in an aircraft under the VFR in VMC by day (61.870 only stops you piloting under the IFR), or fly with an instructor or examiner who is current and acting as pilot in command. Then you can fly IFR yourself.", ref: "CASR 61.870" },
     ],
   },
   {
@@ -192,6 +193,7 @@ export const groundItems: GroundItem[] = [
       { label: "Altitude alerting", text: "IFR in controlled airspace needs at least an assigned altitude indicator. A full altitude alerting system is needed for piston aircraft above FL150 in controlled airspace.", ref: "Part 91 MOS 26.25" },
       { label: "Seminole IFR minimum", text: "IFR needs the PFD, MFD, both GIAs, at least 1 GPS, the AHRS, ADC and magnetometer, plus standby attitude, airspeed, altimeter and heading. If a standby airspeed, altimeter or heading indication fails, the PFD equivalent must work. 'Fully functional' means no related CAS, annunciations or advisories.", ref: "POH 2.27(o)" },
       { label: "Altimeter check", text: "IFR: an error over ±75 ft makes the altimeter inoperative. One required system and one fitted: an error of 60 to 75 ft lets you fly to the first point of landing to recheck. Only ATC, ATIS, AWIS, AAIS, CA/GRS or WATIR give an accurate QNH. A forecast QNH can't be used.", ref: "Part 91 MOS 10.04, 10.06" },
+      { label: "Blocked static", text: "With a blocked static source the altimeter freezes at the blockage altitude and the VSI reads zero. Select alternate static (cabin static reads slightly differently).", ref: "Instrument theory; Part 91 MOS Table 26.08(4) item 2" },
     ],
     aids: [
       {
@@ -209,6 +211,14 @@ export const groundItems: GroundItem[] = [
           "Static group (airspeed, altimeter, VSI): alternate static or flush ports; pitot heat on 1 ASI",
           "Gyro group (attitude, turn and slip, stabilised heading): alternate power, unless independent or a second attitude source",
           "Basics: compass, clock (h:m:s, can be worn), OAT, gyro power indicator, non-C129 GNSS",
+        ],
+      },
+      {
+        name: "Compass errors (southern hemisphere): SAND · ONUS",
+        lines: [
+          "SAND: South Accelerate, North Decelerate. Acceleration error, worst on east or west headings",
+          "ONUS: Overshoot North, Undershoot South. Turning error when rolling out on north or south",
+          "Use the standby compass only in steady, unaccelerated flight",
         ],
       },
     ],
@@ -298,6 +308,9 @@ export const groundItems: GroundItem[] = [
       { label: "Alternate minima", text: "With an IAP you can fly: the alternate minima on the chart. Day only, no usable IAP: LSALT for the final route segment plus 500 ft, and 8 km.", ref: "Part 91 MOS Table 8.08(1)" },
       { label: "Suitability", text: "An alternate must be suitable as a destination, must not itself need an alternate, and must not be a helideck.", ref: "Part 91 MOS 8.07" },
       { label: "C129 GNSS", text: "If navigating with a GNSS certified only to (E)TSO-C129, plan navigation to the alternate with a non-GNSS system.", ref: "Part 91 MOS 8.05(3)" },
+      { label: "Cumulative cloud", text: "Cloud below the alternate minima is cumulative: FEW + FEW = SCT, FEW + SCT = BKN, SCT + SCT = BKN or OVC.", ref: "AIP ENR 1.1 10.7.2.1 Note" },
+      { label: "Lighting times", text: "When PAL isn't used, arrange lighting from at least 10 minutes before departure to 30 minutes after take-off, and from at least 30 minutes before ETA until landing and taxiing are complete.", ref: "AIP ENR 1.1 10.8.1(c)" },
+      { label: "Special alternate minima", text: "Charts marked with ** have special alternate minima for aircraft with dual LOC, dual GP and dual VOR, plus dual DME, dual GNSS, or one of each. They aren't available when local METAR/SPECI or forecasting isn't available, or when the tower isn't operating.", ref: "AIP ENR 1.5 6.2" },
     ],
     aids: [
       {
@@ -319,6 +332,18 @@ export const groundItems: GroundItem[] = [
           "Above FL200: 265 kt",
         ],
       },
+      {
+        name: "Alternates Could Very Well Prove Life Savers",
+        lines: [
+          "Aids: night with no IAP you can fly; C129-only GNSS",
+          "Cloud: more than SCT below alternate minima (cumulative)",
+          "Visibility: below minima, or PROB30+ of fog, mist or dust",
+          "Wind: headwind, crosswind or downwind above the aircraft limit",
+          "PROB and Provision of forecast: no TAF means alternate required",
+          "Lighting: portable, no standby power, PAL without a responsible person",
+          "Storms: thunderstorms or severe turbulence, including PROB30+",
+        ],
+      },
     ],
     questions: [
       { id: "i1", q: "Tamworth TAF: FM0400 BKN006. The alternate minima on the RNP are 1,140 ft and 4.4 km. Your ETA is 0335. Do you need an alternate?", hint: "Where does 0335 fall relative to 0400 minus 30 minutes?", answer: "Yes. BKN006 is more than SCT below the alternate minima, and your ETA is inside the window that starts 30 minutes before the forecast commencement (0330). FM has no end time, so holding it out isn't an option: nominate an alternate. If it were a TAF3 and your ETA was in its first 3 hours, the window would start at 0400 instead and 0335 would be clear.", ref: "Part 91 MOS 8.02(1)(a), 8.04(1), (5)" },
@@ -326,6 +351,8 @@ export const groundItems: GroundItem[] = [
       { id: "i3", q: "You arrive at a holding fix at 6,000 ft via a DME arc. Which entries may you use, how long is the outbound leg, and when does the timing start?", hint: "ENR 1.5 3.3 and 3.4.5.", answer: "From a DME arc, only a Sector 1 (parallel) or Sector 3 (direct) entry. Outbound is 1 minute at or below FL140, unless the chart specifies a time or distance. Timing starts abeam the fix or on reaching the outbound heading, whichever is later.", ref: "AIP ENR 1.5 3.3.1(b)–(c), 3.4.5" },
       { id: "i4", q: "Night IFR to an aerodrome with PAL and standby power, single VHF. Do you need an alternate?", hint: "MOS 8.06(3) and (5).", answer: "Yes, unless a qualified responsible person is in attendance to switch on the lighting manually if PAL fails, or you carry fuel to hold until first light plus 10 minutes.", ref: "Part 91 MOS 8.06(3), (5)" },
       { id: "i5", q: "Day IFR to an aerodrome with no instrument approach. What are the alternate minima there?", hint: "Table 8.08(1) item 2.", answer: "LSALT for the final route segment plus 500 ft, and 8 km visibility. At night, with no IAP you can fly, you need an alternate regardless of weather.", ref: "Part 91 MOS Table 8.08(1), 8.05(1)" },
+      { id: "i6", q: "The TAF has FEW005 and SCT007 below the alternate minima of 900 ft. Do you need an alternate?", hint: "Cloud below the alternate minima is cumulative.", answer: "Yes. FEW plus SCT below the minima counts as BKN, which is more than SCT below the alternate minima.", ref: "AIP ENR 1.1 10.7.2.1 Note" },
+      { id: "i7", q: "Does the Seminole qualify for special alternate minima?", hint: "Count the receivers: LOC, GP, VOR, then DME or GNSS.", answer: "It can. The G1000 has two NAV receivers (VOR, LOC and glideslope in each) and two GNSS receivers, which meets dual LOC, GP, VOR and dual GNSS, provided both NAV receivers are serviceable. The minima are only available while the tower and local MET services are operating.", ref: "AIP ENR 1.5 6.2; POH 2.27, Section 3 (NAV1/NAV2)" },
     ],
   },
   {
@@ -343,6 +370,7 @@ export const groundItems: GroundItem[] = [
       { label: "Levels", text: "Transition altitude 10,000 ft. Transition level FL110 when area QNH is 1013.2 or above (higher with lower QNH). Don't cruise in the transition layer. IFR: odd thousands on magnetic tracks 000–179°, even thousands on 180–359°.", ref: "Part 91 MOS 11.02, 2.09" },
       { label: "VFR climb and descent, VFR-on-top", text: "Need a clearance. VFR climb or descent only in Class D or E control areas. VFR-on-top only in Class E. Stay in VMC, keep IFR reporting, provide your own separation, and maintain your own obstacle clearance.", ref: "Part 91 MOS 11.17" },
       { label: "Deviations to report", text: "In controlled airspace, report immediately: LOC or VOR half-scale or more; NDB ±5°; DME ±2 NM; RNAV beyond the RNP value; visual more than 1 NM.", ref: "AIP ENR 1.1 4.6.2" },
+      { label: "Vectoring", text: "Being vectored, you're routinely given your position. On headings that could infringe terrain clearance or separation, ATC transmissions are no more than 30 seconds apart, so a longer silence suggests a comms failure.", ref: "AIP ENR 1.6 3.7–3.8" },
     ],
     aids: [
       {
@@ -394,21 +422,35 @@ export const groundItems: GroundItem[] = [
       { label: "DME or GNSS arrival", text: "Descent only once established in the sector or on the track. No manoeuvring in the sector after the FAF. In CTA, 'cleared DME/GNSS arrival' clears you to the minimum altitude, with no holding or orbiting. The destination VOR or NDB gives primary track guidance; discontinue if it differs from GNSS by more than 6.9° (NDB) or 5.2° (VOR).", ref: "AIP ENR 1.5 11; Part 91 MOS 14.04" },
       { label: "Reversal turns", text: "45/180 procedure turn: 45° away for 1 minute from the start of the turn (Cat A and B), then 180° the other way. 80/260 is an alternative to 45/180 unless excluded.", ref: "AIP ENR 1.5 2.8" },
       { label: "Approach speeds (Cat A/B)", text: "Cat A (Vat up to 90 kt): initial and intermediate 90–150 kt (110 kt maximum on reversal), final 70–100 kt, circling 100 kt, missed approach 110 kt. Cat B (Vat 91–120 kt): 120–180, 85–130, 135, 150 kt.", ref: "Part 91 MOS 2.02, Table 14.09(2); AIP ENR 1.5 1.17" },
+      { label: "Shaded minima", text: "On charts with shaded minima boxes, the minima assume TAF QNH. With an actual aerodrome QNH set, you may reduce them by 100 ft. With area QNH, add 50 ft.", ref: "AIP ENR 1.5 5.3.2, 5.3.4" },
+      { label: "Missed approach gradient", text: "The missed approach gives 100 ft obstacle clearance at a 2.5% climb gradient (152 ft/NM). If you can't achieve 2.5%, raise the DA or MDA or take other action. Check this with one engine inoperative in the Seminole.", ref: "AIP ENR 1.5 1.9.1 Note 2" },
+      { label: "Departure track", text: "Unless on a SID or told otherwise by ATC, establish on the departure track within 5 NM of the departure aerodrome.", ref: "AIP ENR 1.1 2.7.3" },
+      { label: "Straight-in alignment", text: "A straight-in NPA may be offset from the runway centreline by up to 30° for Cat A and B (15° for Cat C and D). APVs are aligned with the centreline.", ref: "AIP ENR 1.5 1.7.3" },
     ],
     aids: [
-      {
-        name: "QNH: 15 minutes, +50 for area",
-        lines: [
-          "Actual QNH is good for 15 minutes",
-          "Forecast aerodrome QNH: use the published minima as charted",
-          "Area QNH: add 50 ft",
-        ],
-      },
       {
         name: "Arrival disparity: 7 for NDB, 5 for VOR",
         lines: [
           "NDB more than 6.9° from GNSS: discontinue",
           "VOR more than 5.2° from GNSS: discontinue",
+        ],
+      },
+      {
+        name: "QNH on shaded charts: −100 actual · +50 area",
+        lines: [
+          "Shaded minima are built on the TAF QNH",
+          "Actual aerodrome QNH (valid 15 minutes): subtract 100 ft",
+          "Area QNH: add 50 ft",
+        ],
+      },
+      {
+        name: "Missed approach triggers: TAG-VC",
+        lines: [
+          "T: Tolerance. Outside navigational tolerance on the final segment",
+          "A: Aid unreliable or failed below the MSA (RAIM warning, VOR flag, lost NDB ident)",
+          "G: GNSS as a substitute with a sustained deviation from centreline",
+          "V: Visual requirements not met at the DA or MAPt (or below the MDA)",
+          "C: Circling with visibility below minimum, or the aerodrome not distinctly visible",
         ],
       },
     ],
@@ -418,6 +460,8 @@ export const groundItems: GroundItem[] = [
       { id: "k3", q: "Can you request a visual departure at night?", hint: "AIP ENR 1.1 2.5.1.", answer: "No. Visual departures for IFR flights are by day in VMC only, and the cloud base must let you climb in VMC to the MSA or LSALT.", ref: "AIP ENR 1.1 2.5" },
       { id: "k4", q: "On a GNSS arrival you notice the NDB bearing is 8° different from the GNSS track. Continue?", hint: "MOS 14.04(2).", answer: "No. More than 6.9° divergence on an NDB is a significant disparity, so discontinue the arrival procedure.", ref: "Part 91 MOS 14.04" },
       { id: "k5", q: "You're cleared for the DME arrival in controlled airspace and want to do a lap of the hold to lose height. Allowed?", hint: "ENR 1.5 11.2.2.", answer: "No. When cleared for a DME or GNSS arrival in CTA you must not orbit, enter a holding pattern, or use holding entry procedures.", ref: "AIP ENR 1.5 11.2.2" },
+      { id: "k6", q: "The chart minima are shaded and the MDA is 1,340 ft. You've just received the ATIS actual QNH. What MDA can you use?", hint: "ENR 1.5 5.3.2.", answer: "1,240 ft. Shaded minima assume TAF QNH, and may be reduced by 100 ft when an actual aerodrome QNH is set. The actual QNH is valid for 15 minutes.", ref: "AIP ENR 1.5 5.3.2" },
+      { id: "k7", q: "Single-engine in the Seminole, your POH chart gives a climb rate that works out to less than 2.5% at your missed approach groundspeed. What's the consequence?", hint: "ENR 1.5 1.9.1 Note 2.", answer: "The published missed approach only guarantees 100 ft obstacle clearance at 2.5%. If you can't achieve it OEI, raise the DA or MDA (or plan another option, such as a different runway or approach) so obstacle clearance is maintained. At 90 kt, 2.5% is about 230 ft/min.", ref: "AIP ENR 1.5 1.9.1 Note 2" },
     ],
   },
   {
@@ -529,6 +573,7 @@ export const groundItems: GroundItem[] = [
       { label: "Go missed when circling", text: "If flight visibility drops below the minimum, or an identifiable part of the aerodrome is no longer distinctly visible (apart from normal manoeuvring), go missed.", ref: "Part 91 MOS 15.11(1)(e)" },
       { label: "Speed and category", text: "Maximum circling IAS: Cat A 100 kt, Cat B 135 kt. You may use a higher category's circling area if you comply with its limits.", ref: "Part 91 MOS Table 14.09(2); AIP ENR 1.5 1.15.3 Note" },
       { label: "Privilege", text: "You can only circle under the IFR if your test (in the last 12 months) or most recent IPC included circling.", ref: "CASR 61.860(3)" },
+      { label: "Old method removed", text: "Older notes describe circling by day 'not below obstacle clearance' and by night 'not below MDA until downwind, base or final', with radii of 1.68 NM (A) and 2.66 NM (B). The current AIP replaced these with the three-condition rule and a radius table by aerodrome elevation. No Circling sectors are now prohibited, with no VMC-by-day exception.", ref: "AIP ENR 1.5 1.6 (26 Nov 2026)" },
     ],
     aids: [
       {
@@ -554,6 +599,7 @@ export const groundItems: GroundItem[] = [
       { id: "n3", q: "Why is the circling area at a 2,000 ft aerodrome larger than at a sea-level one for the same category?", hint: "What changes with elevation at a constant IAS?", answer: "TAS is higher at higher elevation for the same IAS, which increases the turn radius. The radius is calculated at aerodrome elevation plus 1,000 ft with ISA+15, so higher aerodromes get larger areas.", ref: "AIP ENR 1.5 1.6.4–1.6.5" },
       { id: "n4", q: "During the circle, rain reduces visibility below the circling minimum and you briefly lose sight of the runway. What's required?", hint: "MOS 15.11(1)(e).", answer: "Go missed immediately. Flight visibility below the minimum, or losing distinct sight of an identifiable part of the aerodrome (other than during normal manoeuvring), both require a missed approach.", ref: "Part 91 MOS 15.11(1)(e)" },
       { id: "n5", q: "Can you circle through a sector marked No Circling to get a shorter base leg?", hint: "ENR 1.5 1.6.7.5.", answer: "No. Visual circling is prohibited in No Circling sectors. Only the published tracks to the MAPt over such an area are protected.", ref: "AIP ENR 1.5 1.6.7.5–1.6.7.6" },
+      { id: "n6", q: "Older study notes say visual circling is allowed in a No Circling sector in VMC by day. Is that right today?", hint: "Read ENR 1.5 1.6.7.5.", answer: "No. The current AIP prohibits visual circling in No Circling sectors, with no VMC-by-day exception. Use the current AIP, not older notes, for circling.", ref: "AIP ENR 1.5 1.6.7.5" },
     ],
   },
   {
@@ -570,6 +616,7 @@ export const groundItems: GroundItem[] = [
       { label: "Windshear", text: "Report windshear to ATS. Give its intensity (light, moderate, strong, severe), the speed changes, and the altitude band. At a non-controlled aerodrome, also broadcast on the CTAF.", ref: "AIP GEN 3.5 6.3" },
       { label: "Microburst alerts", text: "Where equipped, ATC alert for windshear when the headwind gain or loss exceeds 15 kt, and for a microburst when the headwind loss exceeds 30 kt.", ref: "AIP GEN 3.5 4.10" },
       { label: "AIREP Special", text: "Make one as soon as practicable after encountering hazardous weather that is, or may become, severe enough to warrant a SIGMET, regardless of other reports.", ref: "AIP GEN 3.5 6.2" },
+      { label: "Icing ingredients", text: "Airframe icing needs visible moisture and a surface temperature at or below 0 °C. In the Seminole, which isn't approved for icing, avoid flight in visible moisture near or below freezing.", ref: "Met theory; POH 2.21" },
     ],
     aids: [
       {
@@ -602,6 +649,8 @@ export const groundItems: GroundItem[] = [
       { label: "Before flight", text: "Radio failure before departure: if repair facilities are available, repair first. If not, you may fly to the nearest repair facility in Class G in VMC; for controlled airspace, advise ATS and get a clearance.", ref: "AIP ENR 1.1 6.2.3; Part 91 MOS 26.19" },
       { label: "Where to look", text: "In-flight radio failure procedures are in ERSA EMERG. Radio failure procedures at non-controlled aerodromes are in ERSA INTRO.", ref: "AIP ENR 1.1 6.2.4" },
       { label: "Fuel emergencies", text: "'MINIMUM FUEL' means you're committed to one aerodrome and any change would mean landing below final reserve (not a distress call). 'MAYDAY MAYDAY MAYDAY FUEL' means you'll land with less than final reserve.", ref: "Part 91 MOS 19.06(3)–(4)" },
+      { label: "Light signals in flight", text: "Steady green: authorised to land if no collision risk. Steady red: give way and keep circling. Green flashes: return for landing. Red flashes: aerodrome unsafe, don't land. White flashes: no significance.", ref: "AIP ENR 1.5 12.1" },
+      { label: "Other comms-failure procedures", text: "SIDs and STARs, and many Class D aerodromes, have their own radio failure procedures. Check them in the DAP and ERSA FAC before flight.", ref: "ERSA FAC, DAP" },
     ],
     aids: [
       {
@@ -613,12 +662,23 @@ export const groundItems: GroundItem[] = [
           "Then the latest acknowledged clearance, descend, and fly the most suitable IAP",
         ],
       },
+      {
+        name: "Light signals in flight: Green Go, Red Circle, Flashing Red Forget it",
+        lines: [
+          "Steady green: land",
+          "Steady red: give way, keep circling",
+          "Green flashes: come back and land",
+          "Red flashes: aerodrome unsafe, don't land",
+          "White flashes: nothing in flight",
+        ],
+      },
     ],
     questions: [
       { id: "p1", q: "You're being vectored in IMC at 5,000 ft (LSALT 4,200) when you lose all radio. Walk through it.", hint: "MOS 11.10(2)(b)(iv).", answer: "Squawk 7600 and transmit blind. Hold 5,000 ft (above the LSALT) for 3 minutes and keep the last vector for 2 minutes. Then proceed in accordance with the latest acknowledged ATC route clearance, descend in accordance with it, and conduct the most suitable instrument approach.", ref: "Part 91 MOS 11.10(2)(b)" },
       { id: "p2", q: "You lose radios in the hold, in IMC. What changes?", hint: "Vector or hold?", answer: "Instead of keeping the last vector for 2 minutes, fly one more holding pattern (while keeping your level, or LSALT if higher, for 3 minutes), then proceed via the latest acknowledged clearance.", ref: "Part 91 MOS 11.10(2)(b)(iv)(B)" },
       { id: "p3", q: "Comms failure on climb out in VMC, and the forecast says VMC all the way. What should you do?", hint: "MOS 11.10(2)(b)(iii).", answer: "If you're certain of staying in VMC, remain in VMC and land at the most suitable aerodrome, with 7600 squawked and transmitting blind. Check ERSA for any Class D-specific procedures at the aerodrome you choose.", ref: "Part 91 MOS 11.10(2)(b)(iii)" },
       { id: "p4", q: "When must you declare 'MINIMUM FUEL'?", hint: "MOS 19.06(3).", answer: "When you're committed to land at a specific aerodrome and any change to the existing clearance would mean landing with less than final reserve fuel. It isn't an emergency; ATS will tell you about delays.", ref: "Part 91 MOS 19.06(3)" },
+      { id: "p5", q: "Radio failure, you've flown the approach to a towered aerodrome and you're visual at minima. Can you land?", hint: "You need a clearance. How could you get one without a radio?", answer: "Only with a clearance, which without a radio means a light signal from the tower (steady green) or a clearance on a voice-modulated navaid. Watch the tower. If there's no signal, follow your plan (hold, or go to a suitable alternate) per ERSA EMERG.", ref: "AIP ENR 1.5 12.1; ERSA EMERG" },
     ],
   },
   {
@@ -637,6 +697,7 @@ export const groundItems: GroundItem[] = [
       { label: "Track precision", text: "Navigate by the most precise track guidance available: localiser, then GNSS, then VOR, then NDB.", ref: "AIP ENR 1.1 4.4.3" },
       { label: "Time", text: "Keep a time reference accurate to ±30 seconds.", ref: "AIP ENR 1.1 4.3.1" },
       { label: "Speed limit", text: "250 kt below 10,000 ft in Class G and E.", ref: "Part 91 MOS Chapter 4" },
+      { label: "Runway distances", text: "If the AFM charts are unfactored, CASA recommends multiplying take-off distance by 1.15 (MTOW 2,000 kg or less, rising to 1.25 at 3,500 kg) and landing distance by 1.15 (rising to 1.43 at 4,500 kg).", ref: "Part 91 Plain English Guide v5.2 (91.795, 91.800)" },
     ],
     aids: [
       {
@@ -668,6 +729,7 @@ export const groundItems: GroundItem[] = [
       { id: "q2", q: "Navigating on NDBs only, how far can you fly between positive fixes?", hint: "Two limits in MOS 14.02(1)(b).", answer: "As far as allowing ±9° tracking error from the last fix still brings you within rated coverage of a usable aid, and never more than 2 hours between positive fixes.", ref: "Part 91 MOS 14.02(1)(b)" },
       { id: "q3", q: "Your departure slips by 40 minutes after you've filed. What must you do?", hint: "MOS 9.03(1)(d).", answer: "Notify ATS. A change in the planned departure time of more than 30 minutes is a required notification.", ref: "Part 91 MOS 9.03(1)(d)" },
       { id: "q4", q: "You're tracking 095°M IFR. Which levels are available below 10,000 ft?", hint: "000–179° is odd.", answer: "Odd thousands: 3,000, 5,000, 7,000 and 9,000 ft, at or above the LSALT. Above the transition layer: FL110 (if QNH permits), FL130, FL150, and so on.", ref: "Part 91 MOS 2.09, Table 2.09(1)" },
+      { id: "q5", q: "The POH gives a landing distance of 1,490 ft for the conditions. What should you plan on in the Seminole?", hint: "MTOW 3,800 lb is about 1,724 kg.", answer: "About 1,714 ft (1,490 × 1.15). The Seminole is under 2,000 kg MTOW, so the recommended factor for unfactored charts is 1.15. Compare that with the landing distance available.", ref: "Part 91 Plain English Guide v5.2" },
     ],
   },
 ];
