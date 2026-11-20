@@ -1,0 +1,66 @@
+/* IR ground component prep. Extends quiz.css in the existing Vectored style. */
+.irg-tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+.irg-tab {
+  padding: 8px 16px; border-radius: 100px; border: 1px solid rgba(255,255,255,0.08);
+  background: transparent; color: #8899AA; font-size: 13px; font-weight: 600;
+  font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.15s;
+}
+.irg-tab:hover { border-color: rgba(0,212,170,0.3); color: #C0CDD8; }
+.irg-tab.active { background: rgba(0,212,170,0.1); border-color: rgba(0,212,170,0.3); color: #00D4AA; }
+
+.irg-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 24px; }
+.irg-stat { background: #131F33; border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 14px 16px; }
+.irg-stat-val { font-size: 22px; font-weight: 700; font-family: 'Space Grotesk', sans-serif; line-height: 1.1; }
+.irg-stat-label { font-size: 11px; color: #6B7B8D; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 4px; }
+
+.irg-item-progress { height: 3px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden; margin-top: 8px; }
+.irg-item-progress-fill { height: 100%; background: #00D4AA; border-radius: 2px; }
+
+.irg-section-label {
+  font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em;
+  color: #00D4AA; margin: 28px 0 12px;
+}
+
+.irg-fact { padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.irg-fact:last-child { border-bottom: none; padding-bottom: 0; }
+.irg-fact:first-child { padding-top: 0; }
+.irg-fact-label { font-size: 13px; font-weight: 600; color: #FFF; margin-bottom: 4px; font-family: 'Space Grotesk', sans-serif; }
+.irg-fact-text { font-size: 14.5px; color: #C0CDD8; line-height: 1.65; }
+.irg-ref { font-size: 12px; color: #4A5568; margin-top: 4px; font-family: 'DM Mono', ui-monospace, monospace; }
+
+.irg-aid { background: rgba(246,187,66,0.04); border: 1px solid rgba(246,187,66,0.15); border-radius: 12px; padding: 16px 18px; margin-bottom: 10px; }
+.irg-aid-name { font-size: 15px; font-weight: 700; color: #F6BB42; font-family: 'Space Grotesk', sans-serif; margin-bottom: 8px; }
+.irg-aid-line { font-size: 14px; color: #C0CDD8; line-height: 1.6; padding-left: 12px; position: relative; }
+.irg-aid-line::before { content: ""; position: absolute; left: 0; top: 10px; width: 4px; height: 4px; border-radius: 50%; background: #F6BB42; opacity: 0.6; }
+
+.irg-note { font-size: 13px; color: #F6BB42; background: rgba(246,187,66,0.06); border: 1px solid rgba(246,187,66,0.2); border-radius: 10px; padding: 12px 14px; margin-bottom: 20px; line-height: 1.6; }
+
+.irg-q { background: #131F33; border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; padding: 20px 20px 18px; margin-bottom: 12px; }
+.irg-q.got { border-color: rgba(0,212,170,0.25); }
+.irg-q.shaky { border-color: rgba(255,107,74,0.3); }
+.irg-q-meta { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #4A5568; margin-bottom: 8px; display: flex; justify-content: space-between; gap: 8px; }
+.irg-q-text { font-size: 16px; font-weight: 600; color: #FFF; font-family: 'Space Grotesk', sans-serif; line-height: 1.45; margin-bottom: 14px; }
+.irg-q-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.irg-btn-sm {
+  padding: 8px 14px; border-radius: 9px; border: 1px solid rgba(255,255,255,0.1); background: transparent;
+  color: #C0CDD8; font-size: 13px; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.15s;
+}
+.irg-btn-sm:hover { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.04); }
+.irg-btn-sm.primary { background: rgba(0,212,170,0.1); border-color: rgba(0,212,170,0.3); color: #00D4AA; }
+.irg-btn-sm.got.on { background: #00D4AA; border-color: #00D4AA; color: #0B1120; }
+.irg-btn-sm.shaky.on { background: #FF6B4A; border-color: #FF6B4A; color: #FFF; }
+.irg-hint { margin-top: 14px; padding: 12px 14px; border-radius: 10px; background: rgba(93,156,236,0.06); border: 1px solid rgba(93,156,236,0.18); font-size: 14px; color: #A9C6EE; line-height: 1.6; }
+.irg-answer { margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.06); }
+.irg-answer-text { font-size: 14.5px; color: #C0CDD8; line-height: 1.7; }
+.irg-mark { display: flex; gap: 8px; margin-top: 14px; align-items: center; flex-wrap: wrap; }
+.irg-mark-label { font-size: 12px; color: #6B7B8D; margin-right: 4px; }
+
+.irg-empty { text-align: center; padding: 48px 16px; color: #6B7B8D; font-size: 14px; line-height: 1.7; }
+
+@media (max-width: 640px) {
+  .irg-stats { gap: 8px; }
+  .irg-stat { padding: 12px; }
+  .irg-stat-val { font-size: 19px; }
+  .irg-q { padding: 16px 16px 14px; }
+  .irg-q-text { font-size: 15px; }
+}

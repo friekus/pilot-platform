@@ -3,6 +3,7 @@ import "../quiz/quiz.css";
 import { useEffect, useState } from "react";
 import { supabase } from "../lib/supabase";
 import { useRouter } from "next/navigation";
+import { canAccessIrGround } from "../study/ir-ground/access";
 
 function Logo({ size = 34 }: { size?: number }) {
   const s = size, cx = s / 2, cy = s / 2;
@@ -262,6 +263,13 @@ export default function DashboardPage() {
         )}
 
         <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 32 }}>
+          {canAccessIrGround(user?.email) && (
+            <DashCard
+              href="/study/ir-ground" accent="#E96B56"
+              icon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2v20" /></svg>}
+              title="IR ground component" desc="Private preview. Form 61-1503 knowledge items, memory aids and mock oral."
+            />
+          )}
           <DashCard
             href="/study" accent="#00D4AA"
             icon={<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" /><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" /></svg>}
