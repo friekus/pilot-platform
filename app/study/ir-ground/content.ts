@@ -1,6 +1,6 @@
 // Instrument rating flight test — ground component (CASA form 61-1503, items 2(a)–2(q)).
 // Every figure is taken from primary sources: CASR (Compilation 101, 1 Apr 2026),
-// Part 91 MOS (Compilation 7, 14 Mar 2026), AIP Australia (19 Mar 2026) and the
+// Part 91 MOS (Compilation 7, 14 Mar 2026), AIP Australia (26 Nov 2026) and the
 // PA-44-180 Seminole G1000 POH (VB-2636). Re-verify after each AIRAC / compilation change.
 
 export type Fact = { label: string; text: string; ref: string };
@@ -17,7 +17,7 @@ export type GroundItem = {
   note?: string;
 };
 
-export const SOURCES_AS_OF = "CASR Comp. 101 (1 Apr 2026) · Part 91 MOS Comp. 7 (14 Mar 2026) · AIP 19 Mar 2026 · PA-44-180 G1000 POH";
+export const SOURCES_AS_OF = "CASR Comp. 101 (1 Apr 2026) · Part 91 MOS Comp. 7 (14 Mar 2026) · AIP 26 Nov 2026 · PA-44-180 G1000 POH";
 
 export const groundItems: GroundItem[] = [
   {
@@ -233,8 +233,8 @@ export const groundItems: GroundItem[] = [
       { label: "No forecast", text: "You may depart without a forecast only if you can return to the departure aerodrome within 1 hour. If the destination forecast isn't obtained within 30 minutes after take-off (and you haven't nominated an alternate), return.", ref: "Part 91 MOS 7.03" },
       { label: "INTER / TEMPO", text: "INTER means fluctuations lasting less than 30 minutes. TEMPO means temporary changes, longer than INTER. They drive 30-minute and 60-minute holding fuel respectively.", ref: "AIP GEN 2.2; MOS 8.04(6)" },
       { label: "BECMG", text: "If BECMG brings deterioration, apply it from the start of the BECMG period. If it brings improvement in all elements, apply it from the end of the period.", ref: "Part 91 MOS 8.04(8)" },
-      { label: "TAF3", text: "TAF3 is issued every 3 hours. If your ETA falls in the first 3 hours of TAF3 validity, the 30-minute buffers and the PROB-based alternate triggers fall away.", ref: "AIP GEN 3.5 4.8; MOS 8.02(2), 8.04(2)" },
-      { label: "TAF area", text: "A TAF covers the area within 8 km of the aerodrome reference point.", ref: "AIP GEN 3.5 4.8" },
+      { label: "TAF3", text: "TAF3 is issued every 3 hours. If your ETA falls in the first 3 hours of TAF3 validity, the 30-minute buffers and the PROB-based alternate triggers fall away.", ref: "AIP GEN 3.5 4.7; MOS 8.02(2), 8.04(2)" },
+      { label: "TAF area", text: "A TAF covers the area within 8 km of the aerodrome reference point.", ref: "AIP GEN 3.5 4.7" },
     ],
     aids: [
       {
@@ -568,7 +568,7 @@ export const groundItems: GroundItem[] = [
       { label: "Turbulence", text: "Don't exceed the operating manoeuvring speed (VO) in turbulence: 135 KIAS at 3,800 lb, 115 KIAS at 2,870 lb, interpolated in between. It decreases at lighter weights.", ref: "POH 2.3" },
       { label: "Datalink weather", text: "Datalink weather is supplementary only. Don't use it to pick a path through thunderstorms. Avoid severe storms by at least 20 NM.", ref: "POH 2.27(i)" },
       { label: "Windshear", text: "Report windshear to ATS. Give its intensity (light, moderate, strong, severe), the speed changes, and the altitude band. At a non-controlled aerodrome, also broadcast on the CTAF.", ref: "AIP GEN 3.5 6.3" },
-      { label: "Microburst alerts", text: "Where equipped, ATC alert for windshear when the headwind gain or loss exceeds 15 kt, and for a microburst when the headwind loss exceeds 30 kt.", ref: "AIP GEN 3.5 4.11" },
+      { label: "Microburst alerts", text: "Where equipped, ATC alert for windshear when the headwind gain or loss exceeds 15 kt, and for a microburst when the headwind loss exceeds 30 kt.", ref: "AIP GEN 3.5 4.10" },
       { label: "AIREP Special", text: "Make one as soon as practicable after encountering hazardous weather that is, or may become, severe enough to warrant a SIGMET, regardless of other reports.", ref: "AIP GEN 3.5 6.2" },
     ],
     aids: [
